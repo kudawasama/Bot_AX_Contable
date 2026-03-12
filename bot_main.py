@@ -106,7 +106,7 @@ def run_bot():
                 break
             
             # Paso C: Confirmación
-            time.sleep(0.8) 
+            time.sleep(0.5) 
             encontrado_confirm = buscar_y_clickear(
                 ruta_imagen=BTN_CONFIRM, 
                 timeout=20,

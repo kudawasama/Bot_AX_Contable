@@ -10,7 +10,7 @@ pytesseract.pytesseract.tesseract_cmd = r'C:\Users\jose.cespedes\AppData\Local\P
 # Configuraciones de seguridad de pyautogui
 pyautogui.FAILSAFE = True
 # PAUSE: Tiempo de espera (en segundos) después de CADA comando de pyautogui (click, press, etc.)
-pyautogui.PAUSE = 0.5 
+pyautogui.PAUSE = 0.3 
 
 def buscar_y_clickear(ruta_imagen, sector_region=None, confidencialidad=0.9, timeout=10, mover_hacia_abajo=False, wait_only=False):
     """
@@ -45,7 +45,7 @@ def buscar_y_clickear(ruta_imagen, sector_region=None, confidencialidad=0.9, tim
                 
                 # Mover el mouse a la ubicación y hacer click
                 # duration: Segundos que tarda el puntero en desplazarse hasta el objetivo
-                pyautogui.moveTo(ubicacion[0], ubicacion[1], duration=0.2)
+                pyautogui.moveTo(ubicacion[0], ubicacion[1], duration=0.1)
                 pyautogui.click()
                 
                 if mover_hacia_abajo:
