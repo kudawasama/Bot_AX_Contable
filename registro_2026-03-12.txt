@@ -19,3 +19,4 @@
 [14:37:22] Diario: 319871D - Resultado: EXITOSO
 [14:39:52] Diario: 319872D - Resultado: EXITOSO
 [14:42:32] Diario: 319873D - Resultado: EXITOSO
+[14:50:16] Diario: 319861D - Resultado: ERROR

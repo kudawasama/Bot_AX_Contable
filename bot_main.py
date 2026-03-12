@@ -49,70 +49,50 @@ def run_bot():
                 
             print(f"\n--- Iniciando Ciclo {ciclo} ---")
             
-            # Paso A: Buscar casillas vacías
-            # Usamos locateAllOnScreen para ver todas las que hay en el sector
-            try:
-                todas_vacias = list(gui.locateAllOnScreen(CHK_VACIO, region=sector_a, confidence=0.9, grayscale=True))
-                # Ordenar de arriba hacia abajo
-                todas_vacias.sort(key=lambda loc: loc.top)
-            except Exception as e:
-                print(f"Error buscando casillas: {e}")
-                todas_vacias = []
-
-            if not todas_vacias:
-                print("No se encontró ningún checkbox vacío. Fin de la lista.")
-                break 
-            # Intentar procesar la primera casilla que no esté en la lista negra
-            casilla_objetivo = None
-            id_actual = "DESCONOCIDO"
-
-            for i, loc in enumerate(todas_vacias):
-                centro = gui.center(loc)
-                coord = (int(centro.x), int(centro.y))
-                
-                # Leer el ID de esta casilla
-                identificador = leer_id_diario(coord)
-                print(f"Analizando Fila Visual {i+1}: ID '{identificador}'")
-
-                if identificador in diarios_con_error:
-                    print(f"  -> Ignorando {identificador} (está en lista negra por error previo).")
-                    continue
-                
-                # Si llegamos aquí, es una fila válida
-                casilla_objetivo = coord
-                id_actual = identificador
-                break
-
-            if not casilla_objetivo:
-                print("No se encontraron más casillas procesables en esta vista. Intentando Scroll Down...")
-                # Hacer un click de foco en el Sector A
-                gui.click(sector_a[0] + 50, sector_a[1] + 50)
-                time.sleep(0.5)
-                gui.press('pgdn')
-                time.sleep(2) # Esperar a que AX cargue la siguiente página
-                
-                # Volver a buscar después del scroll
+            # Paso A: Buscar casillas vacías y elegir la mejor
+            intentos_scroll = 0
+            while intentos_scroll < 3:
                 try:
                     todas_vacias = list(gui.locateAllOnScreen(CHK_VACIO, region=sector_a, confidence=0.9, grayscale=True))
                     todas_vacias.sort(key=lambda loc: loc.top)
                 except:
                     todas_vacias = []
-                
-                # Re-evaluar
+
+                casilla_objetivo = None
+                id_actual = "DESCONOCIDO"
+
                 for i, loc in enumerate(todas_vacias):
                     centro = gui.center(loc)
                     coord = (int(centro.x), int(centro.y))
                     identificador = leer_id_diario(coord)
-                    if identificador not in diarios_con_error:
-                        casilla_objetivo = coord
-                        id_actual = identificador
-                        break
-                
-                if not casilla_objetivo:
-                    print("Definitivamente no hay más casillas para procesar. Fin del trabajo.")
+                    
+                    if identificador in diarios_con_error:
+                        if intentos_scroll == 0: # Solo imprimir en el primer escaneo
+                            print(f"  -> Ignorando {identificador} (lista negra).")
+                        continue
+                    
+                    casilla_objetivo = coord
+                    id_actual = identificador
                     break
+
+                if casilla_objetivo:
+                    break # Encontramos una!
+                
+                # Si no hay casillas o todas están en lista negra, intentamos bajar
+                intentos_scroll += 1
+                if intentos_scroll < 3:
+                    print(f"No hay casillas nuevas en vista. Intento de Scroll {intentos_scroll}/3...")
+                    # Click de foco más seguro (en medio del sector A)
+                    gui.click(sector_a[0] + sector_a[2]//2, sector_a[1] + 50)
+                    time.sleep(0.5)
+                    gui.press('pgdn')
+                    time.sleep(2)
                 else:
-                    print(f"¡Nuevos registros encontrados tras Scroll! Continuando con {id_actual}")
+                    print("Se alcanzó el límite de intentos de scroll sin éxito.")
+
+            if not casilla_objetivo:
+                print("Definitivamente no hay más casillas para procesar. Fin del trabajo.")
+                break
 
             print(f"==> PROCESANDO DIARIO: {id_actual}")
             # duration: Velocidad del mouse al ir a la casilla (0.5 segundos)
