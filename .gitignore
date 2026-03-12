@@ -1,0 +1,16 @@
+# Archivos de registro del Bot AX
+registro_*.txt
+registro_procesamiento.txt
+
+# Archivos de depuración y capturas
+debug_*.png
+vista_principal.png
+last_ocr_capture.png
+debug_ocr_pos*.png
+
+# Archivos de configuración locales
+config_sectores.json
+
+# Python
+__pycache__/
+*.pyc
