@@ -1,7 +1,7 @@
 import sys
 import time
 import pyautogui
-from config import cargar_configuracion, CHK_VACIO, BTN_MENU, BTN_CONFIRM, CHK_MARCADO, IMG_ERROR
+from config import cargar_configuracion, CHK_VACIO, BTN_MENU, BTN_CONFIRM, CHK_MARCADO, IMG_ERROR, BTN_ABAJO
 from vision import buscar_y_clickear, buscar_estado_checkbox, esperar_resultado_registro, leer_id_diario
 import keyboard
 import pyautogui as gui
@@ -81,12 +81,24 @@ def run_bot():
                 # Si no hay casillas o todas están en lista negra, intentamos bajar
                 intentos_scroll += 1
                 if intentos_scroll < 3:
-                    print(f"No hay casillas nuevas en vista. Intento de Scroll {intentos_scroll}/3...")
-                    # Click de foco más seguro (en medio del sector A)
-                    gui.click(sector_a[0] + sector_a[2]//2, sector_a[1] + 50)
-                    time.sleep(0.5)
-                    gui.press('pgdn')
-                    time.sleep(2)
+                    print(f"No hay casillas nuevas en vista. Buscando botón de scroll ({intentos_scroll}/3)...")
+                    
+                    # Buscar el botón de avanzar abajo
+                    pos_flecha = gui.locateCenterOnScreen(BTN_ABAJO, confidence=0.8, grayscale=True)
+                    
+                    if pos_flecha:
+                        print(f"Botón de scroll encontrado en {pos_flecha}. Presionando 5 veces...")
+                        gui.moveTo(pos_flecha.x, pos_flecha.y, duration=0.2)
+                        for _ in range(5):
+                            gui.click()
+                            time.sleep(0.1)
+                        time.sleep(1.5) # Esperar a que AX cargue la siguiente página
+                    else:
+                        print("No se encontró el botón 'Avanzar_Abajo.png'. Intentando con PgDn como respaldo...")
+                        gui.click(sector_a[0] + sector_a[2]//2, sector_a[1] + 50)
+                        time.sleep(0.3)
+                        gui.press('pgdn')
+                        time.sleep(2)
                 else:
                     print("Se alcanzó el límite de intentos de scroll sin éxito.")
 
