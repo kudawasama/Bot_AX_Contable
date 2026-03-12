@@ -62,7 +62,6 @@ def run_bot():
             if not todas_vacias:
                 print("No se encontró ningún checkbox vacío. Fin de la lista.")
                 break 
-
             # Intentar procesar la primera casilla que no esté en la lista negra
             casilla_objetivo = None
             id_actual = "DESCONOCIDO"
@@ -85,8 +84,35 @@ def run_bot():
                 break
 
             if not casilla_objetivo:
-                print("Todas las casillas visibles están en la lista negra o no hay más para procesar.")
-                break
+                print("No se encontraron más casillas procesables en esta vista. Intentando Scroll Down...")
+                # Hacer un click de foco en el Sector A
+                gui.click(sector_a[0] + 50, sector_a[1] + 50)
+                time.sleep(0.5)
+                gui.press('pgdn')
+                time.sleep(2) # Esperar a que AX cargue la siguiente página
+                
+                # Volver a buscar después del scroll
+                try:
+                    todas_vacias = list(gui.locateAllOnScreen(CHK_VACIO, region=sector_a, confidence=0.9, grayscale=True))
+                    todas_vacias.sort(key=lambda loc: loc.top)
+                except:
+                    todas_vacias = []
+                
+                # Re-evaluar
+                for i, loc in enumerate(todas_vacias):
+                    centro = gui.center(loc)
+                    coord = (int(centro.x), int(centro.y))
+                    identificador = leer_id_diario(coord)
+                    if identificador not in diarios_con_error:
+                        casilla_objetivo = coord
+                        id_actual = identificador
+                        break
+                
+                if not casilla_objetivo:
+                    print("Definitivamente no hay más casillas para procesar. Fin del trabajo.")
+                    break
+                else:
+                    print(f"¡Nuevos registros encontrados tras Scroll! Continuando con {id_actual}")
 
             print(f"==> PROCESANDO DIARIO: {id_actual}")
             # duration: Velocidad del mouse al ir a la casilla (0.5 segundos)
