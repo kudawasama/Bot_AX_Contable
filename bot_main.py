@@ -89,6 +89,7 @@ def run_bot():
                 break
 
             print(f"==> PROCESANDO DIARIO: {id_actual}")
+            # duration: Velocidad del mouse al ir a la casilla (0.5 segundos)
             gui.moveTo(casilla_objetivo[0], casilla_objetivo[1], duration=0.5)
             gui.click()
             punto_click_a = casilla_objetivo
@@ -105,7 +106,7 @@ def run_bot():
                 break
             
             # Paso C: Confirmación
-            time.sleep(1.5) 
+            time.sleep(0.8) 
             encontrado_confirm = buscar_y_clickear(
                 ruta_imagen=BTN_CONFIRM, 
                 timeout=20,
@@ -138,12 +139,14 @@ def run_bot():
                  registrar_log(id_actual, "ERROR")
                  diarios_con_error.append(id_actual)
                  gui.press('esc')
+                 # Pausa para que AX cierre el cartel de error antes de seguir
                  time.sleep(2) 
             else:
                  print("Timeout extremo alcanzado.")
                  break
                  
             ciclo += 1
+            # Pausa de seguridad entre ciclos
             time.sleep(1)
             
     except KeyboardInterrupt:
