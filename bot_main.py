@@ -30,6 +30,11 @@ def run_bot():
         
     sector_a = sectores.get("sector_a")
     sector_b = sectores.get("sector_b")
+    sector_scroll = sectores.get("sector_scroll")
+
+    if not sector_scroll:
+        print("ADVERTENCIA: No se encontró la configuración del Sector Scroll (Sector C).")
+        print("Se recomienda volver a ejecutar 'python setup_areas.py' para seleccionarlo.")
 
     print("\n[Instrucción] El bot se ejecutará en bucle.")
     print("[Instrucción] MANTÉN PRESIONADA LA TECLA 'ESC' PARA DETENER EL BOT EN CUALQUIER MOMENTO.\n")
@@ -83,8 +88,8 @@ def run_bot():
                 if intentos_scroll < 3:
                     print(f"No hay casillas nuevas en vista. Buscando botón de scroll ({intentos_scroll}/3)...")
                     
-                    # Buscar el botón de avanzar abajo
-                    pos_flecha = gui.locateCenterOnScreen(BTN_ABAJO, confidence=0.8, grayscale=True)
+                    # Buscar el botón de avanzar abajo dentro del SECTOR SCROLL
+                    pos_flecha = gui.locateCenterOnScreen(BTN_ABAJO, region=sector_scroll, confidence=0.8, grayscale=True)
                     
                     if pos_flecha:
                         print(f"Botón de scroll encontrado en {pos_flecha}. Presionando 5 veces...")

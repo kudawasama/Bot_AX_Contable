@@ -22,13 +22,12 @@ def cargar_configuracion():
         return json.load(f)
 
 
-def guardar_configuracion(sector_a, sector_b):
-    """Guarda la configuración de los sectores en un archivo JSON.
-    Las coordenadas son tuplas (left, top, width, height) compatibles con pyautogui.
-    """
+def guardar_configuracion(sector_a, sector_b, sector_scroll):
+    """Guarda la configuración de los sectores en un archivo JSON."""
     config = {
         "sector_a": sector_a,
-        "sector_b": sector_b
+        "sector_b": sector_b,
+        "sector_scroll": sector_scroll
     }
     with open(CONFIG_FILE, "w") as f:
         json.dump(config, f, indent=4)
@@ -36,3 +35,4 @@ def guardar_configuracion(sector_a, sector_b):
     print(f"Configuración guardada en {CONFIG_FILE}:")
     print(f"Sector A: {sector_a}")
     print(f"Sector B: {sector_b}")
+    print(f"Sector Scroll: {sector_scroll}")

@@ -18,11 +18,12 @@ class AreaSelector:
         self.rect = None
         self.sector_a = None
         self.sector_b = None
+        self.sector_scroll = None
         self.current_sector = "A"
 
         self.instruction_text = self.canvas.create_text(
             self.root.winfo_screenwidth() // 2, 50, 
-            text="Haz click y arrastra para seleccionar el SECTOR A (Donde están los checkboxes).", 
+            text="1. Selecciona el SECTOR A (Cuadrado de Checkboxes)", 
             fill="white", font=("Arial", 24, "bold")
         )
 
@@ -36,7 +37,9 @@ class AreaSelector:
         self.start_y = event.y
         if self.rect:
             self.canvas.delete(self.rect)
-        color = "red" if self.current_sector == "A" else "blue"
+        
+        # Colores por sector
+        color = "red" if self.current_sector == "A" else ("blue" if self.current_sector == "B" else "yellow")
         self.rect = self.canvas.create_rectangle(self.start_x, self.start_y, 1, 1, outline=color, width=3)
 
     def on_move_press(self, event):
@@ -56,11 +59,16 @@ class AreaSelector:
         if self.current_sector == "A":
             self.sector_a = area
             self.current_sector = "B"
-            self.canvas.itemconfig(self.instruction_text, text="Excelente. Ahora selecciona el SECTOR B (Donde están los botones).")
+            self.canvas.itemconfig(self.instruction_text, text="2. Selecciona el SECTOR B (Barra superior de Botones)")
             self.rect = None
         elif self.current_sector == "B":
             self.sector_b = area
-            guardar_configuracion(self.sector_a, self.sector_b)
+            self.current_sector = "C"
+            self.canvas.itemconfig(self.instruction_text, text="3. Selecciona el SECTOR SCROLL (Pequeño recuadro sobre la flecha de abajo)")
+            self.rect = None
+        elif self.current_sector == "C":
+            self.sector_scroll = area
+            guardar_configuracion(self.sector_a, self.sector_b, self.sector_scroll)
             self.root.destroy()
             print("Configuración finalizada con éxito.")
 
