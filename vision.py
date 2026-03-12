@@ -108,6 +108,12 @@ def esperar_resultado_registro(ruta_obj_exito, ruta_obj_error, sector_region, ti
         if time.time() - ultimo_mensaje > 30:
             print(f"... sigo esperando. Han pasado {int(time.time() - inicio)} segundos.")
             ultimo_mensaje = time.time()
+            # Mover el mouse 1 píxel para evitar bloqueo de pantalla por inactividad
+            try:
+                pyautogui.moveRel(1, 0)
+                pyautogui.moveRel(-1, 0)
+            except:
+                pass
             
         try:
              # Primero buscar el éxito
