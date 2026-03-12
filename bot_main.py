@@ -8,10 +8,13 @@ import pyautogui as gui
 from datetime import datetime
 
 def registrar_log(id_diario, resultado):
-    """Guarda el resultado del procesamiento en un archivo TXT."""
-    timestamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+    """Guarda el resultado del procesamiento en un archivo TXT por día."""
+    ahora = datetime.now()
+    fecha_hoy = ahora.strftime("%Y-%m-%d")
+    nombre_archivo = f"registro_{fecha_hoy}.txt"
+    timestamp = ahora.strftime("%H:%M:%S")
     linea = f"[{timestamp}] Diario: {id_diario} - Resultado: {resultado}\n"
-    with open("registro_procesamiento.txt", "a", encoding="utf-8") as f:
+    with open(nombre_archivo, "a", encoding="utf-8") as f:
         f.write(linea)
 
 # Ciclo principal de ejecución
