@@ -14,3 +14,4 @@ config_sectores.json
 # Python
 __pycache__/
 *.pyc
+logs/
