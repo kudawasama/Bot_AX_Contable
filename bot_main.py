@@ -67,7 +67,7 @@ def run_bot(log_callback=print, stop_event=None):
             
             # Paso A: Buscar casillas vacías y elegir la mejor
             intentos_scroll = 0
-            while intentos_scroll < 3:
+            while intentos_scroll < 10:
                 # Verificar parada dentro de bucles internos
                 if (stop_event and stop_event.is_set()) or (not stop_event and keyboard.is_pressed('esc')):
                     break
@@ -100,8 +100,8 @@ def run_bot(log_callback=print, stop_event=None):
                 
                 # Scroll si no hay casillas
                 intentos_scroll += 1
-                if intentos_scroll < 3:
-                    log(f"No hay casillas nuevas. Buscando botón de scroll ({intentos_scroll}/3)...")
+                if intentos_scroll < 10:
+                    log(f"No hay casillas nuevas. Buscando botón de scroll ({intentos_scroll}/10)...")
                     pos_flecha = gui.locateCenterOnScreen(BTN_ABAJO, region=sector_scroll, confidence=0.8, grayscale=True)
                     
                     if pos_flecha:
@@ -119,10 +119,10 @@ def run_bot(log_callback=print, stop_event=None):
                         gui.press('pgdn')
                         time.sleep(2)
                 else:
-                    log("Límite de intentos de scroll alcanzado.")
+                    log("Límite de intentos de scroll (10) alcanzado.")
 
             if not casilla_objetivo:
-                log("No hay más casillas para procesar. Fin del trabajo.")
+                log("No se encontraron más diarios tras 10 intentos de scroll. Fin.")
                 break
 
             log(f"==> PROCESANDO DIARIO: {id_actual}")
@@ -135,7 +135,7 @@ def run_bot(log_callback=print, stop_event=None):
             encontrado_menu = buscar_y_clickear(
                 ruta_imagen=BTN_MENU, 
                 sector_region=sector_b,
-                timeout=12
+                timeout=30
             )
 
             if not encontrado_menu:
