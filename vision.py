@@ -13,10 +13,10 @@ pyautogui.FAILSAFE = True
 # PAUSE: Tiempo de espera (en segundos) después de CADA comando de pyautogui (click, press, etc.)
 pyautogui.PAUSE = 0.3 
 
-def buscar_y_clickear(ruta_imagen, sector_region=None, confidencialidad=0.9, timeout=10, mover_hacia_abajo=False, wait_only=False):
+def buscar_y_clickear(ruta_imagen, sector_region=None, confidencialidad=0.9, timeout=10, mover_hacia_abajo=False, wait_only=False, stop_event=None):
     """
-    Busca una imagen en la pantalla (opcionalmente dentro de una región).
-    Retorna True si la encontró y (opcionalmente) le hizo click, False si se acabó el tiempo.
+    Busca una imagen y clickea. Retorna True si la encontró.
+    stop_event: Si se activa, termina la búsqueda inmediatamente.
     """
     if not os.path.exists(ruta_imagen):
         print(f"ERROR: No se encuentra la imagen: {ruta_imagen}")
@@ -25,6 +25,9 @@ def buscar_y_clickear(ruta_imagen, sector_region=None, confidencialidad=0.9, tim
     inicio = time.time()
     
     while time.time() - inicio < timeout:
+        if stop_event and stop_event.is_set():
+            return False
+            
         try:
             # Buscar en pantalla completa o en una región específica
             ubicacion = pyautogui.locateCenterOnScreen(
@@ -68,14 +71,17 @@ def buscar_y_clickear(ruta_imagen, sector_region=None, confidencialidad=0.9, tim
     print(f"Timeout: No se pudo encontrar {ruta_imagen} en {timeout} segundos.")
     return False
 
-def buscar_estado_checkbox(ruta_obj_inicial, ruta_obj_final, sector_region, timeout=30):
+def buscar_estado_checkbox(ruta_obj_inicial, ruta_obj_final, sector_region, timeout=30, stop_event=None):
     """
-    Espera hasta que el objeto en el Sector A cambie al estado final especificado.
+    Espera hasta que el objeto en el Sector A cambie al estado final.
     """
     inicio = time.time()
     print(f"Esperando a que aparezca {ruta_obj_final}...")
     
     while time.time() - inicio < timeout:
+        if stop_event and stop_event.is_set():
+            return False
+            
         try:
              # Buscar la imagen objetivo
              ubicacion = pyautogui.locateCenterOnScreen(
@@ -95,16 +101,19 @@ def buscar_estado_checkbox(ruta_obj_inicial, ruta_obj_final, sector_region, time
     print("Timeout esperando cambio de estado en el checkbox.")
     return False
 
-def esperar_resultado_registro(ruta_obj_exito, ruta_obj_error, sector_region, timeout=300):
+def esperar_resultado_registro(ruta_obj_exito, ruta_obj_error, sector_region, timeout=300, stop_event=None):
     """
-    Espera hasta 5 minutos (configurable) verificando si aparece el check de éxito o el cartel de error.
-    Retorna 'exito' si se registra bien, 'error' si salta un error, o None por timeout.
+    Espera hasta que aparezca el check de éxito o el cartel de error.
+    stop_event: Atiende la parada inmediata de la UI.
     """
     inicio = time.time()
     print(f"Esperando resultado (hasta {timeout/60:.1f} minutos)...")
     
     ultimo_mensaje = inicio
     while time.time() - inicio < timeout:
+        if stop_event and stop_event.is_set():
+            return 'cancelado'
+            
         # Imprimir progreso cada 30 segundos
         if time.time() - ultimo_mensaje > 30:
             print(f"... sigo esperando. Han pasado {int(time.time() - inicio)} segundos.")

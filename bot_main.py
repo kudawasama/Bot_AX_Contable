@@ -1,7 +1,7 @@
 import sys
 import time
 import pyautogui
-from config import cargar_configuracion, CHK_VACIO, BTN_MENU, BTN_CONFIRM, CHK_MARCADO, IMG_ERROR, BTN_ABAJO
+from config import cargar_configuracion, CHK_VACIO, BTN_MENU, BTN_CONFIRM, CHK_MARCADO, IMG_ERROR, BTN_ABAJO, IMG_FORMULARIOS
 from vision import buscar_y_clickear, buscar_estado_checkbox, esperar_resultado_registro, leer_id_diario, capturar_pantalla_error
 import keyboard
 import pyautogui as gui
@@ -55,6 +55,15 @@ def run_bot(log_callback=print, stop_event=None):
     
     try:
         while True:
+            # Requisito de seguridad: Cancelar si hay formularios abiertos en medio
+            try:
+                if gui.locateOnScreen(IMG_FORMULARIOS, confidence=0.8, grayscale=True):
+                    log("!!! SEGURIDAD: Se detectó 'Formularios Abiertos'. Deteniendo bot.")
+                    capturar_pantalla_error("formularios_abiertos_stop")
+                    break
+            except:
+                pass
+
             # Verificación de parada
             if stop_event and stop_event.is_set():
                 log("Bot detenido por la interfaz.")
@@ -135,10 +144,12 @@ def run_bot(log_callback=print, stop_event=None):
             encontrado_menu = buscar_y_clickear(
                 ruta_imagen=BTN_MENU, 
                 sector_region=sector_b,
-                timeout=30
+                timeout=30,
+                stop_event=stop_event
             )
 
             if not encontrado_menu:
+                if stop_event and stop_event.is_set(): break
                 log(f"Error: No se encontró el botón de registrar para {id_actual}.")
                 capturar_pantalla_error(id_actual)
                 break
@@ -148,10 +159,12 @@ def run_bot(log_callback=print, stop_event=None):
             encontrado_confirm = buscar_y_clickear(
                 ruta_imagen=BTN_CONFIRM, 
                 timeout=20,
-                confidencialidad=0.8
+                confidencialidad=0.8,
+                stop_event=stop_event
             )
             
             if not encontrado_confirm:
+                 if stop_event and stop_event.is_set(): break
                  log(f"Error: No se encontró la confirmación para {id_actual}.")
                  capturar_pantalla_error(id_actual)
                  break
@@ -165,13 +178,17 @@ def run_bot(log_callback=print, stop_event=None):
                 ruta_obj_exito=CHK_MARCADO,
                 ruta_obj_error=IMG_ERROR,
                 sector_region=region_especifica_checkbox,
-                timeout=3600
+                timeout=3600,
+                stop_event=stop_event
             )
             
             if resultado == 'exito':
                 log(f"-> Registro de {id_actual} completado.")
                 registrar_log(id_actual, "EXITOSO")
-                time.sleep(1)
+                time.sleep(0.1)
+            elif resultado == 'cancelado':
+                log("Registro cancelado por el usuario.")
+                break
             elif resultado == 'error':
                  log(f"Se detectó un Error en {id_actual}. A la lista negra.")
                  capturar_pantalla_error(id_actual)
@@ -185,7 +202,7 @@ def run_bot(log_callback=print, stop_event=None):
                  break
                  
             ciclo += 1
-            time.sleep(1)
+            time.sleep(0.1)
             
     except KeyboardInterrupt:
         log("\nBot detenido manualmente.")

@@ -12,6 +12,7 @@ BTN_CONFIRM = os.path.join(PATRONES_DIR, "btn_registrar_confirm.png")
 CHK_MARCADO = os.path.join(PATRONES_DIR, "check_usuario_marcado.png")
 IMG_ERROR = os.path.join(PATRONES_DIR, "Error_Registro.png")
 BTN_ABAJO = os.path.join(PATRONES_DIR, "Avanzar_Abajo.png")
+IMG_FORMULARIOS = os.path.join(PATRONES_DIR, "Formularios_Abiertos.png")
 
 
 def cargar_configuracion():
