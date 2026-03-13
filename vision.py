@@ -3,6 +3,7 @@ import time
 import pyautogui
 import pytesseract
 from PIL import Image
+from datetime import datetime
 
 # Configuración de Tesseract OCR
 pytesseract.pytesseract.tesseract_cmd = r'C:\Users\jose.cespedes\AppData\Local\Programs\Tesseract-OCR\tesseract.exe'
@@ -174,3 +175,24 @@ def leer_id_diario(coord_checkbox):
         print(f"Error en OCR: {e}")
         return "ERROR_LECTURA"
 
+def capturar_pantalla_error(id_diario="global"):
+    """
+    Captura una imagen de la pantalla completa y la guarda en la carpeta de capturas.
+    """
+    try:
+        carpeta_capturas = os.path.join("logs", "capturas")
+        if not os.path.exists(carpeta_capturas):
+            os.makedirs(carpeta_capturas)
+            
+        ahora = datetime.now()
+        timestamp = ahora.strftime("%Y-%m-%d_%H%M%S")
+        nombre_archivo = f"error_{id_diario}_{timestamp}.png"
+        ruta_completa = os.path.join(carpeta_capturas, nombre_archivo)
+        
+        screenshot = pyautogui.screenshot()
+        screenshot.save(ruta_completa)
+        print(f"-> [DIAGNÓSTICO] Captura de pantalla guardada en: {ruta_completa}")
+        return ruta_completa
+    except Exception as e:
+        print(f"No se pudo realizar la captura de pantalla: {e}")
+        return None
