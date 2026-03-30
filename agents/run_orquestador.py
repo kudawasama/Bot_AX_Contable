@@ -87,7 +87,7 @@ def run_tests_and_lint():
 
 
 def orchestrate(task, dry_run=True):
-    subagents = discover_subagents()
+    discover_subagents()
     plan = []
 
     # Step 1: Explore
