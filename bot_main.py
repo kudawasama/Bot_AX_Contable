@@ -1,8 +1,6 @@
-import sys
 import time
-import pyautogui
 from config import cargar_configuracion, CHK_VACIO, BTN_MENU, BTN_CONFIRM, CHK_MARCADO, IMG_ERROR, BTN_ABAJO, IMG_FORMULARIOS
-from vision import buscar_y_clickear, buscar_estado_checkbox, esperar_resultado_registro, leer_id_diario, capturar_pantalla_error
+from vision import buscar_y_clickear, esperar_resultado_registro, leer_id_diario, capturar_pantalla_error
 import keyboard
 import pyautogui as gui
 from datetime import datetime
@@ -114,7 +112,7 @@ def run_bot(log_callback=print, stop_event=None):
                     pos_flecha = gui.locateCenterOnScreen(BTN_ABAJO, region=sector_scroll, confidence=0.8, grayscale=True)
                     
                     if pos_flecha:
-                        log(f"Botón de scroll encontrado. Presionando 5 veces...")
+                        log("Botón de scroll encontrado. Presionando 5 veces...")
                         gui.moveTo(pos_flecha.x, pos_flecha.y, duration=0.2)
                         for _ in range(5):
                             gui.click()

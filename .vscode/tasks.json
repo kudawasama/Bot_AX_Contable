@@ -1,0 +1,13 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "Run Orquestador",
+      "type": "shell",
+      "command": "${config:python.pythonPath}",
+      "args": ["-u", "${workspaceFolder}/agents/run_orquestador.py", "--task", "Invocado desde VSCode", "--dry-run"],
+      "presentation": { "reveal": "always", "panel": "shared" },
+      "problemMatcher": []
+    }
+  ]
+}

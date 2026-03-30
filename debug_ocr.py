@@ -1,6 +1,4 @@
 import pyautogui
-import time
-import os
 from config import cargar_configuracion, CHK_VACIO
 import pyautogui as gui
 

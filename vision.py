@@ -2,18 +2,15 @@ import os
 import time
 import pyautogui
 import pytesseract
-from PIL import Image
 from datetime import datetime
 
 # Configuración de Tesseract OCR
 pytesseract.pytesseract.tesseract_cmd = r'C:\Users\jose.cespedes\AppData\Local\Programs\Tesseract-OCR\tesseract.exe'
 
-# Configuraciones de seguridad de pyautogui
-pyautogui.FAILSAFE = True
-# PAUSE: Tiempo de espera (en segundos) después de CADA comando de pyautogui (click, press, etc.)
-pyautogui.PAUSE = 0.3 
+# PAUSE: Tiempo de espera mínimo después de comandos de pyautogui
+pyautogui.PAUSE = 0.1 
 
-def buscar_y_clickear(ruta_imagen, sector_region=None, confidencialidad=0.9, timeout=10, mover_hacia_abajo=False, wait_only=False, stop_event=None):
+def buscar_y_clickear(ruta_imagen, sector_region=None, confidencialidad=0.8, timeout=10, mover_hacia_abajo=False, wait_only=False, stop_event=None):
     """
     Busca una imagen y clickea. Retorna True si la encontró.
     stop_event: Si se activa, termina la búsqueda inmediatamente.
@@ -29,16 +26,34 @@ def buscar_y_clickear(ruta_imagen, sector_region=None, confidencialidad=0.9, tim
             return False
             
         try:
-            # Buscar en pantalla completa o en una región específica
-            ubicacion = pyautogui.locateCenterOnScreen(
-                ruta_imagen, 
-                region=sector_region, 
-                confidence=confidencialidad,
-                grayscale=True
-            )
+            # Primero intentar en la región específica si existe
+            ubicacion = None
+            if sector_region:
+                try:
+                    ubicacion = pyautogui.locateCenterOnScreen(
+                        ruta_imagen, 
+                        region=sector_region, 
+                        confidence=confidencialidad,
+                        grayscale=True
+                    )
+                except pyautogui.ImageNotFoundException:
+                    pass
             
+            # Si no se encontró en la región o no había región, intentar pantalla completa
+            if not ubicacion:
+                try:
+                    ubicacion = pyautogui.locateCenterOnScreen(
+                        ruta_imagen, 
+                        confidence=max(0.7, confidencialidad - 0.1), # Reducir un poco más la confianza para el fallback
+                        grayscale=True
+                    )
+                    if ubicacion and sector_region:
+                        print(f"AVISO: {ruta_imagen} detectado FUERA del sector. Actualizar coordenadas.")
+                except pyautogui.ImageNotFoundException:
+                    pass
+
             if ubicacion:
-                # Asegurar que las coordenadas sean tipos int nativos de Python y no np.int64
+                # Asegurar que las coordenadas sean tipos int nativos
                 ubicacion = (int(ubicacion[0]), int(ubicacion[1]))
                 # Si solo queremos esperar a que aparezca o cambie de estado visual
                 if wait_only:
@@ -47,9 +62,8 @@ def buscar_y_clickear(ruta_imagen, sector_region=None, confidencialidad=0.9, tim
                 
                 print(f"Click en: {ruta_imagen} en {ubicacion}")
                 
-                # Mover el mouse a la ubicación y hacer click
-                # duration: Segundos que tarda el puntero en desplazarse hasta el objetivo
-                pyautogui.moveTo(ubicacion[0], ubicacion[1], duration=0.1)
+                # Mover el mouse a la ubicación de forma instantánea
+                pyautogui.moveTo(ubicacion[0], ubicacion[1])
                 pyautogui.click()
                 
                 if mover_hacia_abajo:
@@ -87,7 +101,7 @@ def buscar_estado_checkbox(ruta_obj_inicial, ruta_obj_final, sector_region, time
              ubicacion = pyautogui.locateCenterOnScreen(
                 ruta_obj_final, 
                 region=sector_region, 
-                confidence=0.9,
+                confidence=0.8,
                 grayscale=True
              )
              if ubicacion:
@@ -130,7 +144,7 @@ def esperar_resultado_registro(ruta_obj_exito, ruta_obj_error, sector_region, ti
              ubi_exito = pyautogui.locateCenterOnScreen(
                 ruta_obj_exito, 
                 region=sector_region, 
-                confidence=0.9,
+                confidence=0.8,
                 grayscale=True
              )
              if ubi_exito:
