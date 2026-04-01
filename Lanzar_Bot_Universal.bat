@@ -116,17 +116,19 @@ exit /b 0
 REM ---------------------------------------------------------------------------
 :DetectPython
 if exist "python_cmd.local.txt" (
-  set /p PY=<python_cmd.local.txt
+  for /f "usebackq delims=" %%P in ("python_cmd.local.txt") do set "PY=%%P"
   set "PY=!PY:"=!"
-  !PY! -c "import sys; exit(0 if sys.version_info[:2]>=(3,10) else 1)" >nul 2>&1
-  if !errorlevel! neq 0 (
-    echo ERROR: python_cmd.local.txt no es un Python 3.10+ valido.
-    exit /b 1
+  if exist "!PY!" (
+    "!PY!" -c "import sys; exit(0 if sys.version_info[:2]>=(3,10) else 1)" >nul 2>&1
+    if !errorlevel! neq 0 (
+      echo ERROR: python_cmd.local.txt no es un Python 3.10+ valido.
+      exit /b 1
+    )
+    exit /b 0
   )
-  exit /b 0
 )
 if defined PY (
-  !PY! -c "import sys; exit(0 if sys.version_info[:2]>=(3,10) else 1)" >nul 2>&1
+  "!PY!" -c "import sys; exit(0 if sys.version_info[:2]>=(3,10) else 1)" >nul 2>&1
   if !errorlevel! equ 0 exit /b 0
   set "PY="
 )

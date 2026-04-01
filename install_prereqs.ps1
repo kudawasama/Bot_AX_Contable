@@ -31,6 +31,44 @@ function Update-EnvPath {
     $env:Path = "$m;$u"
 }
 
+function Resolve-PythonPath {
+    param([string]$Cmd)
+    $Cmd = $Cmd.Trim()
+    try {
+        if ($Cmd -match '^\s*py\s+-') {
+            $out = & py --list-paths 2>$null
+            if ($out) {
+                foreach ($ln in $out) {
+                    $ln = $ln.Trim()
+                    if ($ln -match '\s+-3\.1[0-9]' -and $ln -match '^([A-Z]:\\.+python\.exe)') {
+                        $p = $Matches[1]
+                        if (Test-Path $p) { return $p }
+                    }
+                }
+            }
+        }
+        $out = & $Cmd -c "import sys; print(sys.executable)" 2>$null
+        if ($out -and (Test-Path $out.Trim())) { return $out.Trim() }
+    } catch {}
+    return $null
+}
+
+function Save-PythonLocal {
+    param([string]$Cmd)
+    $resolved = Resolve-PythonPath $Cmd
+    if (-not $resolved) { return $false }
+    $f = Join-Path $ScriptDir 'python_cmd.local.txt'
+    Set-Content -Path $f -Value $resolved -Encoding UTF8 -Force
+    return $true
+}
+
+function Save-TesseractLocal {
+    param([string]$Path)
+    $f = Join-Path $ScriptDir 'tesseract_path.local.txt'
+    Set-Content -Path $f -Value $Path -Encoding UTF8 -Force
+    return $true
+}
+
 function Test-PythonOk {
     param([Parameter(Mandatory)][string]$Invoke)
     $Invoke = $Invoke.Trim()
@@ -224,6 +262,9 @@ if (-not $SkipPython) {
         }
     }
     Write-Log "Python OK: $py"
+    if (-not (Test-Path (Join-Path $ScriptDir 'python_cmd.local.txt'))) {
+        Save-PythonLocal $py | Out-Null
+    }
 }
 
 if (-not $SkipTesseract) {
@@ -247,6 +288,9 @@ if (-not $SkipTesseract) {
         }
     }
     Write-Log "Tesseract OK: $ts"
+    if (-not (Test-Path (Join-Path $ScriptDir 'tesseract_path.local.txt'))) {
+        Save-TesseractLocal $ts | Out-Null
+    }
 }
 
 Write-Log 'Prerrequisitos listos.'
