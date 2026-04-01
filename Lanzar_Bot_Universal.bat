@@ -1,9 +1,12 @@
 @echo off
+setlocal EnableDelayedExpansion
 title Bot AX Contable - Lanzador Universal
 color 0A
 
-REM Este script no depende de rutas específicas
-REM Se ejecutará desde donde esté el archivo .bat
+REM Un solo doble clic: PowerShell instala Python + Tesseract si faltan (winget o descarga),
+REM luego pip instala Pillow, OpenCV, etc. Requiere conexion a Internet la primera vez.
+REM Desactivar instalacion automatica del sistema: set BOT_AX_NO_AUTO=1
+REM (o BOT_AX_NO_WINGET=1 por compatibilidad)
 
 echo.
 echo ===============================================
@@ -11,94 +14,86 @@ echo   Bot AX Contable - Iniciador Universal
 echo ===============================================
 echo.
 
-REM Obtener la ruta actual del script
 cd /d "%~dp0"
 
 echo Directorio: %cd%
 echo.
 
-REM Verificar si Python está instalado
-python --version >nul 2>&1
-if %errorlevel% neq 0 (
-    echo ERROR: Python no está instalado o no está en PATH
-    echo Descarga Python desde: https://www.python.org/downloads/
-    echo IMPORTANTE: Marca la opción "Add Python to PATH" durante la instalación
+if not defined BOT_AX_NO_AUTO if not defined BOT_AX_NO_WINGET (
+  echo [1/3] Comprobando Python y Tesseract ^(puede tardar y pedir permisos^)...
+  powershell -NoProfile -ExecutionPolicy Bypass -File "%~dp0install_prereqs.ps1"
+  if errorlevel 1 (
+    echo.
+    echo ERROR: No se pudieron instalar o encontrar Python 3.10+ y/o Tesseract.
+    echo Revisa logs\install_prereqs.log — o instala manualmente y vuelve a ejecutar.
+    echo.
     pause
     exit /b 1
+  )
+  echo.
 )
 
-REM Verificar si existen los archivos necesarios
+set "PY="
+call :DetectPython
+if errorlevel 1 (
+  pause
+  exit /b 1
+)
+if not defined PY (
+  echo ERROR: No se encontro Python 3.10+ despues del instalador automatico.
+  echo Revisa install_prereqs.ps1 y logs\install_prereqs.log
+  pause
+  exit /b 1
+)
+
+echo [2/3] Python: !PY!
+!PY! --version
+
 if not exist "app_gui.py" (
-    echo ERROR: app_gui.py no encontrado en %cd%
-    pause
-    exit /b 1
+  echo ERROR: app_gui.py no encontrado en %cd%
+  pause
+  exit /b 1
 )
 
 if not exist "config_sectores.json" (
-    echo ADVERTENCIA: config_sectores.json no encontrado
-    echo Se creará al configurar las áreas
+  echo ADVERTENCIA: config_sectores.json no encontrado — se creara al configurar areas
 )
 
-echo Verificando dependencias de Python...
-pip show pyautogui >nul 2>&1
-if %errorlevel% neq 0 (
-    echo.
-    echo Instalando dependencias necesarias...
-    echo Esto puede tardar algunos minutos...
-    echo.
-    pip install -r requirements.txt --verbose
-    if %errorlevel% neq 0 (
-        echo.
-        echo ===============================================
-        echo ERROR: No se pudieron instalar las dependencias
-        echo ===============================================
-        echo.
-        echo Por favor, intenta ejecutar manualmente:
-        echo   python -m pip install --upgrade pip
-        echo   python -m pip install -r requirements.txt
-        echo.
-        echo Si el error persiste, copia el mensaje de error arriba
-        echo y comparte con soporte.
-        echo.
-        pause
-        exit /b 1
-    )
-)
-
-REM Verificar Tesseract-OCR
-python -c "import pytesseract; pytesseract.pytesseract.pytesseract_cmd" >nul 2>&1
 echo.
-echo Verificando Tesseract-OCR...
-
-REM Intentar encontrar Tesseract en rutas comunes
-set TESSERACT_FOUND=0
-
-REM Buscar en Program Files
-if exist "C:\Program Files\Tesseract-OCR\tesseract.exe" (
-    set TESSERACT_FOUND=1
-    set TESSERACT_PATH=C:\Program Files\Tesseract-OCR\tesseract.exe
-)
-
-REM Buscar en Program Files (x86) para sistemas 32-bit
-if exist "C:\Program Files (x86)\Tesseract-OCR\tesseract.exe" (
-    set TESSERACT_FOUND=1
-    set TESSERACT_PATH=C:\Program Files (x86)\Tesseract-OCR\tesseract.exe
-)
-
-if %TESSERACT_FOUND% equ 0 (
-    echo.
-    echo ADVERTENCIA: Tesseract-OCR no está instalado o no se encontró
-    echo.
-    echo Necesitas descargar e instalar Tesseract-OCR:
-    echo 1. Descargar desde: https://github.com/UB-Mannheim/tesseract/wiki
-    echo 2. Ejecutar el instalador (tesseract-ocr-w64-setup-v5.x.exe)
-    echo 3. Aceptar la ruta de instalación por defecto
-    echo 4. Ejecutar este script nuevamente
-    echo.
+echo [3/3] Paquetes pip ^(Pillow, OpenCV, pyautogui...^)...
+!PY! -m pip show pyautogui >nul 2>&1
+if !errorlevel! neq 0 (
+  echo Instalando dependencias ^(primera vez o entorno nuevo^)...
+  !PY! -m pip install --upgrade pip setuptools wheel
+  !PY! -m pip install -r requirements.txt
+  if !errorlevel! neq 0 (
+    echo ERROR: pip install fallo. Ejecuta manualmente:
+    echo   !PY! -m pip install -r requirements.txt
     pause
     exit /b 1
-) else (
-    echo Tesseract encontrado en: %TESSERACT_PATH%
+  )
+)
+
+echo Verificando Tesseract desde Python...
+!PY! -c "from tesseract_util import find_tesseract_executable; import sys; sys.exit(0 if find_tesseract_executable() else 1)" >nul 2>&1
+if !errorlevel! neq 0 (
+  echo ERROR: tesseract.exe no localizable por el bot.
+  echo Crea tesseract_path.local.txt con la ruta ^(ver .example^) o reinstala Tesseract.
+  pause
+  exit /b 1
+)
+
+for /f "delims=" %%i in ('!PY! -c "from tesseract_util import find_tesseract_executable; print(find_tesseract_executable() or '')"') do set TESSERACT_PATH=%%i
+echo Tesseract: %TESSERACT_PATH%
+
+!PY! -c "import cv2" >nul 2>&1
+if !errorlevel! neq 0 (
+  echo Instalando OpenCV...
+  !PY! -m pip install -r requirements.txt
+  if !errorlevel! neq 0 (
+    pause
+    exit /b 1
+  )
 )
 
 echo.
@@ -107,21 +102,53 @@ echo   Iniciando Bot AX Contable...
 echo ===============================================
 echo.
 
-REM Ejecutar el bot y mostrar cualquier error
-python app_gui.py
+!PY! app_gui.py
 
-REM Si hay error, mostrar y no cerrar
-if %errorlevel% neq 0 (
-    echo.
-    echo ===============================================
-    echo ERROR AL EJECUTAR EL BOT
-    echo ===============================================
-    echo.
-    echo Si ves errores de importación arriba, intenta:
-    echo   python -m pip install --upgrade pip
-    echo   python -m pip install -r requirements.txt
-    echo.
-    pause
+if !errorlevel! neq 0 (
+  echo.
+  echo ERROR AL EJECUTAR EL BOT. Revisa el mensaje arriba.
+  echo   !PY! -m pip install -r requirements.txt
+  pause
 )
 
+exit /b 0
+
+REM ---------------------------------------------------------------------------
+:DetectPython
+if exist "python_cmd.local.txt" (
+  set /p PY=<python_cmd.local.txt
+  set "PY=!PY:"=!"
+  !PY! -c "import sys; exit(0 if sys.version_info[:2]>=(3,10) else 1)" >nul 2>&1
+  if !errorlevel! neq 0 (
+    echo ERROR: python_cmd.local.txt no es un Python 3.10+ valido.
+    exit /b 1
+  )
+  exit /b 0
+)
+if defined PY (
+  !PY! -c "import sys; exit(0 if sys.version_info[:2]>=(3,10) else 1)" >nul 2>&1
+  if !errorlevel! equ 0 exit /b 0
+  set "PY="
+)
+python -c "import sys; exit(0 if sys.version_info[:2]>=(3,10) else 1)" >nul 2>&1
+if !errorlevel! equ 0 set "PY=python"
+if defined PY exit /b 0
+for %%V in (12 11 10) do (
+  if not defined PY (
+    py -3.%%V -c "import sys; exit(0 if sys.version_info[:2]>=(3,10) else 1)" >nul 2>&1
+    if !errorlevel! equ 0 set "PY=py -3.%%V"
+  )
+)
+if not defined PY (
+  if exist "%LocalAppData%\Programs\Python\Python312\python.exe" (
+    "%LocalAppData%\Programs\Python\Python312\python.exe" -c "import sys; exit(0 if sys.version_info[:2]>=(3,10) else 1)" >nul 2>&1
+    if !errorlevel! equ 0 set "PY=%LocalAppData%\Programs\Python\Python312\python.exe"
+  )
+)
+if not defined PY (
+  if exist "%LocalAppData%\Programs\Python\Python311\python.exe" (
+    "%LocalAppData%\Programs\Python\Python311\python.exe" -c "import sys; exit(0 if sys.version_info[:2]>=(3,10) else 1)" >nul 2>&1
+    if !errorlevel! equ 0 set "PY=%LocalAppData%\Programs\Python\Python311\python.exe"
+  )
+)
 exit /b 0

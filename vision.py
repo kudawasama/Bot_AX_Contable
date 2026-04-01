@@ -5,20 +5,15 @@ import pytesseract
 from PIL import Image
 from datetime import datetime
 
-# Configuración de Tesseract OCR - Búsqueda automática
+from tesseract_util import find_tesseract_executable
+
+# Configuración de Tesseract OCR - Búsqueda automática (PATH, TESSERACT_CMD, rutas típicas)
 def _configurar_tesseract():
-    """Busca y configura automáticamente la ruta de Tesseract-OCR"""
-    rutas_comunes = [
-        r'C:\Program Files\Tesseract-OCR\tesseract.exe',
-        r'C:\Program Files (x86)\Tesseract-OCR\tesseract.exe',
-    ]
-    
-    for ruta in rutas_comunes:
-        if os.path.exists(ruta):
-            pytesseract.pytesseract.tesseract_cmd = ruta
-            print(f"[INFO] Tesseract-OCR configurado en: {ruta}")
-            return True
-    
+    ruta = find_tesseract_executable()
+    if ruta:
+        pytesseract.pytesseract.tesseract_cmd = ruta
+        print(f"[INFO] Tesseract-OCR configurado en: {ruta}")
+        return True
     print("[ADVERTENCIA] No se encontró Tesseract-OCR. Algunas funciones de OCR pueden no funcionar.")
     return False
 

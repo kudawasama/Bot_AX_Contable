@@ -1,0 +1,4 @@
+# Copia como python_cmd.local.txt (sin .example) solo si "python" no funciona en la consola.
+# Una sola línea: ruta completa al python.exe que te funcione (Python 3.10 a 3.12 recomendado).
+# Ejemplo:
+# C:\Users\TU_USUARIO\AppData\Local\Programs\Python\Python311\python.exe

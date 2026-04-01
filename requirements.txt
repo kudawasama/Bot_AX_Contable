@@ -1,5 +1,7 @@
-pyautogui==0.9.53
-pyscreeze==0.1.30
-keyboard==0.13.5
-Pillow==10.1.0
-pytesseract==0.3.10
+# Usar Python 3.10, 3.11 o 3.12 (64-bit) desde python.org — evita mezclar varias versiones.
+pyautogui>=0.9.53,<0.10
+pyscreeze>=0.1.30
+keyboard>=0.13.5
+Pillow>=10.2.0,<12
+pytesseract>=0.3.10,<0.4
+opencv-python-headless>=4.8.0,<5

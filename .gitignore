@@ -10,6 +10,8 @@ debug_ocr_pos*.png
 
 # Archivos de configuración locales
 config_sectores.json
+tesseract_path.local.txt
+python_cmd.local.txt
 
 # Python
 __pycache__/

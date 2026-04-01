@@ -7,9 +7,9 @@ Verifica e instala todas las dependencias necesarias
 import sys
 import os
 import subprocess
-import platform
-import shutil
 from pathlib import Path
+
+from tesseract_util import find_tesseract_executable
 
 def print_header(text):
     """Imprime un encabezado formateado"""
@@ -18,40 +18,48 @@ def print_header(text):
     print("="*50 + "\n")
 
 def check_python_version():
-    """Verifica la versión de Python"""
+    """Verifica la versión de Python (recomendado 3.10–3.12 en Windows)."""
     print_header("Verificando Python")
     version = sys.version_info
     print(f"Versión Python: {version.major}.{version.minor}.{version.micro}")
-    
-    if version.major < 3 or (version.major == 3 and version.minor < 8):
-        print("❌ ERROR: Se requiere Python 3.8 o superior")
+    print(f"Ejecutable: {sys.executable}")
+
+    if version.major < 3 or version.minor < 10:
+        print("❌ ERROR: Se requiere Python 3.10 o superior")
+        print("   Descarga 3.11 o 3.12 x64: https://www.python.org/downloads/windows/")
+        print('   Durante la instalación marca "Add python.exe to PATH".')
+        print("   Si ya tienes varias versiones, usa el lanzador: py -3.11 setup_env.py")
+        print("   O crea python_cmd.local.txt con una línea: ruta completa a python.exe")
         return False
-    
-    print("✅ Python compatible")
+
+    if version.minor >= 13:
+        print("⚠️  Python 3.13+ puede dar problemas con algún paquete en Windows.")
+        print("   Si algo falla, instala Python 3.11 o 3.12 y ejecuta de nuevo.")
+        print("✅ Continuando comprobaciones…")
+        return True
+
+    print("✅ Python en rango recomendado (3.10 – 3.12)")
     return True
 
 def check_tesseract():
     """Verifica si Tesseract-OCR está instalado"""
     print_header("Verificando Tesseract-OCR")
-    
-    # Rutas comunes donde se instala Tesseract
-    common_paths = [
-        r"C:\Program Files\Tesseract-OCR\tesseract.exe",
-        r"C:\Program Files (x86)\Tesseract-OCR\tesseract.exe",
-    ]
-    
-    for path in common_paths:
-        if os.path.exists(path):
-            print(f"✅ Tesseract encontrado en: {path}")
-            return True
-    
+
+    path = find_tesseract_executable()
+    if path:
+        print(f"✅ Tesseract encontrado en: {path}")
+        return True
+
     print("❌ Tesseract-OCR no encontrado")
     print("\nInstalación recomendada:")
     print("1. Descarga desde: https://github.com/UB-Mannheim/tesseract/wiki")
     print("2. Ejecuta: tesseract-ocr-w64-setup-v5.x.exe")
-    print("3. Instala en la ruta por defecto: C:\\Program Files\\Tesseract-OCR\\")
-    print("4. Ejecuta este script nuevamente")
-    
+    print("3. Instala en la ruta por defecto o marca la opción de añadir al PATH del sistema")
+    print("4. Crea tesseract_path.local.txt (copia tesseract_path.local.txt.example)")
+    print("   con una línea: ruta completa a tesseract.exe")
+    print("5. O define TESSERACT_CMD con esa ruta")
+    print("6. Ejecuta este script nuevamente")
+
     return False
 
 def install_requirements():
@@ -64,15 +72,20 @@ def install_requirements():
         return False
     
     try:
-        print("Instalando paquetes...")
+        print("Actualizando pip, setuptools y wheel…")
         subprocess.check_call(
-            [sys.executable, "-m", "pip", "install", "-r", req_file],
-            stdout=subprocess.PIPE
+            [sys.executable, "-m", "pip", "install", "--upgrade", "pip", "setuptools", "wheel"]
         )
+        print("Instalando paquetes desde requirements.txt…")
+        subprocess.check_call([sys.executable, "-m", "pip", "install", "-r", req_file])
         print("✅ Dependencias instaladas correctamente")
         return True
     except subprocess.CalledProcessError as e:
         print(f"❌ ERROR al instalar dependencias: {e}")
+        print("   Revisa el mensaje de pip arriba. En Windows suele ayudar:")
+        print("   - Ejecutar desde la carpeta del proyecto")
+        print("   - python -m pip install --upgrade pip")
+        print("   - python -m pip install -r requirements.txt")
         return False
 
 def check_folders():
@@ -123,7 +136,8 @@ def test_imports():
         "pyautogui": "Automatización",
         "keyboard": "Input del teclado",
         "PIL": "Procesamiento de imágenes",
-        "pytesseract": "Reconocimiento OCR"
+        "pytesseract": "Reconocimiento OCR",
+        "cv2": "OpenCV (búsqueda de imágenes con confidence)",
     }
     
     all_ok = True

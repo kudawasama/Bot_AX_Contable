@@ -1,0 +1,5 @@
+# Copia este archivo como tesseract_path.local.txt (sin .example)
+# En la primera línea escribe la ruta completa a tesseract.exe.
+# Ejemplos (elige la que corresponda a tu PC):
+# D:\Apps\Tesseract-OCR\tesseract.exe
+# C:\Usuarios\TU_USUARIO\AppData\Local\Programs\Tesseract-OCR\tesseract.exe
