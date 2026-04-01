@@ -359,14 +359,55 @@ if (-not $SkipTesseract) {
             }
         }
         if (-not $ts) {
-            Write-Log 'ERROR: No se encontro tesseract.exe. Usa tesseract_path.local.txt o instala manual.'
-            exit 1
+            Write-Log 'Busqueda exhaustiva en el sistema...'
+            $searchDirs = @(
+                'C:\Program Files\Tesseract-OCR',
+                'C:\Program Files (x86)\Tesseract-OCR',
+                "$env:LOCALAPPDATA\Tesseract-OCR",
+                "$env:ProgramFiles\Tesseract-OCR",
+                "${env:ProgramFiles(x86)}\Tesseract-OCR"
+            )
+            foreach ($dir in $searchDirs) {
+                if (Test-Path $dir) {
+                    $found = Get-ChildItem -Path $dir -Filter 'tesseract.exe' -Recurse -ErrorAction SilentlyContinue | Select-Object -First 1
+                    if ($found) {
+                        $ts = $found.FullName
+                        break
+                    }
+                }
+            }
+        }
+        if (-not $ts) {
+            Write-Log ''
+            Write-Log '============================================================'
+            Write-Log '  No se pudo detectar Tesseract automaticamente.'
+            Write-Log '  Instala Tesseract manualmente y luego ingresa la ruta'
+            Write-Log '  del ejecutable tesseract.exe cuando se te solicite.'
+            Write-Log '============================================================'
+            Write-Log ''
+            while (-not $ts) {
+                $inputPath = Read-Host 'Ingresa la ruta completa de tesseract.exe (o "salir" para cancelar)'
+                $inputPath = $inputPath.Trim().Trim('"')
+                if ($inputPath -eq 'salir') { exit 1 }
+                if (-not $inputPath) {
+                    Write-Log 'La ruta no puede estar vacia. Intenta de nuevo.'
+                    continue
+                }
+                if (Test-Path $inputPath) {
+                    if ((Split-Path $inputPath -Leaf) -eq 'tesseract.exe') {
+                        $ts = $inputPath
+                        Write-Log "Ruta aceptada: $ts"
+                    } else {
+                        Write-Log 'El archivo debe llamarse tesseract.exe. Intenta de nuevo.'
+                    }
+                } else {
+                    Write-Log 'Archivo no encontrado. Verifica la ruta e intenta de nuevo.'
+                }
+            }
         }
     }
     Write-Log "Tesseract OK: $ts"
-    if (-not (Test-Path (Join-Path $ScriptDir 'tesseract_path.local.txt'))) {
-        Save-TesseractLocal $ts | Out-Null
-    }
+    Save-TesseractLocal $ts | Out-Null
 }
 
 Write-Log 'Prerrequisitos listos.'
