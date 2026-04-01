@@ -46,9 +46,20 @@ if %errorlevel% neq 0 (
     echo Instalando dependencias necesarias...
     echo Esto puede tardar algunos minutos...
     echo.
-    pip install -r requirements.txt
+    pip install -r requirements.txt --verbose
     if %errorlevel% neq 0 (
+        echo.
+        echo ===============================================
         echo ERROR: No se pudieron instalar las dependencias
+        echo ===============================================
+        echo.
+        echo Por favor, intenta ejecutar manualmente:
+        echo   python -m pip install --upgrade pip
+        echo   python -m pip install -r requirements.txt
+        echo.
+        echo Si el error persiste, copia el mensaje de error arriba
+        echo y comparte con soporte.
+        echo.
         pause
         exit /b 1
     )
@@ -98,5 +109,8 @@ echo.
 
 REM Ejecutar la interfaz gráfica sin ventana de consola
 start pythonw app_gui.py
+
+REM Esperar un poco para que aparezca la ventana
+timeout /t 2 /nobreak
 
 exit /b 0
