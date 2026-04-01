@@ -133,13 +133,27 @@ function Get-TesseractPath {
         $e = $e.Trim().Trim('"')
         if (Test-Path $e) { return $e }
     }
-    $cmd = Get-Command tesseract -ErrorAction SilentlyContinue
-    if ($cmd) { return $cmd.Source }
     foreach ($p in @(
             'C:\Program Files\Tesseract-OCR\tesseract.exe',
             'C:\Program Files (x86)\Tesseract-OCR\tesseract.exe'
         )) {
         if (Test-Path $p) { return $p }
+    }
+    $cmd = Get-Command tesseract -ErrorAction SilentlyContinue
+    if ($cmd) { return $cmd.Source }
+    $userPath = [Environment]::GetEnvironmentVariable('Path', 'User')
+    if ($userPath) {
+        foreach ($dir in $userPath -split ';') {
+            $candidate = Join-Path $dir.Trim('"') 'tesseract.exe'
+            if (Test-Path $candidate) { return $candidate }
+        }
+    }
+    $machinePath = [Environment]::GetEnvironmentVariable('Path', 'Machine')
+    if ($machinePath) {
+        foreach ($dir in $machinePath -split ';') {
+            $candidate = Join-Path $dir.Trim('"') 'tesseract.exe'
+            if (Test-Path $candidate) { return $candidate }
+        }
     }
     return $null
 }
@@ -273,9 +287,14 @@ if (-not $SkipTesseract) {
     if (-not $ts) {
         Write-Log 'Tesseract no encontrado. Instalando...'
         $done = $false
-        if (Get-WingetPath) { $done = Install-TesseractWinget }
-        Update-EnvPath
-        $ts = Get-TesseractPath
+        if (Get-WingetPath) {
+            $done = Install-TesseractWinget
+            if ($done) {
+                Start-Sleep -Seconds 5
+                Update-EnvPath
+                $ts = Get-TesseractPath
+            }
+        }
         if (-not $ts) {
             Write-Log 'Descargando e instalando Tesseract (respaldo)...'
             $null = Install-TesseractDownload
