@@ -58,14 +58,14 @@ function Save-PythonLocal {
     $resolved = Resolve-PythonPath $Cmd
     if (-not $resolved) { return $false }
     $f = Join-Path $ScriptDir 'python_cmd.local.txt'
-    Set-Content -Path $f -Value $resolved -Encoding UTF8 -Force
+    [System.IO.File]::WriteAllText($f, $resolved, [System.Text.Encoding]::UTF8)
     return $true
 }
 
 function Save-TesseractLocal {
     param([string]$Path)
     $f = Join-Path $ScriptDir 'tesseract_path.local.txt'
-    Set-Content -Path $f -Value $Path -Encoding UTF8 -Force
+    [System.IO.File]::WriteAllText($f, $Path, [System.Text.Encoding]::UTF8)
     return $true
 }
 

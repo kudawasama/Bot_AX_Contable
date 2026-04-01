@@ -1,6 +1,7 @@
 """
 Resolución portable de la ruta del ejecutable Tesseract (PATH, env, rutas típicas Windows).
 """
+
 from __future__ import annotations
 
 import os
@@ -16,11 +17,11 @@ def _path_from_local_file():
     if not p.is_file():
         return None
     try:
-        text = p.read_text(encoding="utf-8", errors="ignore")
+        text = p.read_text(encoding="utf-8-sig", errors="ignore")
     except OSError:
         return None
     for raw in text.splitlines():
-        line = raw.strip().strip('"')
+        line = raw.strip().strip('"').strip()
         if not line or line.startswith("#"):
             continue
         if os.path.isfile(line):
