@@ -139,6 +139,32 @@ function Get-TesseractPath {
         )) {
         if (Test-Path $p) { return $p }
     }
+    $regPaths = @(
+        'HKLM:\SOFTWARE\Tesseract-OCR',
+        'HKLM:\SOFTWARE\WOW6432Node\Tesseract-OCR',
+        'HKCU:\SOFTWARE\Tesseract-OCR',
+        'HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\*',
+        'HKLM:\SOFTWARE\WOW6432Node\Microsoft\Windows\CurrentVersion\Uninstall\*',
+        'HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\*'
+    )
+    foreach ($regPath in $regPaths) {
+        try {
+            $items = Get-ItemProperty -Path $regPath -ErrorAction SilentlyContinue
+            if ($items) {
+                foreach ($item in @($items)) {
+                    $installDir = $item.InstallLocation
+                    if ($installDir -and (Test-Path $installDir)) {
+                        $candidate = Join-Path $installDir 'tesseract.exe'
+                        if (Test-Path $candidate) { return $candidate }
+                    }
+                    $dispName = $item.DisplayName
+                    if ($dispName -and $dispName -match 'Tesseract') {
+                        $candidate = Join-Path (Split-Path $regPath -Parent) 'tesseract.exe'
+                    }
+                }
+            }
+        } catch {}
+    }
     $userPath = [Environment]::GetEnvironmentVariable('Path', 'User')
     if ($userPath) {
         foreach ($dir in $userPath -split ';') {
