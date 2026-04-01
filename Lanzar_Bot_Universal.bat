@@ -65,12 +65,29 @@ echo [3/3] Paquetes pip ^(Pillow, OpenCV, pyautogui...^)...
 if !errorlevel! neq 0 (
   echo Instalando dependencias ^(primera vez o entorno nuevo^)...
   !PY! -m pip install --upgrade pip setuptools wheel
+  !PY! -m pip install --upgrade "Pillow>=10.2.0,<12" "pyscreeze>=0.1.30"
   !PY! -m pip install -r requirements.txt
   if !errorlevel! neq 0 (
     echo ERROR: pip install fallo. Ejecuta manualmente:
     echo   !PY! -m pip install -r requirements.txt
     pause
     exit /b 1
+  )
+) else (
+  !PY! -m pip show Pillow >nul 2>&1
+  if !errorlevel! neq 0 (
+    echo Pillow no encontrado, instalando dependencias...
+    !PY! -m pip install --upgrade pip setuptools wheel
+    !PY! -m pip install --upgrade "Pillow>=10.2.0,<12" "pyscreeze>=0.1.30"
+    !PY! -m pip install -r requirements.txt
+  ) else (
+    for /f "tokens=2 delims=:" %%V in ('!PY! -m pip show Pillow ^| findstr /i "Version"') do set PVER=%%V
+    set "PVER=!PVER: =!"
+    !PY! -c "import sys; v=tuple(int(x) for x in '!PVER!'.split('.')[:2]); sys.exit(0 if v>=(10,2) else 1)" >nul 2>&1
+    if !errorlevel! neq 0 (
+      echo Pillow desactualizado ^(!PVER!^), actualizando a 10.2.0+...
+      !PY! -m pip install --upgrade "Pillow>=10.2.0,<12" "pyscreeze>=0.1.30"
+    )
   )
 )
 
