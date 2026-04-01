@@ -139,20 +139,31 @@ function Get-TesseractPath {
         )) {
         if (Test-Path $p) { return $p }
     }
-    $cmd = Get-Command tesseract -ErrorAction SilentlyContinue
-    if ($cmd) { return $cmd.Source }
     $userPath = [Environment]::GetEnvironmentVariable('Path', 'User')
     if ($userPath) {
         foreach ($dir in $userPath -split ';') {
-            $candidate = Join-Path $dir.Trim('"') 'tesseract.exe'
+            $d = $dir.Trim().Trim('"')
+            if (-not $d) { continue }
+            $candidate = Join-Path $d 'tesseract.exe'
             if (Test-Path $candidate) { return $candidate }
         }
     }
     $machinePath = [Environment]::GetEnvironmentVariable('Path', 'Machine')
     if ($machinePath) {
         foreach ($dir in $machinePath -split ';') {
-            $candidate = Join-Path $dir.Trim('"') 'tesseract.exe'
+            $d = $dir.Trim().Trim('"')
+            if (-not $d) { continue }
+            $candidate = Join-Path $d 'tesseract.exe'
             if (Test-Path $candidate) { return $candidate }
+        }
+    }
+    $cmd = Get-Command tesseract -ErrorAction SilentlyContinue
+    if ($cmd) { return $cmd.Source }
+    $where = & cmd /c 'where tesseract.exe' 2>$null
+    if ($where) {
+        foreach ($line in $where) {
+            $l = $line.Trim()
+            if ($l -and (Test-Path $l)) { return $l }
         }
     }
     return $null
