@@ -327,7 +327,8 @@ if (-not $SkipTesseract) {
         if (Get-WingetPath) {
             $done = Install-TesseractWinget
             if ($done) {
-                Start-Sleep -Seconds 5
+                Write-Log 'Esperando que la instalacion de Tesseract se complete...'
+                Start-Sleep -Seconds 10
                 Update-EnvPath
                 $ts = Get-TesseractPath
             }
@@ -337,6 +338,25 @@ if (-not $SkipTesseract) {
             $null = Install-TesseractDownload
             Update-EnvPath
             $ts = Get-TesseractPath
+        }
+        if (-not $ts) {
+            Write-Log 'Busqueda exhaustiva en el sistema...'
+            $searchDirs = @(
+                'C:\Program Files\Tesseract-OCR',
+                'C:\Program Files (x86)\Tesseract-OCR',
+                "$env:LOCALAPPDATA\Tesseract-OCR",
+                "$env:ProgramFiles\Tesseract-OCR",
+                "${env:ProgramFiles(x86)}\Tesseract-OCR"
+            )
+            foreach ($dir in $searchDirs) {
+                if (Test-Path $dir) {
+                    $found = Get-ChildItem -Path $dir -Filter 'tesseract.exe' -Recurse -ErrorAction SilentlyContinue | Select-Object -First 1
+                    if ($found) {
+                        $ts = $found.FullName
+                        break
+                    }
+                }
+            }
         }
         if (-not $ts) {
             Write-Log 'ERROR: No se encontro tesseract.exe. Usa tesseract_path.local.txt o instala manual.'
