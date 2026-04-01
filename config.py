@@ -1,9 +1,10 @@
 import os
 import json
 
-CONFIG_FILE = "config_sectores.json"
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+CONFIG_FILE = os.path.join(BASE_DIR, "config_sectores.json")
 
-PATRONES_DIR = "patrones"
+PATRONES_DIR = os.path.join(BASE_DIR, "patrones")
 
 # Nombres de archivos de patrones según la documentación.
 CHK_VACIO = os.path.join(PATRONES_DIR, "checkbox_vacio.png")
@@ -28,11 +29,11 @@ def guardar_configuracion(sector_a, sector_b, sector_scroll):
     config = {
         "sector_a": sector_a,
         "sector_b": sector_b,
-        "sector_scroll": sector_scroll
+        "sector_scroll": sector_scroll,
     }
     with open(CONFIG_FILE, "w") as f:
         json.dump(config, f, indent=4)
-        
+
     print(f"Configuración guardada en {CONFIG_FILE}:")
     print(f"Sector A: {sector_a}")
     print(f"Sector B: {sector_b}")
