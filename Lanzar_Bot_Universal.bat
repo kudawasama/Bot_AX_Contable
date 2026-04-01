@@ -107,10 +107,21 @@ echo   Iniciando Bot AX Contable...
 echo ===============================================
 echo.
 
-REM Ejecutar la interfaz gráfica sin ventana de consola
-start pythonw app_gui.py
+REM Ejecutar el bot y mostrar cualquier error
+python app_gui.py
 
-REM Esperar un poco para que aparezca la ventana
-timeout /t 2 /nobreak
+REM Si hay error, mostrar y no cerrar
+if %errorlevel% neq 0 (
+    echo.
+    echo ===============================================
+    echo ERROR AL EJECUTAR EL BOT
+    echo ===============================================
+    echo.
+    echo Si ves errores de importación arriba, intenta:
+    echo   python -m pip install --upgrade pip
+    echo   python -m pip install -r requirements.txt
+    echo.
+    pause
+)
 
 exit /b 0
