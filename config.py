@@ -1,12 +1,14 @@
 import os
 import json
+from path_utils import get_resource_path, get_external_path
 
-BASE_DIR = os.path.dirname(os.path.abspath(__file__))
-CONFIG_FILE = os.path.join(BASE_DIR, "config_sectores.json")
+# Archivos que pueden estar fuera del .exe
+CONFIG_FILE = get_external_path("config_sectores.json")
 
-PATRONES_DIR = os.path.join(BASE_DIR, "patrones")
+# Archivos de patrones (Proridad: externo > interno del .exe)
+PATRONES_DIR = get_resource_path("patrones")
 
-# Nombres de archivos de patrones según la documentación.
+# Nombres de archivos de patrones
 CHK_VACIO = os.path.join(PATRONES_DIR, "checkbox_vacio.png")
 BTN_MENU = os.path.join(PATRONES_DIR, "btn_registrar_menu.png")
 BTN_CONFIRM = os.path.join(PATRONES_DIR, "btn_registrar_confirm.png")

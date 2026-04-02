@@ -134,6 +134,7 @@ function Get-TesseractPath {
         if (Test-Path $e) { return $e }
     }
     foreach ($p in @(
+            (Join-Path $ScriptDir 'bin\tesseract\tesseract.exe'),
             'C:\Program Files\Tesseract-OCR\tesseract.exe',
             'C:\Program Files (x86)\Tesseract-OCR\tesseract.exe'
         )) {
@@ -274,11 +275,13 @@ function Install-TesseractDownload {
         Write-Log 'Descarga Tesseract invalida.'
         return $false
     }
-    Write-Log '[Auto] Ejecutando instalador Tesseract...'
+    Write-Log "[Auto] Ejecutando instalador Tesseract en carpeta local: $LocalTessDir"
+    if (-not (Test-Path $LocalTessDir)) { New-Item -ItemType Directory -Path $LocalTessDir -Force | Out-Null }
+    
     foreach ($argset in @(
-            @('/VERYSILENT', '/NORESTART'),
-            @('/SILENT', '/NORESTART'),
-            @('/S')
+            @('/VERYSILENT', '/NORESTART', "/DIR=$LocalTessDir"),
+            @('/SILENT', '/NORESTART', "/DIR=$LocalTessDir"),
+            @('/S', "/D=$LocalTessDir")
         )) {
         $null = Start-Process -FilePath $dst -ArgumentList $argset -Wait -PassThru
         Update-EnvPath
@@ -291,6 +294,8 @@ function Install-TesseractDownload {
     Remove-Item $dst -Force -ErrorAction SilentlyContinue
     return $false
 }
+
+$LocalTessDir = Join-Path $ScriptDir 'bin\tesseract'
 
 Write-Log '--- Inicio install_prereqs.ps1 ---'
 

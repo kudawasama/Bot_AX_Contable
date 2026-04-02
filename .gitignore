@@ -16,4 +16,26 @@ python_cmd.local.txt
 # Python
 __pycache__/
 *.pyc
+*.pyo
+*.pyd
+.venv/
+env/
+venv/
+ENV/
+
+# Entorno de Construcción y Salida
+dist/
+build/
+*.exe
+*.dist/
+*.onefile-build/
+nuitka-crash-report.xml
+
+# Archivos Locales y de Usuario
 logs/
+license.key
+*.lnk
+10.2.0
+vbs_path.vbs
+create_shortcut.vbs
+update_bot.bat
