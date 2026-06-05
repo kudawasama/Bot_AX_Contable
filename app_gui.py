@@ -102,13 +102,15 @@ class BotAXGui:
 
         tk.Label(brand, text="Bot AX Contable", font=self.f["h2"],
                  bg=self.c["bg"], fg=self.c["text"]).pack(side="left")
-        tk.Label(brand, text=f" {VERSION_TAG}", font=self.f["sm"],
-                 bg=self.c["bg"], fg=self.c["subtext"]).pack(side="left", padx=4)
+        self._lbl_header_version = tk.Label(brand, text=f" {VERSION_TAG}", font=self.f["sm"],
+                 bg=self.c["bg"], fg=self.c["subtext"])
+        self._lbl_header_version.pack(side="left", padx=4)
 
         sha = get_git_short_sha()
         if sha:
-            tk.Label(brand, text=f"@{sha}", font=self.f["sm"],
-                     bg=self.c["bg"], fg=self.c["muted"]).pack(side="left", padx=2)
+            self._lbl_header_sha = tk.Label(brand, text=f"@{sha}", font=self.f["sm"],
+                     bg=self.c["bg"], fg=self.c["muted"])
+            self._lbl_header_sha.pack(side="left", padx=2)
 
         # clock
         clock_frame = tk.Frame(header, bg=self.c["card"])
@@ -141,21 +143,32 @@ class BotAXGui:
         footer.pack_propagate(False)
 
         left_tags = [
-            (VERSION_TAG, self.c["accent"]),
             ("RSA-4096", self.c["subtext"]),
         ]
+        self._lbl_footer_version = self._ftag(VERSION_TAG, self.c["accent"], footer)
+        self._fsep(footer)
         for txt, clr in left_tags:
-            tk.Label(footer, text=f"  {txt}  ", font=self.f["sm"],
-                     bg=self.c["bg"], fg=clr).pack(side="left")
-            tk.Label(footer, text="|", font=self.f["sm"],
-                     bg=self.c["bg"], fg=self.c["border"]).pack(side="left")
+            self._ftag(txt, clr, footer)
+            self._fsep(footer)
 
         sha = get_git_short_sha()
+        self._lbl_footer_sha = None
         if sha:
-            tk.Label(footer, text=f"  @{sha}  ", font=self.f["sm"],
-                     bg=self.c["bg"], fg=self.c["subtext"]).pack(side="left")
-            tk.Label(footer, text="|", font=self.f["sm"],
-                     bg=self.c["bg"], fg=self.c["border"]).pack(side="left")
+            self._lbl_footer_sha = self._ftag(f"@{sha}", self.c["subtext"], footer)
+            self._fsep(footer)
+
+        # sync button (right side)
+        self._lbl_sync = tk.Label(
+            footer, text="↻", font=self.f["sm"],
+            bg=self.c["bg"], fg=self.c["muted"],
+            cursor="hand2",
+        )
+        self._lbl_sync.pack(side="right", padx=(0, 2))
+        self._lbl_sync.bind("<Button-1>", lambda e: self._do_sync())
+        self._lbl_sync.bind(
+            "<Enter>", lambda e: self._lbl_sync.config(fg=self.c["accent"]))
+        self._lbl_sync.bind(
+            "<Leave>", lambda e: self._lbl_sync.config(fg=self.c["muted"]))
 
         tk.Label(footer, text="Cotano_", font=self.f["sm"],
                  bg=self.c["bg"], fg=self.c["muted"]).pack(side="right")
@@ -293,6 +306,18 @@ class BotAXGui:
         inner = tk.Frame(outer, bg=self.c["card"], bd=0)
         inner.pack(fill="both", padx=1, pady=1)
         return inner
+
+    def _ftag(self, text, color, parent):
+        """Footer tag label."""
+        lbl = tk.Label(parent, text=f"  {text}  ", font=self.f["sm"],
+                       bg=self.c["bg"], fg=color)
+        lbl.pack(side="left")
+        return lbl
+
+    def _fsep(self, parent):
+        """Footer separator."""
+        tk.Label(parent, text="|", font=self.f["sm"],
+                 bg=self.c["bg"], fg=self.c["border"]).pack(side="left")
 
     def _status_row(self, parent, label, value, color):
         f = tk.Frame(parent, bg=self.c["card"])
@@ -444,6 +469,56 @@ class BotAXGui:
         self.log("Stopping engine ...")
         self.btn_stop.config(state="disabled", fg=self.c["muted"])
         self._pulse(False)
+
+    def _do_sync(self):
+        """Pull latest code from git in a background thread."""
+        if getattr(self, "_syncing", False):
+            return
+        self._syncing = True
+        self._lbl_sync.config(fg=self.c["amber"])
+        self.log("↻ Syncing: pulling latest code ...")
+        threading.Thread(target=self._sync_thread, daemon=True).start()
+
+    def _sync_thread(self):
+        import subprocess
+        repo = os.path.dirname(os.path.abspath(__file__))
+        try:
+            result = subprocess.run(
+                ["git", "pull", "--ff-only"],
+                capture_output=True, text=True, cwd=repo, timeout=60,
+            )
+            output = (result.stdout + result.stderr).strip()
+        except subprocess.TimeoutExpired:
+            output = "Timeout: git pull tardó más de 60s"
+        except Exception as e:
+            output = f"Error: {e}"
+
+        self.root.after(0, lambda: self._sync_done(output))
+
+    def _sync_done(self, output):
+        self._syncing = False
+        self._lbl_sync.config(fg=self.c["muted"])
+        self.log(f"↻ Sync result: {output}")
+
+        # Refresh version info
+        import importlib
+        import _version as vmod
+        importlib.reload(vmod)
+        vtag = vmod.VERSION_TAG
+        sha = vmod.get_git_short_sha()
+
+        # Update window title
+        self.root.title(f"Bot AX Contable  {vtag}")
+
+        # Update header + footer labels
+        self._lbl_header_version.config(text=f" {vtag} ")
+        if hasattr(self, "_lbl_header_sha") and self._lbl_header_sha:
+            self._lbl_header_sha.config(text=f"@{sha}")
+        self._lbl_footer_version.config(text=f"  {vtag}  ")
+        if self._lbl_footer_sha:
+            self._lbl_footer_sha.config(text=f"  @{sha}  ")
+
+        self.log(f"↻ Version actualizada: {vtag} @{sha}")
 
     def run_bot_thread(self):
         try:
