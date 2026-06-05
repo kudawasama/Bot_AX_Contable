@@ -252,7 +252,19 @@ def run_bot(log_callback=print, stop_event=None):
                  except Exception:
                      pass
                  gui.press('esc')
-                 time.sleep(2) 
+                 time.sleep(1)
+                 # Asegurar que el pop-up de error se cierre (clic en el centro)
+                 try:
+                     from config import IMG_ERROR
+                     ubi_err = gui.locateCenterOnScreen(IMG_ERROR, confidence=0.8, grayscale=True)
+                     if ubi_err:
+                         gui.moveTo(int(ubi_err[0]), int(ubi_err[1]))
+                         gui.click()
+                         time.sleep(0.5)
+                         gui.press('esc')
+                 except Exception:
+                     pass
+                 time.sleep(1)
             else:
                  log(f"[RESULT:ERROR] Timeout extremo para {id_actual}.")
                  capturar_pantalla_error(id_actual)
