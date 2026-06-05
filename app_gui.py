@@ -8,6 +8,7 @@ from datetime import datetime
 from bot_main import run_bot
 from setup_areas import AreaSelector
 from logger import get_logger, QueueLogHandler
+from _version import VERSION_TAG, get_git_short_sha
 
 logger = get_logger()
 
@@ -15,7 +16,7 @@ logger = get_logger()
 class BotAXGui:
     def __init__(self, root):
         self.root = root
-        self.root.title("Bot AX Contable  v2.0")
+        self.root.title(f"Bot AX Contable  {VERSION_TAG}")
         self.root.configure(bg="#0d1117")
         self.root.minsize(1000, 680)
 
@@ -89,7 +90,7 @@ class BotAXGui:
         header.pack(fill="x", pady=(0, 20))
         header.pack_propagate(False)
 
-        # brand
+        # brand + versión + commit
         brand = tk.Frame(header, bg=self.c["bg"])
         brand.pack(side="left")
 
@@ -101,8 +102,13 @@ class BotAXGui:
 
         tk.Label(brand, text="Bot AX Contable", font=self.f["h2"],
                  bg=self.c["bg"], fg=self.c["text"]).pack(side="left")
-        tk.Label(brand, text=" v2.0", font=self.f["sm"],
+        tk.Label(brand, text=f" {VERSION_TAG}", font=self.f["sm"],
                  bg=self.c["bg"], fg=self.c["subtext"]).pack(side="left", padx=4)
+
+        sha = get_git_short_sha()
+        if sha:
+            tk.Label(brand, text=f"@{sha}", font=self.f["sm"],
+                     bg=self.c["bg"], fg=self.c["muted"]).pack(side="left", padx=2)
 
         # clock
         clock_frame = tk.Frame(header, bg=self.c["card"])
@@ -135,13 +141,19 @@ class BotAXGui:
         footer.pack_propagate(False)
 
         left_tags = [
-            ("ACTIVE", self.c["green"]),
+            (VERSION_TAG, self.c["accent"]),
             ("RSA-4096", self.c["subtext"]),
-            ("v2.0.0", self.c["subtext"]),
         ]
         for txt, clr in left_tags:
             tk.Label(footer, text=f"  {txt}  ", font=self.f["sm"],
                      bg=self.c["bg"], fg=clr).pack(side="left")
+            tk.Label(footer, text="|", font=self.f["sm"],
+                     bg=self.c["bg"], fg=self.c["border"]).pack(side="left")
+
+        sha = get_git_short_sha()
+        if sha:
+            tk.Label(footer, text=f"  @{sha}  ", font=self.f["sm"],
+                     bg=self.c["bg"], fg=self.c["subtext"]).pack(side="left")
             tk.Label(footer, text="|", font=self.f["sm"],
                      bg=self.c["bg"], fg=self.c["border"]).pack(side="left")
 
@@ -334,12 +346,13 @@ class BotAXGui:
                        cursor="hand2", padx=28, pady=12,
                        highlightbackground=self.c["border"],
                        highlightthickness=1)
-        if not disabled:
-            btn.bind("<Button-1>", lambda e: cmd())
-            btn.bind("<Enter>",
-                     lambda e: btn.config(bg=self.c["hover"]))
-            btn.bind("<Leave>",
-                     lambda e: btn.config(bg=self.c["card"]))
+        btn.bind("<Button-1>", lambda e: cmd())
+        btn.bind("<Enter>",
+                 lambda e: btn.config(bg=self.c["hover"]))
+        btn.bind("<Leave>",
+                 lambda e: btn.config(bg=self.c["card"]))
+        if disabled:
+            btn.config(state="disabled")
         return btn
 
     # ============================================================
