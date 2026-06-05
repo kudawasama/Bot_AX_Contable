@@ -83,6 +83,7 @@ def run_bot(log_callback=print, stop_event=None):
     log("\n--- CONFIGURACIÓN OCR ACTIVA ---")
     
     try:
+        posiciones_procesadas = set()  # Cache de coordenadas de checkbox ya procesados
         while True:
             # Requisito de seguridad: Cancelar si hay formularios abiertos en medio
             try:
@@ -122,6 +123,16 @@ def run_bot(log_callback=print, stop_event=None):
                 for i, loc in enumerate(todas_vacias):
                     centro = gui.center(loc)
                     coord = (int(centro.x), int(centro.y))
+                    # Redondear coordenadas para tolerancia de 5px (misma posición = mismo diario)
+                    coord_redondeada = (coord[0] // 5 * 5, coord[1] // 5 * 5)
+                    
+                    # Saltar si ya procesamos esta posición (evita OCR redundante)
+                    if coord_redondeada in posiciones_procesadas:
+                        continue
+                    
+                    # Marcar posición como visitada antes de hacer OCR
+                    posiciones_procesadas.add(coord_redondeada)
+                    
                     identificador = leer_id_diario(coord)
                     id_normalizado = normalizar_id_diario(identificador)
                     
