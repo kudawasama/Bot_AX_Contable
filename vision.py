@@ -70,7 +70,7 @@ def buscar_y_clickear(ruta_imagen, sector_region=None, confidencialidad=0.8, tim
                         grayscale=True
                     )
                     if ubicacion and sector_region:
-                        logger.warning(f"{ruta_imagen} detectado FUERA del sector. Actualizar coordenadas.")
+                        logger.warning(f"{os.path.basename(ruta_imagen)} fuera de sector B - redefinir area")
                 except pyautogui.ImageNotFoundException:
                     pass
 
@@ -79,10 +79,10 @@ def buscar_y_clickear(ruta_imagen, sector_region=None, confidencialidad=0.8, tim
                 ubicacion = (int(ubicacion[0]), int(ubicacion[1]))
                 # Si solo queremos esperar a que aparezca o cambie de estado visual
                 if wait_only:
-                    logger.info(f"Imagen detectada: {ruta_imagen}")
+                    logger.info(f"Detectado: {os.path.basename(ruta_imagen)}")
                     return ubicacion
                 
-                logger.info(f"Click en: {ruta_imagen} en {ubicacion}")
+                logger.info(f"Click: {os.path.basename(ruta_imagen)} @ ({ubicacion[0]},{ubicacion[1]})")
                 
                 # Mover el mouse a la ubicación de forma instantánea
                 pyautogui.moveTo(ubicacion[0], ubicacion[1])
@@ -104,7 +104,7 @@ def buscar_y_clickear(ruta_imagen, sector_region=None, confidencialidad=0.8, tim
         # Velocidad de escaneo: cuánto tiempo esperar entre cada intento de buscar la imagen
         time.sleep(0.5) 
         
-    logger.warning(f"Timeout: No se pudo encontrar {ruta_imagen} en {timeout} segundos.")
+    logger.warning(f"Timeout: {os.path.basename(ruta_imagen)} no encontrado ({timeout}s).")
     return False
 
 def buscar_estado_checkbox(ruta_obj_inicial, ruta_obj_final, sector_region, timeout=30, stop_event=None):
@@ -143,7 +143,7 @@ def esperar_resultado_registro(ruta_obj_exito, ruta_obj_error, sector_region, ti
     stop_event: Atiende la parada inmediata de la UI.
     """
     inicio = time.time()
-    logger.info(f"Esperando resultado (hasta {timeout/60:.1f} minutos)...")
+    logger.info(f"Esperando resultado (timeout: {timeout/60:.0f}min)...")
     
     ultimo_mensaje = inicio
     while time.time() - inicio < timeout:
@@ -152,7 +152,7 @@ def esperar_resultado_registro(ruta_obj_exito, ruta_obj_error, sector_region, ti
             
         # Imprimir progreso cada 30 segundos
         if time.time() - ultimo_mensaje > 30:
-            logger.info(f"... sigo esperando. Han pasado {int(time.time() - inicio)} segundos.")
+            logger.info(f"...esperando ({int(time.time() - inicio)}s)")
             ultimo_mensaje = time.time()
             # Mover el mouse 1 píxel para evitar bloqueo de pantalla por inactividad
             try:
@@ -171,7 +171,7 @@ def esperar_resultado_registro(ruta_obj_exito, ruta_obj_error, sector_region, ti
                 grayscale=True
              )
              if ubi_popup:
-                 logger.info("-> Registro completado exitosamente! (pop-up detectado)")
+                 logger.info("-> EXITO! (pop-up confirmado)")
                  pyautogui.press('esc')
                  time.sleep(0.5)
                  return 'exito'
@@ -186,7 +186,7 @@ def esperar_resultado_registro(ruta_obj_exito, ruta_obj_error, sector_region, ti
                 grayscale=True
              )
              if ubi_error:
-                 logger.warning("-> Apareció un Error de Registro de AX!")
+                 logger.warning("-> ERROR de Registro AX!")
                  return 'error'
         except pyautogui.ImageNotFoundException:
              pass
