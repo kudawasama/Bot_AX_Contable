@@ -3,7 +3,7 @@ import time
 import json
 import os
 from config import cargar_configuracion, CHK_VACIO, BTN_MENU, BTN_CONFIRM, CHK_MARCADO, IMG_ERROR, BTN_ABAJO, IMG_FORMULARIOS, MSG_EXITO_ASIENTO, BTN_CERRAR_INFO
-from vision import buscar_y_clickear, buscar_estado_checkbox, esperar_resultado_registro, leer_id_diario, capturar_pantalla_error, normalizar_id_diario, limpiar_popups
+from vision import buscar_y_clickear, buscar_estado_checkbox, esperar_resultado_registro, leer_id_diario, capturar_pantalla_error, normalizar_id_diario
 import pyautogui as gui
 from datetime import datetime
 
@@ -262,14 +262,9 @@ def run_bot(log_callback=print, stop_event=None):
                  log(f"[RESULT:ERROR] Timeout extremo para {id_actual}.")
                  capturar_pantalla_error(id_actual)
                  break
-            
-            # Limpiar cualquier pop-up residual antes del siguiente ciclo
-            try:
-                limpiar_popups()
-            except Exception:
-                pass
+                 
             ciclo += 1
-            time.sleep(0.5)
+            time.sleep(0.1)
             
     except KeyboardInterrupt:
         log("\nBot detenido manualmente.")
