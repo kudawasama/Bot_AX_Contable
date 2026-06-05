@@ -14,6 +14,19 @@ pytesseract.pytesseract.tesseract_cmd = TESSERACT_CMD
 # PAUSE: Tiempo de espera mínimo después de comandos de pyautogui
 pyautogui.PAUSE = 0.1 
 
+
+def _check_esc(stop_event=None):
+    """Verifica si el usuario presionó ESC para cancelar."""
+    if stop_event and stop_event.is_set():
+        return True
+    if stop_event is None:
+        try:
+            import keyboard as _kb
+            return _kb.is_pressed('esc')
+        except ImportError:
+            pass
+    return False
+
 def buscar_y_clickear(ruta_imagen, sector_region=None, confidencialidad=0.8, timeout=10, mover_hacia_abajo=False, wait_only=False, stop_event=None):
     """
     Busca una imagen y clickea. Retorna True si la encontró.
@@ -147,7 +160,8 @@ def esperar_resultado_registro(ruta_obj_exito, ruta_obj_error, sector_region, ti
     
     ultimo_mensaje = inicio
     while time.time() - inicio < timeout:
-        if stop_event and stop_event.is_set():
+        if _check_esc(stop_event):
+            logger.info("Espera cancelada por el usuario.")
             return 'cancelado'
             
         # Imprimir progreso cada 30 segundos

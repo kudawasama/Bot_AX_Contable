@@ -197,6 +197,8 @@ def run_bot(log_callback=print, stop_event=None):
                 log(f"Error: No se encontró el botón de registrar para {id_actual}.")
                 capturar_pantalla_error(id_actual)
                 diarios_con_error.append(normalizar_id_diario(id_actual))
+                ciclo += 1
+                time.sleep(0.5)
                 continue
             
             # Paso C: Confirmación
@@ -213,6 +215,8 @@ def run_bot(log_callback=print, stop_event=None):
                  log(f"Error: No se encontró la confirmación para {id_actual}.")
                  capturar_pantalla_error(id_actual)
                  diarios_con_error.append(normalizar_id_diario(id_actual))
+                 ciclo += 1
+                 time.sleep(0.5)
                  continue
             
             # Paso D: Esperar resultado
