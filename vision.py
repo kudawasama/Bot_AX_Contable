@@ -191,7 +191,7 @@ def esperar_resultado_registro(ruta_obj_exito, ruta_obj_error, sector_region, ti
         try:
              ubi_popup = pyautogui.locateCenterOnScreen(
                 MSG_EXITO_ASIENTO,
-                confidence=0.85,
+                confidence=0.8,
                 grayscale=True
              )
              if ubi_popup:
@@ -211,11 +211,9 @@ def esperar_resultado_registro(ruta_obj_exito, ruta_obj_error, sector_region, ti
              )
              if ubi_exito:
                  logger.info("-> Registro en AX completado exitosamente! (checkbox marcado)")
-                 # Cerrar pop-up por si está tapando (puede haberse abierto después del checkbox)
-                 try:
-                     cerrar_popup_exito()
-                 except Exception:
-                     pass
+                 # FASE DE LIMPIEZA: el pop-up puede estar apareciendo AHORA
+                 # Esperar un momento para que termine de cargar y cerrarlo
+                 limpiar_popups()
                  return 'exito'
         except pyautogui.ImageNotFoundException:
              pass
@@ -303,22 +301,76 @@ def cerrar_popup_exito():
         if ubicacion:
             pyautogui.moveTo(int(ubicacion[0]), int(ubicacion[1]))
             pyautogui.click()
-            logger.info("Pop-up de éxito cerrado.")
+            logger.info("Pop-up de éxito cerrado (botón cerrar).")
             time.sleep(0.5)
             return True
         else:
             # Intentar con ESC como fallback
             pyautogui.press('esc')
-            time.sleep(0.5)
+            time.sleep(0.3)
             return True
     except Exception:
         # Fallback: presionar ESC
         try:
             pyautogui.press('esc')
-            time.sleep(0.5)
+            time.sleep(0.3)
         except Exception:
             pass
         return True
+
+
+def limpiar_popups():
+    """
+    Fase de limpieza post-registro.
+    Espera a que cualquier pop-up termine de cargar y lo cierra.
+    Se llama SIEMPRE después de detectar éxito para evitar que
+    el pop-up bloquee el siguiente ciclo.
+    """
+    logger.info("Limpiando pop-ups post-registro...")
+    time.sleep(1.0)  # Esperar a que el pop-up termine de cargar
+    
+    # Intentos múltiples de cerrar
+    for intento in range(3):
+        # 1. Intentar con botón cerrar
+        try:
+            from config import BTN_CERRAR_INFO
+            ubi = pyautogui.locateCenterOnScreen(
+                BTN_CERRAR_INFO,
+                confidence=0.75,
+                grayscale=True
+            )
+            if ubi:
+                pyautogui.moveTo(int(ubi[0]), int(ubi[1]))
+                pyautogui.click()
+                time.sleep(0.3)
+                continue
+        except Exception:
+            pass
+        
+        # 2. Intentar detectar msg_exito_asiento
+        try:
+            from config import MSG_EXITO_ASIENTO
+            ubi = pyautogui.locateCenterOnScreen(
+                MSG_EXITO_ASIENTO,
+                confidence=0.75,
+                grayscale=True
+            )
+            if ubi:
+                # Hacer clic en el centro del pop-up y luego ESC
+                pyautogui.moveTo(int(ubi[0]), int(ubi[1]))
+                pyautogui.click()
+                time.sleep(0.2)
+                pyautogui.press('esc')
+                time.sleep(0.3)
+                continue
+        except Exception:
+            pass
+        
+        # 3. ESC como fallback universal
+        pyautogui.press('esc')
+        time.sleep(0.3)
+    
+    logger.info("Limpieza de pop-ups completada.")
 
 
 import re
