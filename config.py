@@ -47,3 +47,14 @@ def guardar_configuracion(sector_a, sector_b, sector_scroll):
     print(f"Sector A: {sector_a}")
     print(f"Sector B: {sector_b}")
     print(f"Sector Scroll: {sector_scroll}")
+
+
+def validar_tesseract():
+    """Verifica que Tesseract OCR esté instalado y accesible."""
+    if not os.path.exists(TESSERACT_CMD):
+        raise FileNotFoundError(
+            f"Tesseract OCR no encontrado en: {TESSERACT_CMD}\n"
+            f"Instálalo desde https://github.com/UB-Mannheim/tesseract/wiki "
+            f"o configura la variable de entorno TESSERACT_CMD con la ruta correcta."
+        )
+    return True

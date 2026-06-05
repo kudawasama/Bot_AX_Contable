@@ -33,6 +33,15 @@ def run_bot(log_callback=print, stop_event=None):
         
     log("Iniciando Bot AX Contable...")
     
+    # 0. Validar que Tesseract esté disponible antes de empezar
+    from config import validar_tesseract
+    try:
+        validar_tesseract()
+        log("Tesseract OCR verificado.")
+    except FileNotFoundError as e:
+        log(f"ERROR CRÍTICO: {e}")
+        return False
+    
     # 1. Cargar la configuración de los sectores
     sectores = cargar_configuracion()
     if not sectores:
