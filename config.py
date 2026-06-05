@@ -1,9 +1,19 @@
 import os
 import json
+import sys
 
-CONFIG_FILE = "config_sectores.json"
+# Directorio base: donde está este archivo (config.py)
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 
-PATRONES_DIR = "patrones"
+CONFIG_FILE = os.path.join(BASE_DIR, "config_sectores.json")
+
+PATRONES_DIR = os.path.join(BASE_DIR, "patrones")
+
+# Ruta de Tesseract: personalizable por variable de entorno, con fallback
+TESSERACT_CMD = os.environ.get(
+    "TESSERACT_CMD",
+    r"C:\Users\jose.cespedes\AppData\Local\Programs\Tesseract-OCR\tesseract.exe"
+)
 
 # Nombres de archivos de patrones según la documentación.
 CHK_VACIO = os.path.join(PATRONES_DIR, "checkbox_vacio.png")
