@@ -3,15 +3,21 @@ registro_*.txt
 registro_procesamiento.txt
 
 # Archivos de depuración y capturas
-debug_*.png
-vista_principal.png
-last_ocr_capture.png
-debug_ocr_pos*.png
+*.png
+!patrones/*.png
+!Imagenes/*.png
 
 # Archivos de configuración locales
 config_sectores.json
+
+# Logs y diagnosticos
+crash_log.txt
+error.txt
+diag_output*.txt
 
 # Python
 __pycache__/
 *.pyc
 logs/
+
+blacklist.json

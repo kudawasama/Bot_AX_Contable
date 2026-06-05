@@ -1,5 +1,7 @@
 import sys
 import time
+import json
+import os
 from config import cargar_configuracion, CHK_VACIO, BTN_MENU, BTN_CONFIRM, CHK_MARCADO, IMG_ERROR, BTN_ABAJO, IMG_FORMULARIOS
 from vision import buscar_y_clickear, buscar_estado_checkbox, esperar_resultado_registro, leer_id_diario, capturar_pantalla_error, normalizar_id_diario
 import pyautogui as gui
@@ -42,6 +44,21 @@ def run_bot(log_callback=print, stop_event=None):
         log(f"ERROR CRÍTICO: {e}")
         return False
     
+    # 0.5. Cargar lista negra persistente de diarios con error
+    script_dir = os.path.dirname(os.path.abspath(__file__))
+    blacklist_file = os.path.join(script_dir, "blacklist.json")
+    diarios_con_error = []
+    if os.path.exists(blacklist_file):
+        try:
+            with open(blacklist_file, "r") as f:
+                diarios_con_error = json.load(f)
+                if not isinstance(diarios_con_error, list):
+                    diarios_con_error = []
+            if diarios_con_error:
+                log(f"Lista negra cargada: {len(diarios_con_error)} diario(s) con error previo.")
+        except Exception:
+            diarios_con_error = []
+    
     # 1. Cargar la configuración de los sectores
     sectores = cargar_configuracion()
     if not sectores:
@@ -62,7 +79,6 @@ def run_bot(log_callback=print, stop_event=None):
     time.sleep(1) 
 
     ciclo = 1
-    diarios_con_error = [] # Lista negra de IDs que fallaron
     
     log("\n--- CONFIGURACIÓN OCR ACTIVA ---")
     
@@ -209,6 +225,12 @@ def run_bot(log_callback=print, stop_event=None):
                  capturar_pantalla_error(id_actual)
                  registrar_log(id_actual, "ERROR")
                  diarios_con_error.append(normalizar_id_diario(id_actual))
+                 # Persistir lista negra actualizada
+                 try:
+                     with open(blacklist_file, "w") as f:
+                         json.dump(diarios_con_error, f)
+                 except Exception:
+                     pass
                  gui.press('esc')
                  time.sleep(2) 
             else:
