@@ -35,11 +35,20 @@ def cargar_configuracion():
 
 def guardar_configuracion(sector_a, sector_b, sector_scroll):
     """Guarda la configuración de los sectores en un archivo JSON."""
+    # Preservar ocr_region_offset si ya existe
+    config_actual = cargar_configuracion()
+    ocr_offset = None
+    if config_actual and "ocr_region_offset" in config_actual:
+        ocr_offset = config_actual["ocr_region_offset"]
+    
     config = {
         "sector_a": sector_a,
         "sector_b": sector_b,
         "sector_scroll": sector_scroll
     }
+    if ocr_offset:
+        config["ocr_region_offset"] = ocr_offset
+    
     with open(CONFIG_FILE, "w") as f:
         json.dump(config, f, indent=4)
         
@@ -58,3 +67,15 @@ def validar_tesseract():
             f"o configura la variable de entorno TESSERACT_CMD con la ruta correcta."
         )
     return True
+
+
+def obtener_offset_ocr(config=None):
+    """Obtiene el offset de la región OCR desde la configuración, con fallback a valores por defecto."""
+    if config is None:
+        config = cargar_configuracion()
+    if config and "ocr_region_offset" in config:
+        offset = config["ocr_region_offset"]
+        if isinstance(offset, (list, tuple)) and len(offset) == 4:
+            return tuple(offset)
+    # Fallback a valores por defecto
+    return (-275, -13, 110, 28)

@@ -69,8 +69,10 @@ class AreaSelector:
         elif self.current_sector == "C":
             self.sector_scroll = area
             guardar_configuracion(self.sector_a, self.sector_b, self.sector_scroll)
+            print("Configuración guardada.")
+            print("Puedes ajustar el offset OCR (ocr_region_offset) en config_sectores.json")
+            print("  si los IDs de diario no se leen correctamente.")
             self.root.destroy()
-            print("Configuración finalizada con éxito.")
 
     def run(self):
         self.root.mainloop()

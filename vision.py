@@ -194,10 +194,10 @@ def leer_id_diario(coord_checkbox):
     Toma una captura pequeña a la derecha del checkbox para leer el número de diario.
     """
     cx, cy = coord_checkbox
-    # Ajuste fino basado en debug_ocr_pos1.png:
-    # El ID empieza unos 270px a la izquierda del centro del checkbox.
-    # r1 era (cx - 320, cy - 12, 300, 30). El número está centrado en ese tramo.
-    region_texto = (int(cx) - 275, int(cy) - 13, 110, 28)
+    # Offset definido en config_sectores.json (ocr_region_offset)
+    from config import obtener_offset_ocr
+    ox, oy, ow, oh = obtener_offset_ocr()
+    region_texto = (int(cx) + ox, int(cy) + oy, ow, oh)
     
     try:
         # Captura la zona en escala de grises para mejor lectura

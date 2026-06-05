@@ -15,16 +15,17 @@ def debug_captura_ocr():
     if loc:
         centro = gui.center(loc)
         cx, cy = int(centro.x), int(centro.y)
-        
-        # Intentamos capturar hacia la IZQUIERDA (donde suele estar el ID)
-        # Una franja larga a la izquierda
-        r1 = (cx - 320, cy - 12, 300, 30)
-        # Una franja central
+        printe(f"Casilla encontrada en {cx, cy}")
+        from config import obtener_offset_ocr
+        ox, oy, ow, oh = obtener_offset_ocr()
+        r1 = (cx + ox, cy + oy, ow, oh)
+        # Una franja adicional de respaldo
         r2 = (cx - 150, cy - 12, 140, 30)
         # Una franja a la derecha (por si acaso)
         r3 = (cx + 30, cy - 12, 200, 30)
         
         print(f"Casilla encontrada en {cx, cy}")
+        print(f"Offset OCR aplicado: x={ox}, y={oy}, w={ow}, h={oh}")
         pyautogui.screenshot("debug_ocr_pos1.png", region=r1)
         pyautogui.screenshot("debug_ocr_pos2.png", region=r2)
         pyautogui.screenshot("debug_ocr_pos3.png", region=r3)
