@@ -1,5 +1,5 @@
 @echo off
-title Bot AX Contable - Lanzador
+title Bot AX Registro - Lanzador Gemini Engine
 :: Verificar que la unidad H: existe
 if not exist "H:\" (
     echo ERROR: La unidad H: no esta disponible. Conecta Google Drive.
@@ -15,11 +15,11 @@ if errorlevel 1 (
     exit /b 1
 )
 :: Verificar que el script existe
-if not exist "app_gui.py" (
-    echo ERROR: No se encontro app_gui.py en la carpeta actual.
+if not exist "bot_ax_registro.py" (
+    echo ERROR: No se encontro bot_ax_registro.py en la carpeta actual.
     pause
     exit /b 1
 )
 :: Ejecutar la interfaz grafica
-start "" "%LOCALAPPDATA%\Programs\Python\Python312\pythonw.exe" app_gui.py
+start "" "%LOCALAPPDATA%\Programs\Python\Python312\pythonw.exe" bot_ax_registro.py
 exit
