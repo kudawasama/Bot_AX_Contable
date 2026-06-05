@@ -11,6 +11,25 @@ logger = get_logger()
 
 pytesseract.pytesseract.tesseract_cmd = TESSERACT_CMD
 
+# Verificar si la librería keyboard está disponible
+try:
+    import keyboard as _kb
+    HAS_KEYBOARD_LIB = True
+except ImportError:
+    HAS_KEYBOARD_LIB = False
+
+
+def _check_esc(stop_event=None):
+    """Verifica si el usuario presionó ESC o el stop_event está activado."""
+    if stop_event and stop_event.is_set():
+        return True
+    if stop_event is None and HAS_KEYBOARD_LIB:
+        try:
+            return _kb.is_pressed('esc')
+        except Exception:
+            pass
+    return False
+
 # PAUSE: Tiempo de espera mínimo después de comandos de pyautogui
 pyautogui.PAUSE = 0.1 
 
@@ -26,7 +45,8 @@ def buscar_y_clickear(ruta_imagen, sector_region=None, confidencialidad=0.8, tim
     inicio = time.time()
     
     while time.time() - inicio < timeout:
-        if stop_event and stop_event.is_set():
+        if _check_esc(stop_event):
+            logger.info("Búsqueda cancelada por el usuario (ESC).")
             return False
             
         try:
@@ -115,7 +135,8 @@ def buscar_estado_checkbox(ruta_obj_inicial, ruta_obj_final, sector_region, time
     logger.info(f"Esperando a que aparezca {ruta_obj_final}...")
     
     while time.time() - inicio < timeout:
-        if stop_event and stop_event.is_set():
+        if _check_esc(stop_event):
+            logger.info("Búsqueda cancelada por el usuario (ESC).")
             return False
             
         try:
@@ -149,7 +170,8 @@ def esperar_resultado_registro(ruta_obj_exito, ruta_obj_error, sector_region, ti
     
     ultimo_mensaje = inicio
     while time.time() - inicio < timeout:
-        if stop_event and stop_event.is_set():
+        if _check_esc(stop_event):
+            logger.info("Espera de resultado cancelada por el usuario (ESC).")
             return 'cancelado'
             
         # Imprimir progreso cada 30 segundos
