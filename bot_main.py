@@ -1,7 +1,7 @@
 import sys
 import time
 from config import cargar_configuracion, CHK_VACIO, BTN_MENU, BTN_CONFIRM, CHK_MARCADO, IMG_ERROR, BTN_ABAJO, IMG_FORMULARIOS
-from vision import buscar_y_clickear, buscar_estado_checkbox, esperar_resultado_registro, leer_id_diario, capturar_pantalla_error
+from vision import buscar_y_clickear, buscar_estado_checkbox, esperar_resultado_registro, leer_id_diario, capturar_pantalla_error, normalizar_id_diario
 import pyautogui as gui
 from datetime import datetime
 
@@ -98,10 +98,11 @@ def run_bot(log_callback=print, stop_event=None):
                     centro = gui.center(loc)
                     coord = (int(centro.x), int(centro.y))
                     identificador = leer_id_diario(coord)
+                    id_normalizado = normalizar_id_diario(identificador)
                     
-                    if identificador in diarios_con_error:
+                    if id_normalizado in diarios_con_error:
                         if intentos_scroll == 0:
-                            log(f"  -> Ignorando {identificador} (lista negra).")
+                            log(f"  -> Ignorando {identificador} (lista negra, normalizado: {id_normalizado}).")
                         continue
                     
                     casilla_objetivo = coord
@@ -198,7 +199,7 @@ def run_bot(log_callback=print, stop_event=None):
                  log(f"[RESULT:ERROR] Se detectó un Error en {id_actual}. A la lista negra.")
                  capturar_pantalla_error(id_actual)
                  registrar_log(id_actual, "ERROR")
-                 diarios_con_error.append(id_actual)
+                 diarios_con_error.append(normalizar_id_diario(id_actual))
                  gui.press('esc')
                  time.sleep(2) 
             else:
