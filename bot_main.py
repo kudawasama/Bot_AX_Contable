@@ -241,7 +241,7 @@ def run_bot(log_callback=print, stop_event=None):
             if resultado == 'exito':
                 log(f"[RESULT:OK] -> Registro de {id_actual} completado.")
                 registrar_log(id_actual, "EXITOSO")
-                time.sleep(1.5)  # Esperar a que el pop-up se cierre antes del siguiente ciclo
+                time.sleep(0.1)
             elif resultado == 'cancelado':
                 log("Registro cancelado por el usuario.")
                 break
