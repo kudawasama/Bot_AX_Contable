@@ -104,7 +104,7 @@ def run_bot(log_callback=print, stop_event=None):
                 
             log(f"\n--- Iniciando Ciclo {ciclo} ---")
             
-            # Paso A: Buscar casillas vacías
+            # Paso A: Buscar casillas vacías y elegir la mejor
             intentos_scroll = 0
             while intentos_scroll < 10:
                 # Verificar parada dentro de bucles internos
@@ -152,10 +152,7 @@ def run_bot(log_callback=print, stop_event=None):
                 intentos_scroll += 1
                 if intentos_scroll < 10:
                     log(f"No hay casillas nuevas. Buscando botón de scroll ({intentos_scroll}/10)...")
-                    try:
-                        pos_flecha = gui.locateCenterOnScreen(BTN_ABAJO, region=sector_scroll, confidence=0.8, grayscale=True)
-                    except Exception:
-                        pos_flecha = None
+                    pos_flecha = gui.locateCenterOnScreen(BTN_ABAJO, region=sector_scroll, confidence=0.8, grayscale=True)
                     
                     if pos_flecha:
                         log(f"Botón de scroll encontrado. Presionando 5 veces...")
@@ -275,17 +272,11 @@ def run_bot(log_callback=print, stop_event=None):
             time.sleep(0.5)
             
     except KeyboardInterrupt:
-        log("\\nBot detenido manualmente.")
+        log("\nBot detenido manualmente.")
     except Exception as e:
-        log(f"\\nError inesperado en ciclo {ciclo}: {e}")
-        capturar_pantalla_error(f"error_fatal_ciclo_{ciclo}")
-        try:
-            limpiar_popups()
-        except Exception:
-            pass
-        time.sleep(1)
+        log(f"\nError inesperado: {e}")
         
-    log("\\nEjecución finalizada.")
+    log("\nEjecución finalizada.")
     return True
 
 if __name__ == "__main__":
