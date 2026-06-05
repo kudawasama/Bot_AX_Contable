@@ -163,8 +163,23 @@ def esperar_resultado_registro(ruta_obj_exito, ruta_obj_error, sector_region, ti
             except Exception:
                 pass
             
-        # Intentar detectar ÉXITO (cualquiera de los dos indicadores):
-        # 1. Checkbox marcado en el Sector A
+        # Intentar detectar ÉXITO:
+        # 1. Pop-up de éxito en pantalla completa (ventana que aparece "frente a todo")
+        #    Se detecta PRIMERO porque es la señal más confiable y hay que cerrarlo
+        try:
+             ubi_popup = pyautogui.locateCenterOnScreen(
+                MSG_EXITO_ASIENTO,
+                confidence=0.85,
+                grayscale=True
+             )
+             if ubi_popup:
+                 logger.info("-> Registro en AX completado exitosamente! (pop-up detectado)")
+                 cerrar_popup_exito()
+                 return 'exito'
+        except pyautogui.ImageNotFoundException:
+             pass
+        
+        # 2. Checkbox marcado en el Sector A
         try:
              ubi_exito = pyautogui.locateCenterOnScreen(
                 ruta_obj_exito, 
@@ -174,21 +189,11 @@ def esperar_resultado_registro(ruta_obj_exito, ruta_obj_error, sector_region, ti
              )
              if ubi_exito:
                  logger.info("-> Registro en AX completado exitosamente! (checkbox marcado)")
-                 return 'exito'
-        except pyautogui.ImageNotFoundException:
-             pass
-        
-        # 2. Pop-up de éxito en pantalla completa (ventana que aparece "frente a todo")
-        try:
-             ubi_popup = pyautogui.locateCenterOnScreen(
-                MSG_EXITO_ASIENTO,
-                confidence=0.85,
-                grayscale=True
-             )
-             if ubi_popup:
-                 logger.info("-> Registro en AX completado exitosamente! (pop-up detectado)")
-                 # Cerrar el pop-up de éxito para poder continuar
-                 cerrar_popup_exito()
+                 # Cerrar pop-up por si está tapando (puede haberse abierto después del checkbox)
+                 try:
+                     cerrar_popup_exito()
+                 except Exception:
+                     pass
                  return 'exito'
         except pyautogui.ImageNotFoundException:
              pass
