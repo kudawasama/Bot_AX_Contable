@@ -26,11 +26,31 @@ IMG_FORMULARIOS = os.path.join(PATRONES_DIR, "Formularios_Abiertos.png")
 
 
 def cargar_configuracion():
-    """Carga la configuración de los sectores desde un archivo JSON."""
+    """Carga y valida la configuración de sectores desde JSON."""
     if not os.path.exists(CONFIG_FILE):
         return None
-    with open(CONFIG_FILE, "r") as f:
-        return json.load(f)
+    
+    try:
+        with open(CONFIG_FILE, "r") as f:
+            config = json.load(f)
+    except json.JSONDecodeError as e:
+        print(f"ERROR: {CONFIG_FILE} no es un JSON válido: {e}")
+        return None
+    
+    # Validar que existen los sectores requeridos
+    for key in ["sector_a", "sector_b"]:
+        if key not in config:
+            print(f"ERROR: Falta '{key}' en {CONFIG_FILE}")
+            return None
+        val = config[key]
+        if not isinstance(val, (list, tuple)) or len(val) != 4:
+            print(f"ERROR: '{key}' debe ser una lista de 4 números [x, y, w, h]")
+            return None
+        if not all(isinstance(n, (int, float)) for n in val):
+            print(f"ERROR: '{key}' contiene valores no numéricos")
+            return None
+    
+    return config
 
 
 def guardar_configuracion(sector_a, sector_b, sector_scroll):
