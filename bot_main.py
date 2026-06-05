@@ -152,7 +152,10 @@ def run_bot(log_callback=print, stop_event=None):
                 intentos_scroll += 1
                 if intentos_scroll < 10:
                     log(f"No hay casillas nuevas. Buscando botón de scroll ({intentos_scroll}/10)...")
-                    pos_flecha = gui.locateCenterOnScreen(BTN_ABAJO, region=sector_scroll, confidence=0.8, grayscale=True)
+                    try:
+                        pos_flecha = gui.locateCenterOnScreen(BTN_ABAJO, region=sector_scroll, confidence=0.8, grayscale=True)
+                    except Exception:
+                        pos_flecha = None
                     
                     if pos_flecha:
                         log(f"Botón de scroll encontrado. Presionando 5 veces...")
@@ -193,7 +196,8 @@ def run_bot(log_callback=print, stop_event=None):
                 if stop_event and stop_event.is_set(): break
                 log(f"Error: No se encontró el botón de registrar para {id_actual}.")
                 capturar_pantalla_error(id_actual)
-                break
+                diarios_con_error.append(normalizar_id_diario(id_actual))
+                continue
             
             # Paso C: Confirmación
             time.sleep(0.5) 
@@ -208,7 +212,8 @@ def run_bot(log_callback=print, stop_event=None):
                  if stop_event and stop_event.is_set(): break
                  log(f"Error: No se encontró la confirmación para {id_actual}.")
                  capturar_pantalla_error(id_actual)
-                 break
+                 diarios_con_error.append(normalizar_id_diario(id_actual))
+                 continue
             
             # Paso D: Esperar resultado
             px, py = punto_click_a

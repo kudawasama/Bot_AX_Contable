@@ -162,7 +162,7 @@ def esperar_resultado_registro(ruta_obj_exito, ruta_obj_error, sector_region, ti
                 pass
             
         try:
-             # Primero buscar el éxito
+             # Primero buscar el éxito (checkbox marcado en Sector A)
              ubi_exito = pyautogui.locateCenterOnScreen(
                 ruta_obj_exito, 
                 region=sector_region, 
@@ -170,13 +170,28 @@ def esperar_resultado_registro(ruta_obj_exito, ruta_obj_error, sector_region, ti
                 grayscale=True
              )
              if ubi_exito:
-                 logger.info("-> Registro en AX completado exitosamente!")
+                 logger.info("-> Registro en AX completado exitosamente! (checkbox)")
+                 return 'exito'
+        except pyautogui.ImageNotFoundException:
+             pass
+        
+        # Segundo: buscar pop-up de éxito en pantalla completa
+        # (ventana que aparece "frente a todo" cuando el registro finaliza)
+        try:
+             from config import MSG_EXITO_ASIENTO
+             ubi_popup = pyautogui.locateCenterOnScreen(
+                MSG_EXITO_ASIENTO,
+                confidence=0.8,
+                grayscale=True
+             )
+             if ubi_popup:
+                 logger.info("-> Registro en AX completado exitosamente! (pop-up)")
                  return 'exito'
         except pyautogui.ImageNotFoundException:
              pass
 
         try:
-             # Segundo buscar el error (pantalla completa o sector de error)
+             # Tercero: buscar el error (pantalla completa)
              ubi_error = pyautogui.locateCenterOnScreen(
                 ruta_obj_error, 
                 confidence=0.9,
