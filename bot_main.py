@@ -166,7 +166,8 @@ def run_bot(log_callback=print, stop_event=None):
                         time.sleep(1.5)
                     else:
                         log("Botón no encontrado. Intentando con PgDn...")
-                        capturar_pantalla_error("scroll_button_not_found")
+                        if intentos_scroll == 1:
+                            capturar_pantalla_error("scroll_button_not_found")
                         gui.click(sector_a[0] + sector_a[2]//2, sector_a[1] + 50)
                         time.sleep(0.3)
                         gui.press('pgdn')
