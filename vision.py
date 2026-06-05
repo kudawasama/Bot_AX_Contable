@@ -139,11 +139,9 @@ def buscar_estado_checkbox(ruta_obj_inicial, ruta_obj_final, sector_region, time
 
 def esperar_resultado_registro(ruta_obj_exito, ruta_obj_error, sector_region, timeout=300, stop_event=None):
     """
-    Espera hasta que aparezca el check de éxito, el pop-up de éxito, o el cartel de error.
+    Espera hasta que aparezca el check de éxito o el cartel de error.
     stop_event: Atiende la parada inmediata de la UI.
     """
-    from config import MSG_EXITO_ASIENTO
-    
     inicio = time.time()
     logger.info(f"Esperando resultado (hasta {timeout/60:.1f} minutos)...")
     
@@ -163,9 +161,8 @@ def esperar_resultado_registro(ruta_obj_exito, ruta_obj_error, sector_region, ti
             except Exception:
                 pass
             
-        # Intentar detectar ÉXITO (cualquiera de los dos indicadores):
-        # 1. Checkbox marcado en el Sector A
         try:
+             # Primero buscar el éxito
              ubi_exito = pyautogui.locateCenterOnScreen(
                 ruta_obj_exito, 
                 region=sector_region, 
@@ -173,28 +170,13 @@ def esperar_resultado_registro(ruta_obj_exito, ruta_obj_error, sector_region, ti
                 grayscale=True
              )
              if ubi_exito:
-                 logger.info("-> Registro en AX completado exitosamente! (checkbox marcado)")
-                 return 'exito'
-        except pyautogui.ImageNotFoundException:
-             pass
-        
-        # 2. Pop-up de éxito en pantalla completa (ventana que aparece "frente a todo")
-        try:
-             ubi_popup = pyautogui.locateCenterOnScreen(
-                MSG_EXITO_ASIENTO,
-                confidence=0.85,
-                grayscale=True
-             )
-             if ubi_popup:
-                 logger.info("-> Registro en AX completado exitosamente! (pop-up detectado)")
-                 # Cerrar el pop-up de éxito para poder continuar
-                 cerrar_popup_exito()
+                 logger.info("-> Registro en AX completado exitosamente!")
                  return 'exito'
         except pyautogui.ImageNotFoundException:
              pass
 
-        # Intentar detectar ERROR (pop-up de error en pantalla completa)
         try:
+             # Segundo buscar el error (pantalla completa o sector de error)
              ubi_error = pyautogui.locateCenterOnScreen(
                 ruta_obj_error, 
                 confidence=0.9,
@@ -205,7 +187,7 @@ def esperar_resultado_registro(ruta_obj_exito, ruta_obj_error, sector_region, ti
                  return 'error'
         except pyautogui.ImageNotFoundException:
              pass
-            
+             
         time.sleep(1) # Revisar 1 vez por segundo
         
     return None
@@ -259,39 +241,6 @@ def capturar_pantalla_error(id_diario="global"):
     except Exception as e:
         logger.error(f"No se pudo realizar la captura de pantalla: {e}")
         return None
-
-
-def cerrar_popup_exito():
-    """
-    Busca y hace clic en el botón de cerrar de la ventana de éxito de AX,
-    para poder continuar con el siguiente diario.
-    """
-    from config import BTN_CERRAR_INFO
-    try:
-        ubicacion = pyautogui.locateCenterOnScreen(
-            BTN_CERRAR_INFO,
-            confidence=0.8,
-            grayscale=True
-        )
-        if ubicacion:
-            pyautogui.moveTo(int(ubicacion[0]), int(ubicacion[1]))
-            pyautogui.click()
-            logger.info("Pop-up de éxito cerrado.")
-            time.sleep(0.5)
-            return True
-        else:
-            # Intentar con ESC como fallback
-            pyautogui.press('esc')
-            time.sleep(0.5)
-            return True
-    except Exception:
-        # Fallback: presionar ESC
-        try:
-            pyautogui.press('esc')
-            time.sleep(0.5)
-        except Exception:
-            pass
-        return True
 
 
 import re

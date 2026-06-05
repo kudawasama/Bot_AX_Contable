@@ -2,7 +2,7 @@ import sys
 import time
 import json
 import os
-from config import cargar_configuracion, CHK_VACIO, BTN_MENU, BTN_CONFIRM, CHK_MARCADO, IMG_ERROR, BTN_ABAJO, IMG_FORMULARIOS, MSG_EXITO_ASIENTO, BTN_CERRAR_INFO
+from config import cargar_configuracion, CHK_VACIO, BTN_MENU, BTN_CONFIRM, CHK_MARCADO, IMG_ERROR, BTN_ABAJO, IMG_FORMULARIOS
 from vision import buscar_y_clickear, buscar_estado_checkbox, esperar_resultado_registro, leer_id_diario, capturar_pantalla_error, normalizar_id_diario
 import pyautogui as gui
 from datetime import datetime
@@ -193,14 +193,7 @@ def run_bot(log_callback=print, stop_event=None):
                 if stop_event and stop_event.is_set(): break
                 log(f"Error: No se encontró el botón de registrar para {id_actual}.")
                 capturar_pantalla_error(id_actual)
-                diarios_con_error.append(normalizar_id_diario(id_actual))
-                # Persistir lista negra
-                try:
-                    with open(blacklist_file, "w") as f:
-                        json.dump(diarios_con_error, f)
-                except Exception:
-                    pass
-                continue
+                break
             
             # Paso C: Confirmación
             time.sleep(0.5) 
@@ -215,14 +208,7 @@ def run_bot(log_callback=print, stop_event=None):
                  if stop_event and stop_event.is_set(): break
                  log(f"Error: No se encontró la confirmación para {id_actual}.")
                  capturar_pantalla_error(id_actual)
-                 diarios_con_error.append(normalizar_id_diario(id_actual))
-                 # Persistir lista negra
-                 try:
-                     with open(blacklist_file, "w") as f:
-                         json.dump(diarios_con_error, f)
-                 except Exception:
-                     pass
-                 continue
+                 break
             
             # Paso D: Esperar resultado
             px, py = punto_click_a
