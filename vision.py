@@ -186,6 +186,9 @@ def esperar_resultado_registro(ruta_obj_exito, ruta_obj_error, sector_region, ti
              )
              if ubi_popup:
                  logger.info("-> Registro en AX completado exitosamente! (pop-up)")
+                 # Cerrar el pop-up con una sola tecla ESC
+                 pyautogui.press('esc')
+                 time.sleep(0.5)
                  return 'exito'
         except pyautogui.ImageNotFoundException:
              pass
