@@ -1,11 +1,15 @@
 import sys
 import time
-import pyautogui
 from config import cargar_configuracion, CHK_VACIO, BTN_MENU, BTN_CONFIRM, CHK_MARCADO, IMG_ERROR, BTN_ABAJO, IMG_FORMULARIOS
 from vision import buscar_y_clickear, buscar_estado_checkbox, esperar_resultado_registro, leer_id_diario, capturar_pantalla_error
-import keyboard
 import pyautogui as gui
 from datetime import datetime
+
+try:
+    import keyboard
+    HAS_KEYBOARD = True
+except ImportError:
+    HAS_KEYBOARD = False
 
 def registrar_log(id_diario, resultado):
     """Guarda el resultado del procesamiento en un archivo TXT por día."""
@@ -61,14 +65,14 @@ def run_bot(log_callback=print, stop_event=None):
                     log("!!! SEGURIDAD: Se detectó 'Formularios Abiertos'. Deteniendo bot.")
                     capturar_pantalla_error("formularios_abiertos_stop")
                     break
-            except:
+            except Exception:
                 pass
 
             # Verificación de parada
             if stop_event and stop_event.is_set():
                 log("Bot detenido por la interfaz.")
                 break
-            if not stop_event and keyboard.is_pressed('esc'):
+            if not stop_event and HAS_KEYBOARD and keyboard.is_pressed('esc'):
                 log("Bot detenido por el usuario (ESC).")
                 break
                 
@@ -78,13 +82,13 @@ def run_bot(log_callback=print, stop_event=None):
             intentos_scroll = 0
             while intentos_scroll < 10:
                 # Verificar parada dentro de bucles internos
-                if (stop_event and stop_event.is_set()) or (not stop_event and keyboard.is_pressed('esc')):
+                if (stop_event and stop_event.is_set()) or (not stop_event and HAS_KEYBOARD and keyboard.is_pressed('esc')):
                     break
 
                 try:
                     todas_vacias = list(gui.locateAllOnScreen(CHK_VACIO, region=sector_a, confidence=0.9, grayscale=True))
                     todas_vacias.sort(key=lambda loc: loc.top)
-                except:
+                except Exception:
                     todas_vacias = []
 
                 casilla_objetivo = None
@@ -171,33 +175,34 @@ def run_bot(log_callback=print, stop_event=None):
             
             # Paso D: Esperar resultado
             px, py = punto_click_a
-            region_especifica_checkbox = (int(px)-20, int(py)-20, 40, 40)
             time.sleep(2)
             
+            # Usar el Sector A completo para detectar el check marcado
+            # (evita falsos negativos por región 40x40 que causaban timeout de 1h)
             resultado = esperar_resultado_registro(
                 ruta_obj_exito=CHK_MARCADO,
                 ruta_obj_error=IMG_ERROR,
-                sector_region=region_especifica_checkbox,
+                sector_region=sector_a,
                 timeout=3600,
                 stop_event=stop_event
             )
             
             if resultado == 'exito':
-                log(f"-> Registro de {id_actual} completado.")
+                log(f"[RESULT:OK] -> Registro de {id_actual} completado.")
                 registrar_log(id_actual, "EXITOSO")
                 time.sleep(0.1)
             elif resultado == 'cancelado':
                 log("Registro cancelado por el usuario.")
                 break
             elif resultado == 'error':
-                 log(f"Se detectó un Error en {id_actual}. A la lista negra.")
+                 log(f"[RESULT:ERROR] Se detectó un Error en {id_actual}. A la lista negra.")
                  capturar_pantalla_error(id_actual)
                  registrar_log(id_actual, "ERROR")
                  diarios_con_error.append(id_actual)
                  gui.press('esc')
                  time.sleep(2) 
             else:
-                 log(f"Timeout extremo para {id_actual}.")
+                 log(f"[RESULT:ERROR] Timeout extremo para {id_actual}.")
                  capturar_pantalla_error(id_actual)
                  break
                  
