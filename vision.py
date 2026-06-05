@@ -161,37 +161,8 @@ def esperar_resultado_registro(ruta_obj_exito, ruta_obj_error, sector_region, ti
             except Exception:
                 pass
             
-        try:
-             # Primero buscar el éxito (checkbox marcado en Sector A)
-             ubi_exito = pyautogui.locateCenterOnScreen(
-                ruta_obj_exito, 
-                region=sector_region, 
-                confidence=0.8,
-                grayscale=True
-             )
-             if ubi_exito:
-                 logger.info("-> Registro en AX completado exitosamente! (checkbox)")
-                 # Esperar un momento a que aparezca el pop-up y cerrarlo
-                 time.sleep(2)
-                 from config import MSG_EXITO_ASIENTO
-                 try:
-                     ubi_popup = pyautogui.locateCenterOnScreen(
-                        MSG_EXITO_ASIENTO,
-                        confidence=0.8,
-                        grayscale=True
-                     )
-                     if ubi_popup:
-                         logger.info("Pop-up detectado, cerrando con ESC...")
-                         pyautogui.press('esc')
-                         time.sleep(0.5)
-                 except pyautogui.ImageNotFoundException:
-                     pass
-                 return 'exito'
-        except pyautogui.ImageNotFoundException:
-             pass
-        
-        # Segundo: buscar pop-up de éxito en pantalla completa
-        # (ventana que aparece "frente a todo" cuando el registro finaliza)
+        # 1. Buscar pop-up de ÉXITO en pantalla completa
+        # (el bot solo avanza cuando ve este patrón, no antes)
         try:
              from config import MSG_EXITO_ASIENTO
              ubi_popup = pyautogui.locateCenterOnScreen(
@@ -200,16 +171,15 @@ def esperar_resultado_registro(ruta_obj_exito, ruta_obj_error, sector_region, ti
                 grayscale=True
              )
              if ubi_popup:
-                 logger.info("-> Registro en AX completado exitosamente! (pop-up)")
-                 # Cerrar el pop-up con una sola tecla ESC
+                 logger.info("-> Registro completado exitosamente! (pop-up detectado)")
                  pyautogui.press('esc')
                  time.sleep(0.5)
                  return 'exito'
         except pyautogui.ImageNotFoundException:
              pass
-
+        
+        # 2. Buscar Error de registro en pantalla completa
         try:
-             # Tercero: buscar el error (pantalla completa)
              ubi_error = pyautogui.locateCenterOnScreen(
                 ruta_obj_error, 
                 confidence=0.9,
