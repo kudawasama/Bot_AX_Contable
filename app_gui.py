@@ -285,12 +285,21 @@ class BotAXGui:
         stream_card = self._card(right)
         stream_inner = tk.Frame(stream_card, bg=self.c["card"])
         stream_inner.pack(fill="both", expand=True, padx=16, pady=(14, 14))
-        stream_inner.grid_rowconfigure(0, weight=1)
+        stream_inner.grid_rowconfigure(1, weight=1)
         stream_inner.grid_columnconfigure(0, weight=1)
 
-        tk.Label(stream_inner, text="LIVE STREAM", font=self.f["h3"],
-                 bg=self.c["card"], fg=self.c["amber"]).grid(
-            row=0, column=0, sticky="w", pady=(0, 8))
+        # header row: label + toolbar
+        head_frame = tk.Frame(stream_inner, bg=self.c["card"])
+        head_frame.grid(row=0, column=0, sticky="ew", pady=(0, 8))
+        head_frame.grid_columnconfigure(0, weight=1)
+
+        tk.Label(head_frame, text="LIVE STREAM", font=self.f["h3"],
+                 bg=self.c["card"], fg=self.c["amber"]).pack(side="left")
+
+        # toolbar buttons (right side)
+        self._log_btn("📋", "Mostrar solo errores", self._show_errors, head_frame)
+        self._log_btn("✕S", "Eliminar seleccionadas", self._delete_selected, head_frame)
+        self._log_btn("✕A", "Limpiar todo el log", self._clear_log, head_frame)
 
         self.log_widget = scrolledtext.ScrolledText(
             stream_inner, bg="#0d1117", fg=self.c["text"],
@@ -304,6 +313,20 @@ class BotAXGui:
         self.log_widget.tag_config("err", foreground=self.c["red"])
         self.log_widget.tag_config("warn", foreground=self.c["amber"])
         self.log_widget.tag_config("info", foreground=self.c["accent"])
+        self.log_widget.tag_config("err_sel", background="#3d1010",
+                                   foreground=self.c["red"])
+
+        # Click derecho → menú contextual sobre errores
+        self._err_menu = tk.Menu(self.log_widget, tearoff=0,
+                                 bg=self.c["card"], fg=self.c["text"],
+                                 activebackground=self.c["hover"],
+                                 activeforeground=self.c["accent"],
+                                 font=self.f["body"])
+        self._err_menu.add_command(label="🗑 Borrar esta línea",
+                                   command=self._delete_clicked_err)
+        self._err_menu.add_command(label="📋 Borrar solo errores",
+                                   command=self._delete_all_errs)
+        self.log_widget.bind("<Button-3>", self._show_err_menu)
 
     # ============================================================
     #  COMPONENTS
@@ -336,6 +359,16 @@ class BotAXGui:
                  bg=self.c["card"], fg=self.c["subtext"]).pack(side="left")
         tk.Label(f, text=value, font=self.f["body"],
                  bg=self.c["card"], fg=color).pack(side="right")
+
+    def _log_btn(self, text, tooltip, cmd, parent):
+        """Pequeño botón para toolbar del log."""
+        btn = tk.Label(parent, text=text, font=self.f["sm"],
+                       bg=self.c["card"], fg=self.c["subtext"],
+                       cursor="hand2", padx=4)
+        btn.pack(side="right", padx=(2, 0))
+        btn.bind("<Button-1>", lambda e: cmd())
+        btn.bind("<Enter>", lambda e: btn.config(fg=self.c["accent"]))
+        btn.bind("<Leave>", lambda e: btn.config(fg=self.c["subtext"]))
 
     def _progress(self, parent, color, tag_name):
         c = tk.Canvas(parent, bg=self.c["hover"], height=3,
@@ -511,6 +544,77 @@ class BotAXGui:
             os.remove(bl)
             self.log("🗑 Blacklist borrada.")
         self.log("🧹 Contadores reseteados.")
+        # También scrollear a los errores en el log
+        self._show_errors()
+
+    # ── Log interactivo ──────────────────────────────────────
+
+    def _get_err_lines(self):
+        """Retorna lista ordenada de números de línea con tag 'err'."""
+        ranges = self.log_widget.tag_ranges("err")
+        return sorted(set(int(str(r).split(".")[0]) for r in ranges))
+
+    def _show_errors(self):
+        """Scrollea al primer error y resalta todos."""
+        lines = self._get_err_lines()
+        if not lines:
+            self.log("📋 No hay errores en el log.")
+            return
+        self.log_widget.config(state="normal")
+        for ln in lines:
+            self.log_widget.tag_add("err_sel", f"{ln}.0", f"{ln}.end")
+        self.log_widget.see(f"{lines[0]}.0")
+        self.log_widget.config(state="disabled")
+        self.log(f"📋 {len(lines)} error(es) resaltado(s).")
+
+    def _delete_selected(self):
+        """Borra las líneas resaltadas (con tag err_sel)."""
+        lines = self._get_err_lines()
+        if not lines:
+            return
+        self.log_widget.config(state="normal")
+        # Se eliminan por el tag "err" para cubrir líneas completas
+        for ln in reversed(lines):
+            self.log_widget.delete(f"{ln}.0", f"{ln+1}.0")
+        self.log_widget.config(state="disabled")
+        self.log(f"✕ {len(lines)} error(es) eliminado(s) del log.")
+
+    def _clear_log(self):
+        """Limpia TODO el log widget."""
+        self.log_widget.config(state="normal")
+        self.log_widget.delete("1.0", tk.END)
+        self.log_widget.config(state="disabled")
+
+    def _show_err_menu(self, event):
+        """Menú contextual con click derecho sobre una línea de error."""
+        index = self.log_widget.index(f"@{event.x},{event.y}")
+        line = int(index.split(".")[0])
+        tags = self.log_widget.tag_names(f"{line}.0")
+        if "err" in tags:
+            self._err_menu.line = line
+            self._err_menu.tk_popup(event.x_root, event.y_root)
+        return "break"
+
+    def _delete_clicked_err(self):
+        """Borra la línea donde se hizo click derecho."""
+        line = getattr(self._err_menu, "line", None)
+        if line is None:
+            return
+        self.log_widget.config(state="normal")
+        self.log_widget.delete(f"{line}.0", f"{line+1}.0")
+        self.log_widget.config(state="disabled")
+        self.log(f"🗑 Línea {line} eliminada.")
+
+    def _delete_all_errs(self):
+        """Borra todas las líneas con tag err del widget."""
+        lines = self._get_err_lines()
+        if not lines:
+            return
+        self.log_widget.config(state="normal")
+        for ln in reversed(lines):
+            self.log_widget.delete(f"{ln}.0", f"{ln+1}.0")
+        self.log_widget.config(state="disabled")
+        self.log("🗑 Todos los errores eliminados del log.")
 
     def _do_sync(self):
         """Pull latest code from git in a background thread."""
