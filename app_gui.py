@@ -4,6 +4,7 @@ import threading
 import queue
 import sys
 import os
+import time
 from datetime import datetime
 from bot_main import run_bot
 from setup_areas import AreaSelector
@@ -56,6 +57,8 @@ class BotAXGui:
         self.ok_count = 0
         self.err_count = 0
         self.cycle = 0
+        self._session_start = None
+        self._session_paused = 0.0
 
         # Conectar logging estructurado a la GUI
         queue_handler = QueueLogHandler(self.log_queue)
@@ -188,9 +191,9 @@ class BotAXGui:
                  bg=self.c["card"], fg=self.c["accent"]).pack(
             anchor="w", padx=16, pady=(14, 8))
 
-        self._status_row(s, "Engine",  "IDLE",       self.c["subtext"])
-        self._status_row(s, "Session", "00:00:00",   self.c["subtext"])
-        self._status_row(s, "Node",    "ACTIVE",     self.c["green"])
+        self._lbl_engine = self._status_row(s, "Engine",  "IDLE",       self.c["subtext"])
+        self._lbl_session = self._status_row(s, "Session", "00:00:00",   self.c["subtext"])
+        self._lbl_node = self._status_row(s, "Node",    "ACTIVE",     self.c["green"])
 
         # card: METRICS
         m = self._card(left)
@@ -357,8 +360,10 @@ class BotAXGui:
         f.pack(fill="x", padx=16, pady=1)
         tk.Label(f, text=label, font=self.f["body"],
                  bg=self.c["card"], fg=self.c["subtext"]).pack(side="left")
-        tk.Label(f, text=value, font=self.f["body"],
-                 bg=self.c["card"], fg=color).pack(side="right")
+        lbl = tk.Label(f, text=value, font=self.f["body"],
+                       bg=self.c["card"], fg=color)
+        lbl.pack(side="right")
+        return lbl
 
     def _log_btn(self, text, tooltip, cmd, parent):
         """Pequeño botón para toolbar del log."""
@@ -429,6 +434,12 @@ class BotAXGui:
 
     def _animate_clock(self):
         self.clock_lbl.config(text=datetime.now().strftime("%H:%M:%S"))
+        # Actualizar sesión en vivo si el engine está corriendo
+        if self._session_start is not None and not self.pause_event.is_set():
+            elapsed = time.time() - self._session_start - self._session_paused
+            h, r = divmod(int(elapsed), 3600)
+            m, s = divmod(r, 60)
+            self._lbl_session.config(text=f"{h:02d}:{m:02d}:{s:02d}")
         self.root.after(1000, self._animate_clock)
 
     def _pulse(self, active):
@@ -500,6 +511,11 @@ class BotAXGui:
             return
         self.stop_event.clear()
         self.pause_event.clear()
+        # Status en vivo
+        self._session_start = time.time()
+        self._session_paused = 0.0
+        self._lbl_engine.config(text="RUNNING", fg=self.c["green"])
+        self._lbl_session.config(text="00:00:00", fg=self.c["accent"])
         self.log("Engine starting ...")
         self.btn_start.config(state="disabled", fg=self.c["muted"])
         self.btn_stop.config(state="normal", fg=self.c["red"])
@@ -513,6 +529,10 @@ class BotAXGui:
         self.stop_event.set()
         self.pause_event.clear()  # salir de pausa si estaba
         self.log("Stopping engine ...")
+        self._lbl_engine.config(text="IDLE", fg=self.c["subtext"])
+        self._lbl_session.config(text="00:00:00", fg=self.c["subtext"])
+        self._session_start = None
+        self._session_paused = 0.0
         self.btn_stop.config(state="disabled", fg=self.c["muted"])
         self.btn_pause.config(state="disabled", fg=self.c["muted"], text="⏸ Pause")
         self._pulse(False)
@@ -520,10 +540,12 @@ class BotAXGui:
     def toggle_pause(self):
         if self.pause_event.is_set():
             self.pause_event.clear()
+            self._lbl_engine.config(text="RUNNING", fg=self.c["green"])
             self.log("▶ Reanudando ...")
             self.btn_pause.config(text="⏸ Pause", fg=self.c["amber"])
         else:
             self.pause_event.set()
+            self._lbl_engine.config(text="PAUSED", fg=self.c["amber"])
             self.log("⏸ Pausado — el bot esperará al reanudar")
             self.btn_pause.config(text="▶ Resume", fg=self.c["green"])
 
@@ -672,6 +694,12 @@ class BotAXGui:
                     pause_event=self.pause_event)
         finally:
             self.pause_event.clear()
+            self.root.after(0, lambda: self._lbl_engine.config(
+                text="IDLE", fg=self.c["subtext"]))
+            self.root.after(0, lambda: self._lbl_session.config(
+                text="00:00:00", fg=self.c["subtext"]))
+            self._session_start = None
+            self._session_paused = 0.0
             self.root.after(0, lambda: self.btn_start.config(
                 state="normal", fg=self.c["green"]))
             self.root.after(0, lambda: self.btn_stop.config(
