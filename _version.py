@@ -13,7 +13,7 @@ el patch en cada commit. Para cambios mayores, ejecutar manualmente:
 import subprocess
 import os
 
-__version__ = "00.01.34"
+__version__ = "00.01.35"
 VERSION_TAG = f"v-{__version__}"
 
 

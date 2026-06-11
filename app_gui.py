@@ -487,13 +487,9 @@ class BotAXGui:
                     self.err_count += 1
                     self.lbl_err.config(text=str(self.err_count))
 
-                if "Iniciando Ciclo" in msg:
-                    try:
-                        n = int(msg.split("Ciclo")[1].split("---")[0].strip())
-                        self.cycle = n
-                        self.lbl_cy.config(text=str(n))
-                    except Exception:
-                        pass
+                # Ciclo = total procesados (éxitos + errores)
+                self.cycle = self.ok_count + self.err_count
+                self.lbl_cy.config(text=str(self.cycle))
 
                 total = max(self.ok_count + self.err_count, 1)
                 self._update_bar(self.bar_ok, self.bar_ok_rect,
