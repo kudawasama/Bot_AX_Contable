@@ -24,11 +24,12 @@ def registrar_log(id_diario, resultado):
         f.write(linea)
 
 # Ciclo principal de ejecución
-def run_bot(log_callback=print, stop_event=None):
+def run_bot(log_callback=print, stop_event=None, pause_event=None):
     """
     Ejecuta el bot. 
     log_callback: Función para enviar mensajes (por defecto print).
     stop_event: threading.Event para detener el bot desde la UI.
+    pause_event: threading.Event — cuando está set, el bot espera.
     """
     def log(msg):
         log_callback(msg)
@@ -101,7 +102,16 @@ def run_bot(log_callback=print, stop_event=None):
             if not stop_event and HAS_KEYBOARD and keyboard.is_pressed('esc'):
                 log("Bot detenido por el usuario (ESC).")
                 break
-                
+
+            # Pausa: esperar hasta que se reanude
+            while pause_event and pause_event.is_set():
+                if stop_event and stop_event.is_set():
+                    break
+                time.sleep(0.3)
+
+            if stop_event and stop_event.is_set():
+                break
+
             log(f"\n--- Iniciando Ciclo {ciclo} ---")
             
             # Paso A: Buscar casillas vacías y elegir la mejor
@@ -109,6 +119,13 @@ def run_bot(log_callback=print, stop_event=None):
             while intentos_scroll < 10:
                 # Verificar parada dentro de bucles internos
                 if (stop_event and stop_event.is_set()) or (not stop_event and HAS_KEYBOARD and keyboard.is_pressed('esc')):
+                    break
+                # Verificar pausa
+                while pause_event and pause_event.is_set():
+                    if stop_event and stop_event.is_set():
+                        break
+                    time.sleep(0.3)
+                if stop_event and stop_event.is_set():
                     break
 
                 try:
@@ -158,9 +175,9 @@ def run_bot(log_callback=print, stop_event=None):
                         pos_flecha = None
                     
                     if pos_flecha:
-                        log(f"Botón de scroll encontrado. Presionando 5 veces...")
+                        log("Botón de scroll encontrado. Presionando 2 veces...")
                         gui.moveTo(pos_flecha.x, pos_flecha.y, duration=0.2)
-                        for _ in range(5):
+                        for _ in range(2):
                             gui.click()
                             time.sleep(0.1)
                         time.sleep(1.5)

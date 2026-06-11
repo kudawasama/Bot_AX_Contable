@@ -51,6 +51,7 @@ class BotAXGui:
         # ---- state ----
         self.bot_thread = None
         self.stop_event = threading.Event()
+        self.pause_event = threading.Event()
         self.log_queue = queue.Queue()
         self.ok_count = 0
         self.err_count = 0
@@ -239,6 +240,7 @@ class BotAXGui:
         self._action_btn(a, "Adjust Regions",   self.run_setup)
         self._action_btn(a, "View Snapshots",   self.open_screenshots)
         self._action_btn(a, "Export Logs",      self.open_logs)
+        self._action_btn(a, "Clear Errors",     self.clear_errors)
 
     # ----------------------------------------------------------
     #  RIGHT PANEL
@@ -270,6 +272,14 @@ class BotAXGui:
             btn_row, "Stop Engine",   self.c["red"],   self.stop_bot,
             disabled=True)
         self.btn_stop.pack(side="left", fill="x", expand=True, padx=(6, 0))
+
+        # segunda fila: pause
+        pause_row = tk.Frame(ctrl_inner, bg=self.c["card"])
+        pause_row.pack(fill="x", pady=(8, 0))
+        self.btn_pause = self._ctrl_btn(
+            pause_row, "⏸ Pause",  self.c["amber"], self.toggle_pause,
+            disabled=True)
+        self.btn_pause.pack(side="left", fill="x", expand=True)
 
         # ---- NEURAL STREAM ----
         stream_card = self._card(right)
@@ -456,9 +466,11 @@ class BotAXGui:
         if self.bot_thread and self.bot_thread.is_alive():
             return
         self.stop_event.clear()
+        self.pause_event.clear()
         self.log("Engine starting ...")
         self.btn_start.config(state="disabled", fg=self.c["muted"])
         self.btn_stop.config(state="normal", fg=self.c["red"])
+        self.btn_pause.config(state="normal", fg=self.c["amber"], text="⏸ Pause")
         self._pulse(True)
         self.bot_thread = threading.Thread(
             target=self.run_bot_thread, daemon=True)
@@ -466,9 +478,39 @@ class BotAXGui:
 
     def stop_bot(self):
         self.stop_event.set()
+        self.pause_event.clear()  # salir de pausa si estaba
         self.log("Stopping engine ...")
         self.btn_stop.config(state="disabled", fg=self.c["muted"])
+        self.btn_pause.config(state="disabled", fg=self.c["muted"], text="⏸ Pause")
         self._pulse(False)
+
+    def toggle_pause(self):
+        if self.pause_event.is_set():
+            self.pause_event.clear()
+            self.log("▶ Reanudando ...")
+            self.btn_pause.config(text="⏸ Pause", fg=self.c["amber"])
+        else:
+            self.pause_event.set()
+            self.log("⏸ Pausado — el bot esperará al reanudar")
+            self.btn_pause.config(text="▶ Resume", fg=self.c["green"])
+
+    def clear_errors(self):
+        """Resetea contadores y borra blacklist.json."""
+        self.ok_count = 0
+        self.err_count = 0
+        self.cycle = 0
+        self.lbl_ok.config(text="0")
+        self.lbl_err.config(text="0")
+        self.lbl_cy.config(text="0")
+        self._update_bar(self.bar_ok, self.bar_ok_rect, 0, 0)
+        self._update_bar(self.bar_err, self.bar_err_rect, 0, 0)
+        self._update_bar(self.bar_cy, self.bar_cy_rect, 0, 0)
+        # Borrar blacklist
+        bl = os.path.join(os.path.dirname(os.path.abspath(__file__)), "blacklist.json")
+        if os.path.exists(bl):
+            os.remove(bl)
+            self.log("🗑 Blacklist borrada.")
+        self.log("🧹 Contadores reseteados.")
 
     def _do_sync(self):
         """Pull latest code from git in a background thread."""
@@ -522,12 +564,16 @@ class BotAXGui:
 
     def run_bot_thread(self):
         try:
-            run_bot(log_callback=self.log, stop_event=self.stop_event)
+            run_bot(log_callback=self.log, stop_event=self.stop_event,
+                    pause_event=self.pause_event)
         finally:
+            self.pause_event.clear()
             self.root.after(0, lambda: self.btn_start.config(
                 state="normal", fg=self.c["green"]))
             self.root.after(0, lambda: self.btn_stop.config(
                 state="disabled", fg=self.c["muted"]))
+            self.root.after(0, lambda: self.btn_pause.config(
+                state="disabled", fg=self.c["muted"], text="⏸ Pause"))
             self.root.after(0, lambda: self._pulse(False))
 
     def run_setup(self):
