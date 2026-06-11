@@ -196,7 +196,7 @@ def run_bot(log_callback=print, stop_event=None, pause_event=None):
                 log("No se encontraron más diarios tras 10 intentos de scroll. Fin.")
                 break
 
-            log(f"==> PROCESANDO DIARIO: {id_actual}")
+            log(f"==> PROCESANDO DIARIO: {normalizar_id_diario(id_actual)}")
             gui.moveTo(casilla_objetivo[0], casilla_objetivo[1], duration=0.5)
             gui.click()
             punto_click_a = casilla_objetivo

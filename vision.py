@@ -9,6 +9,25 @@ from config import TESSERACT_CMD
 from logger import get_logger
 logger = get_logger()
 
+# Nombres cortos para mostrar en logs (en vez de rutas largas de archivo)
+NOMBRES_IMAGENES = {
+    "btn_registrar_menu.png": "Menu",
+    "btn_registrar_confirm.png": "Confirmar",
+    "checkbox_vacio.png": "Checkbox",
+    "check_usuario_marcado.png": "Check-Marcado",
+    "Error_Registro.png": "Error-Ventana",
+    "Avanzar_Abajo.png": "Scroll",
+    "Formularios_Abiertos.png": "FormAbierto",
+    "msg_exito_asiento_1.png": "Exito-Ventana",
+    "btn_cerrar_info.png": "Cerrar",
+}
+
+
+def nombre_corto(ruta):
+    """Devuelve el nombre corto de una imagen para mostrar en logs."""
+    base = os.path.basename(ruta)
+    return NOMBRES_IMAGENES.get(base, base)
+
 pytesseract.pytesseract.tesseract_cmd = TESSERACT_CMD
 
 # PAUSE: Tiempo de espera mínimo después de comandos de pyautogui
@@ -38,7 +57,7 @@ def buscar_y_clickear(ruta_imagen, sector_region=None, confidencialidad=0.8, tim
                     img = Image.open(ruta_imagen)
                     iw, ih = img.size
                     if iw > sector_region[2] or ih > sector_region[3]:
-                        logger.warning(f"Region {sector_region} muy pequeña para {os.path.basename(ruta_imagen)} ({iw}x{ih}). Buscando en pantalla completa.")
+                        logger.warning(f"Region {sector_region} muy pequeña para {nombre_corto(ruta_imagen)} ({iw}x{ih}). Buscando en pantalla completa.")
                     else:
                         try:
                             ubicacion = pyautogui.locateCenterOnScreen(
@@ -70,7 +89,7 @@ def buscar_y_clickear(ruta_imagen, sector_region=None, confidencialidad=0.8, tim
                         grayscale=True
                     )
                     if ubicacion and sector_region:
-                        logger.warning(f"{os.path.basename(ruta_imagen)} fuera de sector B - redefinir area")
+                        logger.warning(f"{nombre_corto(ruta_imagen)} fuera de sector B")
                 except pyautogui.ImageNotFoundException:
                     pass
 
@@ -79,10 +98,10 @@ def buscar_y_clickear(ruta_imagen, sector_region=None, confidencialidad=0.8, tim
                 ubicacion = (int(ubicacion[0]), int(ubicacion[1]))
                 # Si solo queremos esperar a que aparezca o cambie de estado visual
                 if wait_only:
-                    logger.info(f"Detectado: {os.path.basename(ruta_imagen)}")
+                    logger.info(f"Detectado: {nombre_corto(ruta_imagen)}")
                     return ubicacion
                 
-                logger.info(f"Click: {os.path.basename(ruta_imagen)} @ ({ubicacion[0]},{ubicacion[1]})")
+                logger.info(f"Click: {nombre_corto(ruta_imagen)} @ ({ubicacion[0]},{ubicacion[1]})")
                 
                 # Mover el mouse a la ubicación de forma instantánea
                 pyautogui.moveTo(ubicacion[0], ubicacion[1])
@@ -104,7 +123,7 @@ def buscar_y_clickear(ruta_imagen, sector_region=None, confidencialidad=0.8, tim
         # Velocidad de escaneo: cuánto tiempo esperar entre cada intento de buscar la imagen
         time.sleep(0.5) 
         
-    logger.warning(f"Timeout: {os.path.basename(ruta_imagen)} no encontrado ({timeout}s).")
+    logger.warning(f"Timeout: {nombre_corto(ruta_imagen)} no encontrado ({timeout}s).")
     return False
 
 def buscar_estado_checkbox(ruta_obj_inicial, ruta_obj_final, sector_region, timeout=30, stop_event=None):
