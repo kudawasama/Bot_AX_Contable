@@ -173,7 +173,7 @@ def run_bot(log_callback=print, stop_event=None, pause_event=None):
                     pos_flecha = None
 
                 if pos_flecha:
-                    log("Botón de scroll encontrado. Presionando 3 veces...")
+                    log("Botón de scroll encontrado. Presionando 1 vez...")
                     gui.moveTo(pos_flecha.x, pos_flecha.y, duration=0.2)
                     for _ in range(VISION.scroll_clicks):
                         gui.click()

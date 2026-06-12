@@ -31,7 +31,7 @@ class VisionDefaults:
     timeout_normal: int = 30
     timeout_resultado: int = 3600  # 60 min
     scroll_intentos: int = 3
-    scroll_clicks: int = 3
+    scroll_clicks: int = 1
 
 
 @dataclass(frozen=True)
