@@ -13,8 +13,9 @@ logger = get_logger()
 NOMBRES_IMAGENES = {
     "btn_registrar_menu.png": "Menu",
     "btn_registrar_confirm.png": "Confirmar",
+    "check_usuario_desmarcado.png": "Usuario-Vacio",
     "checkbox_vacio.png": "Checkbox",
-    "check_usuario_marcado.png": "Check-Marcado",
+    "check_usuario_marcado.png": "Usuario-Marcado",
     "Error_Registro.png": "Error-Ventana",
     "Avanzar_Abajo.png": "Scroll",
     "Formularios_Abiertos.png": "FormAbierto",
