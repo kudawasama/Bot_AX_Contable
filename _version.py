@@ -15,7 +15,7 @@ El pre-commit hook detecta el tipo de commit y auto-bumpea:
 import subprocess
 import os
 
-__version__ = "00.01.40"
+__version__ = "01.00.00"
 VERSION_TAG = f"v-{__version__}"
 
 
