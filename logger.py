@@ -13,7 +13,7 @@ LOG_FILE = os.path.join(LOG_DIR, "bot_ax.log")
 
 # Formato: [2026-06-05 13:04:08] [INFO] mensaje
 LOG_FORMAT = "[%(asctime)s] [%(levelname)s] %(message)s"
-LOG_DATE_FORMAT = "%Y-%m-%d %H:%M:%S"
+LOG_DATE_FORMAT = "%Y-%m-%d"
 
 _logger = None
 

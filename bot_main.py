@@ -256,7 +256,7 @@ def run_bot(log_callback=print, stop_event=None, pause_event=None):
             )
             
             if resultado == 'exito':
-                log(f"[RESULT:OK] -> Registro de {id_actual} completado.")
+                log(f"[RESULT:OK] -> Registro de {normalizar_id_diario(id_actual)} completado.")
                 registrar_log(id_actual, "EXITOSO")
                 time.sleep(0.1)
             elif resultado == 'cancelado':
