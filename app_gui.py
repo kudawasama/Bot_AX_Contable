@@ -712,14 +712,16 @@ class BotAXGui:
         self.root.deiconify()
 
     def open_screenshots(self):
-        path = os.path.join("logs", "capturas")
+        script_dir = os.path.dirname(os.path.abspath(__file__))
+        path = os.path.join(script_dir, "logs", "capturas")
         if not os.path.exists(path):
             os.makedirs(path)
         os.startfile(path)
 
     def open_logs(self):
+        script_dir = os.path.dirname(os.path.abspath(__file__))
         fecha_hoy = datetime.now().strftime("%Y-%m-%d")
-        name = f"registro_{fecha_hoy}.txt"
+        name = os.path.join(script_dir, f"registro_{fecha_hoy}.txt")
         if os.path.exists(name):
             os.startfile(name)
 

@@ -17,11 +17,15 @@ def registrar_log(id_diario, resultado):
     """Guarda el resultado del procesamiento en un archivo TXT por día."""
     ahora = datetime.now()
     fecha_hoy = ahora.strftime("%Y-%m-%d")
-    nombre_archivo = f"registro_{fecha_hoy}.txt"
+    script_dir = os.path.dirname(os.path.abspath(__file__))
+    nombre_archivo = os.path.join(script_dir, f"registro_{fecha_hoy}.txt")
     timestamp = ahora.strftime("%H:%M:%S")
     linea = f"[{timestamp}] Diario: {id_diario} - Resultado: {resultado}\n"
-    with open(nombre_archivo, "a", encoding="utf-8") as f:
-        f.write(linea)
+    try:
+        with open(nombre_archivo, "a", encoding="utf-8") as f:
+            f.write(linea)
+    except Exception as e:
+        print(f"Error escribiendo registro: {e}")
 
 # Ciclo principal de ejecución
 def run_bot(log_callback=print, stop_event=None, pause_event=None):
@@ -116,7 +120,7 @@ def run_bot(log_callback=print, stop_event=None, pause_event=None):
             
             # Paso A: Buscar casillas vacías y elegir la mejor
             intentos_scroll = 0
-            while intentos_scroll < 10:
+            while intentos_scroll < 2:
                 # Verificar parada dentro de bucles internos
                 if (stop_event and stop_event.is_set()) or (not stop_event and HAS_KEYBOARD and keyboard.is_pressed('esc')):
                     break
@@ -175,9 +179,9 @@ def run_bot(log_callback=print, stop_event=None, pause_event=None):
                         pos_flecha = None
                     
                     if pos_flecha:
-                        log("Botón de scroll encontrado. Presionando 3 veces...")
+                        log("Botón de scroll encontrado. Presionando 5 veces...")
                         gui.moveTo(pos_flecha.x, pos_flecha.y, duration=0.2)
-                        for _ in range(3):
+                        for _ in range(5):
                             gui.click()
                             time.sleep(0.1)
                         time.sleep(1.5)
@@ -190,10 +194,10 @@ def run_bot(log_callback=print, stop_event=None, pause_event=None):
                         gui.press('pgdn')
                         time.sleep(2)
                 else:
-                    log("Límite de intentos de scroll (10) alcanzado.")
+                    log("Límite de intentos de scroll (2) alcanzado.")
 
             if not casilla_objetivo:
-                log("No se encontraron más diarios tras 10 intentos de scroll. Fin.")
+                log("No se encontraron más diarios tras 2 intentos de scroll. Fin.")
                 break
 
             log(f"==> PROCESANDO DIARIO: {normalizar_id_diario(id_actual)}")
