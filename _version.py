@@ -2,11 +2,13 @@
 _version.py — fuente única de verdad para la versión de Bot AX Contable.
 
 Formato: v-{major:02d}.{minor:02d}.{patch:02d}
-Ejemplo: v-00.01.41
+Ejemplo: v-00.01.42
 
-Pre-alpha. El pre-commit hook auto-incrementa patch (+0.00.01)
-en cada commit. Major/minor se ajustan manualmente cuando
-corresponda (pre-alpha → beta → stable).
+Pre-alpha. El pre-commit hook auto-bumpea según los cambios:
+  - Archivos NUEVOS añadidos → minor (+0.01.00)
+  - Archivos ELIMINADOS → minor (+0.01.00)
+  - Solo modificaciones en archivos existentes → patch (+0.00.01)
+  - Si se tocó _version.py manualmente → NO auto-bump
 """
 
 import subprocess
