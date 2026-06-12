@@ -16,7 +16,7 @@ TESSERACT_CMD = os.environ.get(
 )
 
 # Nombres de archivos de patrones según la documentación.
-CHK_VACIO = os.path.join(PATRONES_DIR, "check_usuario_desmarcado.png")
+CHK_VACIO = os.path.join(PATRONES_DIR, "checkbox_vacio.png")
 BTN_MENU = os.path.join(PATRONES_DIR, "btn_registrar_menu.png")
 BTN_CONFIRM = os.path.join(PATRONES_DIR, "btn_registrar_confirm.png")
 CHK_MARCADO = os.path.join(PATRONES_DIR, "check_usuario_marcado.png")

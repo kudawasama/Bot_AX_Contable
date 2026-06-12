@@ -140,7 +140,7 @@ def run_bot(log_callback=print, stop_event=None, pause_event=None):
                 # Si no encontró en el sector, buscar en pantalla completa (puede haberse movido)
                 if not todas_vacias:
                     try:
-                        todas_vacias = list(gui.locateAllOnScreen(CHK_VACIO, confidence=0.85, grayscale=True))
+                        todas_vacias = list(gui.locateAllOnScreen(CHK_VACIO, confidence=0.75, grayscale=True))
                         todas_vacias.sort(key=lambda loc: loc.top)
                     except Exception:
                         todas_vacias = []
