@@ -30,8 +30,8 @@ class VisionDefaults:
     confianza_scroll_full: float = 0.65
     timeout_normal: int = 30
     timeout_resultado: int = 3600  # 60 min
-    scroll_intentos: int = 4
-    scroll_clicks: int = 5
+    scroll_intentos: int = 3
+    scroll_clicks: int = 3
 
 
 @dataclass(frozen=True)

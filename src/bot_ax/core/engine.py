@@ -182,7 +182,7 @@ def run_bot(log_callback=print, stop_event=None, pause_event=None):
                         pos_flecha = None
 
                 if pos_flecha:
-                    log("Botón de scroll encontrado. Presionando 5 veces...")
+                    log("Botón de scroll encontrado. Presionando 3 veces...")
                     gui.moveTo(pos_flecha.x, pos_flecha.y, duration=0.2)
                     for _ in range(VISION.scroll_clicks):
                         gui.click()
@@ -202,7 +202,7 @@ def run_bot(log_callback=print, stop_event=None, pause_event=None):
                     time.sleep(1.5)
 
             if not casilla_objetivo:
-                log("No se encontraron más diarios tras 2 intentos de scroll. Fin.")
+                log(f"No se encontraron más diarios tras {VISION.scroll_intentos} intentos de scroll. Fin.")
                 break
 
             log(f"==> PROCESANDO DIARIO: {normalizar_id_diario(id_actual)}")
