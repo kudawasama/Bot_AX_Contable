@@ -24,8 +24,17 @@ def main():
         from bot_ax.core.engine import run_bot
         run_bot()
     else:
-        from bot_ax.ui.app_gui import main as gui_main
-        gui_main()
+        # La GUI aún está en app_gui.py en la raíz del proyecto
+        import importlib.util
+        gui_path = os.path.join(_project_root, "app_gui.py")
+        if os.path.exists(gui_path):
+            import app_gui
+            root = app_gui.tk.Tk()
+            app = app_gui.BotAXGui(root)
+            root.mainloop()
+        else:
+            print("ERROR: app_gui.py no encontrado en la raíz del proyecto.")
+            sys.exit(1)
 
 
 if __name__ == "__main__":
