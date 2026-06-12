@@ -171,30 +171,31 @@ def run_bot(log_callback=print, stop_event=None, pause_event=None):
                 
                 # Scroll si no hay casillas
                 intentos_scroll += 1
-                if intentos_scroll < 10:
-                    log(f"No hay casillas nuevas. Buscando botón de scroll ({intentos_scroll}/10)...")
-                    try:
-                        pos_flecha = gui.locateCenterOnScreen(BTN_ABAJO, region=sector_scroll, confidence=0.8, grayscale=True)
-                    except Exception:
-                        pos_flecha = None
-                    
-                    if pos_flecha:
-                        log("Botón de scroll encontrado. Presionando 5 veces...")
-                        gui.moveTo(pos_flecha.x, pos_flecha.y, duration=0.2)
-                        for _ in range(5):
-                            gui.click()
-                            time.sleep(0.1)
-                        time.sleep(1.5)
-                    else:
-                        log("Botón no encontrado. Intentando con PgDn...")
-                        if intentos_scroll == 1:
-                            capturar_pantalla_error("scroll_button_not_found")
-                        gui.click(sector_a[0] + sector_a[2]//2, sector_a[1] + 50)
-                        time.sleep(0.3)
-                        gui.press('pgdn')
-                        time.sleep(2)
+                log(f"No hay casillas nuevas. Buscando botón de scroll ({intentos_scroll}/2)...")
+                try:
+                    pos_flecha = gui.locateCenterOnScreen(BTN_ABAJO, region=sector_scroll, confidence=0.8, grayscale=True)
+                except Exception:
+                    pos_flecha = None
+                
+                if pos_flecha:
+                    log("Botón de scroll encontrado. Presionando 3 veces...")
+                    gui.moveTo(pos_flecha.x, pos_flecha.y, duration=0.2)
+                    for _ in range(3):
+                        gui.click()
+                        time.sleep(0.1)
+                    time.sleep(1.5)
                 else:
-                    log("Límite de intentos de scroll (2) alcanzado.")
+                    log("Botón no encontrado. Scroll por clic...")
+                    if intentos_scroll == 2:
+                        capturar_pantalla_error("scroll_button_not_found")
+                    try:
+                        gui.moveTo(sector_a[0] + sector_a[2]//2, sector_a[1] + sector_a[3] - 10)
+                        gui.click()
+                        time.sleep(0.2)
+                        gui.scroll(-10)
+                    except Exception:
+                        gui.press('pgdn')
+                    time.sleep(1.5)
 
             if not casilla_objetivo:
                 log("No se encontraron más diarios tras 2 intentos de scroll. Fin.")
