@@ -1,45 +1,14 @@
 """
-config.py — Wrapper de compatibilidad hacia atrás.
-
-Mantiene la API original completa para que todos los imports
-existentes (from config import CHK_VACIO, cargar_configuracion, ...)
-sigan funcionando sin cambios.
-
-Las funciones se implementan directamente aquí usando la variable
-local CONFIG_FILE (mutable), por lo que los tests que hacen
-config.CONFIG_FILE = temp_path siguen funcionando.
+Carga y guardado de la configuración de sectores (config_sectores.json).
 """
 
-import os
-import sys
 import json
-
-# Asegurar que src/ está en el path
-_src = os.path.join(os.path.dirname(os.path.abspath(__file__)), "src")
-if _src not in sys.path:
-    sys.path.insert(0, _src)
-
-# ── Re-exportar constantes inmutables ────────────────────────────
-# Estas se definen en bot_ax.config.settings y nunca cambian en runtime.
-from bot_ax.config.settings import (               # noqa: F401, E402
-    BASE_DIR, PATRONES_DIR, TESSERACT_CMD,
-    CHK_VACIO, BTN_MENU, BTN_CONFIRM, CHK_MARCADO,
-    IMG_ERROR, BTN_ABAJO, IMG_FORMULARIOS, MSG_EXITO_ASIENTO,
-    validar_tesseract,
-)
-
-# ── CONFIG_FILE como variable LOCAL mutable ───────────────────────
-# Los tests existentes hacen config.CONFIG_FILE = temp_path para
-# probar cargar_configuracion(). Esto solo funciona si CONFIG_FILE
-# es una variable en este módulo, no un re-export.
-CONFIG_FILE = os.path.join(BASE_DIR, "config_sectores.json")
+from bot_ax.config.settings import CONFIG_FILE, TESSERACT_CMD
 
 
 def cargar_configuracion():
-    """
-    Carga y valida la configuración de sectores desde JSON.
-    (Implementación directa, compatible con monkey-patching de CONFIG_FILE)
-    """
+    """Carga y valida la configuración de sectores desde JSON."""
+    import os
     if not os.path.exists(CONFIG_FILE):
         return None
 
@@ -50,6 +19,7 @@ def cargar_configuracion():
         print(f"ERROR: {CONFIG_FILE} no es un JSON válido: {e}")
         return None
 
+    # Validar que existen los sectores requeridos
     for key in ["sector_a", "sector_b"]:
         if key not in config:
             print(f"ERROR: Falta '{key}' en {CONFIG_FILE}")
@@ -67,6 +37,7 @@ def cargar_configuracion():
 
 def guardar_configuracion(sector_a, sector_b, sector_scroll):
     """Guarda la configuración de los sectores en un archivo JSON."""
+    # Preservar ocr_region_offset si ya existe
     config_actual = cargar_configuracion()
     ocr_offset = None
     if config_actual and "ocr_region_offset" in config_actual:
@@ -90,11 +61,12 @@ def guardar_configuracion(sector_a, sector_b, sector_scroll):
 
 
 def obtener_offset_ocr(config=None):
-    """Obtiene el offset de la región OCR desde la configuración, con fallback."""
+    """Obtiene el offset de la región OCR desde la configuración, con fallback a valores por defecto."""
     if config is None:
         config = cargar_configuracion()
     if config and "ocr_region_offset" in config:
         offset = config["ocr_region_offset"]
         if isinstance(offset, (list, tuple)) and len(offset) == 4:
             return tuple(offset)
+    # Fallback a valores por defecto
     return (-275, -13, 110, 28)

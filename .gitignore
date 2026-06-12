@@ -1,23 +1,28 @@
-# Archivos de registro del Bot AX
-registro_*.txt
-registro_procesamiento.txt
-
-# Archivos de depuración y capturas
-*.png
-!patrones/*.png
-!Imagenes/*.png
-
-# Archivos de configuración locales
-config_sectores.json
-
-# Logs y diagnosticos
-crash_log.txt
-error.txt
-diag_output*.txt
-
 # Python
 __pycache__/
 *.pyc
-logs/
+*.pyo
+*.egg-info/
+dist/
+build/
 
+# IDE
+.vscode/
+.idea/
+
+# Bot AX — logs y registros
+logs/
+registro_*.txt
+registro_procesamiento.txt
+
+# Bot AX — datos locales generados
 blacklist.json
+config_sectores.json
+
+# Bot AX — debug/diagnóstico
+*.png
+!patrones/*.png
+!src/**/*.png
+crash_log.txt
+error.txt
+diag_output*.txt

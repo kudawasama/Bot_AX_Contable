@@ -1,40 +1,14 @@
 """
-_version.py — fuente única de verdad para la versión de Bot AX Contable.
-
-Formato: v-{major:02d}.{minor:02d}.{patch:02d}
-Ejemplo: v-00.01.42
-
-Pre-alpha. El pre-commit hook auto-bumpea según los cambios:
-  - Archivos NUEVOS añadidos → minor (+0.01.00)
-  - Archivos ELIMINADOS → minor (+0.01.00)
-  - Solo modificaciones en archivos existentes → patch (+0.00.01)
-  - Si se tocó _version.py manualmente → NO auto-bump
+_version.py — Wrapper de compatibilidad.
+Re-exporta desde el nuevo paquete estructurado en src/bot_ax/_version.py.
 """
 
-import subprocess
 import os
+import sys
 
-__version__ = "00.01.45"
-VERSION_TAG = f"v-{__version__}"
+_src = os.path.join(os.path.dirname(os.path.abspath(__file__)), "src")
+if _src not in sys.path:
+    sys.path.insert(0, _src)
 
-
-def get_git_short_sha() -> str:
-    """Retorna el SHA corto del último commit, o '??????' si falla."""
-    try:
-        repo = os.path.dirname(os.path.abspath(__file__))
-        sha = subprocess.run(
-            ["git", "rev-parse", "--short", "HEAD"],
-            capture_output=True, text=True, cwd=repo, timeout=2,
-        ).stdout.strip()
-
-        dirty = (
-            subprocess.run(
-                ["git", "status", "--porcelain"],
-                capture_output=True, text=True, cwd=repo, timeout=2,
-            ).stdout.strip()
-        )
-        if dirty:
-            sha += " ◇"
-        return sha
-    except Exception:
-        return "??????"
+# Import explícito (__version__ empieza con _, no lo trae import *)
+from bot_ax._version import __version__, VERSION_TAG, get_git_short_sha  # noqa: F401, E402

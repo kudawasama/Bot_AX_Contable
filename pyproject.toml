@@ -1,0 +1,26 @@
+[build-system]
+requires = ["setuptools>=68.0"]
+build-backend = "setuptools.backends._legacy:_Backend"
+
+[project]
+name = "bot-ax-contable"
+version = "0.1.44"
+description = "Bot de automatización para Microsoft Dynamics AX — registro de diarios contables"
+readme = "README.md"
+license = {text = "MIT"}
+authors = [
+    {name = "José Céspedes"}
+]
+requires-python = ">=3.10"
+dependencies = [
+    "pyautogui>=0.9.54",
+    "pytesseract>=0.3.10",
+    "pillow>=10.0.0",
+    "keyboard>=0.13.5",
+]
+
+[project.scripts]
+bot-ax = "bot_ax.__main__:main"
+
+[tool.setuptools.packages.find]
+where = ["src"]
