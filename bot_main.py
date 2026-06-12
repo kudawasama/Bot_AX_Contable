@@ -120,7 +120,7 @@ def run_bot(log_callback=print, stop_event=None, pause_event=None):
             
             # Paso A: Buscar casillas vacías y elegir la mejor
             intentos_scroll = 0
-            while intentos_scroll < 2:
+            while intentos_scroll < 3:
                 # Verificar parada dentro de bucles internos
                 if (stop_event and stop_event.is_set()) or (not stop_event and HAS_KEYBOARD and keyboard.is_pressed('esc')):
                     break
@@ -132,28 +132,20 @@ def run_bot(log_callback=print, stop_event=None, pause_event=None):
                 if stop_event and stop_event.is_set():
                     break
 
+                # Asegurar foco en AX antes de buscar
                 try:
-                    todas_vacias = list(gui.locateAllOnScreen(CHK_VACIO, region=sector_a, confidence=0.85, grayscale=True))
+                    gui.moveTo(sector_a[0] + sector_a[2]//2, sector_a[1] + 10)
+                    gui.click()
+                    time.sleep(0.3)
+                except Exception:
+                    pass
+
+                try:
+                    todas_vacias = list(gui.locateAllOnScreen(CHK_VACIO,
+                        region=sector_a, confidence=0.9, grayscale=True))
                     todas_vacias.sort(key=lambda loc: loc.top)
                 except Exception:
                     todas_vacias = []
-                
-                # Filtrar: si una posición coincide con check_usuario_marcado, ya está procesada
-                if todas_vacias:
-                    from config import CHK_MARCADO
-                    try:
-                        marcados = list(gui.locateAllOnScreen(CHK_MARCADO, region=sector_a, confidence=0.8, grayscale=True))
-                        # Excluir checkboxes vacíos que en realidad están marcados
-                        def _no_esta_marcado(loc):
-                            cx, cy = gui.center(loc)
-                            for m in marcados:
-                                mx, my = gui.center(m)
-                                if abs(cx - mx) < 10 and abs(cy - my) < 10:
-                                    return False  # mismo lugar que un marcado
-                            return True
-                        todas_vacias = [loc for loc in todas_vacias if _no_esta_marcado(loc)]
-                    except Exception:
-                        pass
 
                 casilla_objetivo = None
                 id_actual = "DESCONOCIDO"
@@ -188,23 +180,16 @@ def run_bot(log_callback=print, stop_event=None, pause_event=None):
                 
                 # Scroll si no hay casillas
                 intentos_scroll += 1
-                log(f"No hay casillas nuevas. Buscando botón de scroll ({intentos_scroll}/2)...")
+                log(f"No hay casillas nuevas. Buscando botón de scroll ({intentos_scroll}/3)...")
                 try:
                     pos_flecha = gui.locateCenterOnScreen(BTN_ABAJO, region=sector_scroll, confidence=0.7, grayscale=True)
                 except Exception:
                     pos_flecha = None
-                
-                # Si no se encuentra en el sector, buscar en toda la pantalla
-                if not pos_flecha:
-                    try:
-                        pos_flecha = gui.locateCenterOnScreen(BTN_ABAJO, confidence=0.65, grayscale=True)
-                    except Exception:
-                        pos_flecha = None
-                
+
                 if pos_flecha:
-                    log("Botón de scroll encontrado. Presionando 5 veces...")
+                    log("Botón de scroll encontrado. Presionando 1 vez...")
                     gui.moveTo(pos_flecha.x, pos_flecha.y, duration=0.2)
-                    for _ in range(5):
+                    for _ in range(1):
                         gui.click()
                         time.sleep(0.1)
                     time.sleep(1.5)
@@ -222,7 +207,7 @@ def run_bot(log_callback=print, stop_event=None, pause_event=None):
                     time.sleep(1.5)
 
             if not casilla_objetivo:
-                log("No se encontraron más diarios tras 2 intentos de scroll. Fin.")
+                log("No se encontraron más diarios tras 3 intentos de scroll. Fin.")
                 break
 
             log(f"==> PROCESANDO DIARIO: {normalizar_id_diario(id_actual)}")
@@ -283,7 +268,7 @@ def run_bot(log_callback=print, stop_event=None, pause_event=None):
             if resultado == 'exito':
                 log(f"[RESULT:OK] -> Registro de {normalizar_id_diario(id_actual)} completado.")
                 registrar_log(id_actual, "EXITOSO")
-                time.sleep(0.1)
+                time.sleep(2)
             elif resultado == 'cancelado':
                 log("Registro cancelado por el usuario.")
                 break
