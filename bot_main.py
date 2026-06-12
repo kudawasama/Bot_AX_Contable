@@ -137,6 +137,23 @@ def run_bot(log_callback=print, stop_event=None, pause_event=None):
                     todas_vacias.sort(key=lambda loc: loc.top)
                 except Exception:
                     todas_vacias = []
+                
+                # Filtrar: si una posición coincide con check_usuario_marcado, ya está procesada
+                if todas_vacias:
+                    from config import CHK_MARCADO
+                    try:
+                        marcados = list(gui.locateAllOnScreen(CHK_MARCADO, region=sector_a, confidence=0.8, grayscale=True))
+                        # Excluir checkboxes vacíos que en realidad están marcados
+                        def _no_esta_marcado(loc):
+                            cx, cy = gui.center(loc)
+                            for m in marcados:
+                                mx, my = gui.center(m)
+                                if abs(cx - mx) < 10 and abs(cy - my) < 10:
+                                    return False  # mismo lugar que un marcado
+                            return True
+                        todas_vacias = [loc for loc in todas_vacias if _no_esta_marcado(loc)]
+                    except Exception:
+                        pass
 
                 casilla_objetivo = None
                 id_actual = "DESCONOCIDO"
