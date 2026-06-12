@@ -14,7 +14,7 @@ Pre-alpha. El pre-commit hook auto-bumpea según los cambios:
 import subprocess
 import os
 
-__version__ = "00.02.02"
+__version__ = "00.02.03"
 VERSION_TAG = f"v-{__version__}"
 
 
