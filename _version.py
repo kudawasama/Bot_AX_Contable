@@ -2,20 +2,20 @@
 _version.py — fuente única de verdad para la versión de Bot AX Contable.
 
 Formato: v-{major:02d}.{minor:02d}.{patch:02d}
-Ejemplo: v-00.01.24
+Ejemplo: v-00.01.39
 
-El versionado es MANUAL. Para incrementar la versión:
-    python bump_version.py patch   # bug fixes
-    python bump_version.py minor   # nuevas funcionalidades
-    python bump_version.py major   # cambios grandes/rompientes
-
-Sin auto-bump. Tú decides cuándo y qué bump aplicar.
+El pre-commit hook detecta el tipo de commit y auto-bumpea:
+  fix: → patch   (+0.00.01)
+  feat: → minor   (+0.01.00)
+  refactor: → minor (+0.01.00)
+  BREAKING: → major (+01.00.00)
+  default → patch
 """
 
 import subprocess
 import os
 
-__version__ = "00.01.39"
+__version__ = "00.01.40"
 VERSION_TAG = f"v-{__version__}"
 
 

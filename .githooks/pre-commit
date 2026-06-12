@@ -1,11 +1,32 @@
 #!/bin/sh
 #
-# pre-commit hook — (desactivado) El versionado ahora es manual.
+# pre-commit hook — auto-bump version según el tipo de commit.
 #
-# Ya NO se auto-incrementa la versión en cada commit.
-# Para bumpear la versión, ejecutar manualmente:
-#   python bump_version.py patch   # bug fixes
-#   python bump_version.py minor   # nuevas funcionalidades
-#   python bump_version.py major   # cambios grandes/rompientes
+# Examina el mensaje del commit (desde .git/COMMIT_EDITMSG) y decide:
+#   fix: → patch   (+0.00.01)
+#   feat: → minor   (+0.01.00)
+#   refactor: → minor (+0.01.00)
+#   BREAKING: → major (+01.00.00)
+#   default → patch
 #
 # Se activa con: git config core.hooksPath .githooks
+
+REPO_ROOT=$(git rev-parse --show-toplevel 2>/dev/null) || exit 0
+[ -f "$REPO_ROOT/_version.py" ] || exit 0
+cd "$REPO_ROOT" || exit 0
+
+MSG_FILE=$(git rev-parse --git-path COMMIT_EDITMSG 2>/dev/null)
+BUMP="patch"  # default
+
+if [ -f "$MSG_FILE" ]; then
+    MSG=$(head -1 "$MSG_FILE")
+    case "$MSG" in
+        *BREAKING*) BUMP="major" ;;
+        *feat:*)    BUMP="minor" ;;
+        *refactor:*) BUMP="minor" ;;
+        *fix:*)     BUMP="patch" ;;
+    esac
+fi
+
+python bump_version.py "$BUMP" 2>/dev/null || true
+git add _version.py 2>/dev/null || true
