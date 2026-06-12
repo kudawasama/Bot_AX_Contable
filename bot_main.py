@@ -150,10 +150,22 @@ def run_bot(log_callback=print, stop_event=None, pause_event=None):
                 casilla_objetivo = None
                 id_actual = "DESCONOCIDO"
 
+                # Encontrar el checkbox marcado más abajo (último procesado)
+                ultimo_marcado_y = 0
+                try:
+                    marcados = list(gui.locateAllOnScreen(CHK_MARCADO, region=sector_a, confidence=0.8, grayscale=True))
+                    if marcados:
+                        ultimo_marcado_y = max(gui.center(m).y for m in marcados)
+                except Exception:
+                    pass
+
                 for i, loc in enumerate(todas_vacias):
                     centro = gui.center(loc)
                     coord = (int(centro.x), int(centro.y))
-                    # Redondear coordenadas para tolerancia de 5px (misma posición = mismo diario)
+                    # Solo procesar checkboxes vacíos que estén DEBAJO del último marcado
+                    if coord[1] <= ultimo_marcado_y:
+                        continue
+                    # Redondear coordenadas
                     coord_redondeada = (coord[0] // 5 * 5, coord[1] // 5 * 5)
                     
                     # Saltar si ya procesamos esta posición (evita OCR redundante)
