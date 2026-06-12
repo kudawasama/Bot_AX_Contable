@@ -23,7 +23,7 @@ class OCRDefaults:
 @dataclass(frozen=True)
 class VisionDefaults:
     """Valores por defecto para template matching."""
-    confianza_alta: float = 0.85
+    confianza_alta: float = 0.9
     confianza_media: float = 0.8
     confianza_baja: float = 0.7
     confianza_scroll_sector: float = 0.7

@@ -123,6 +123,14 @@ def run_bot(log_callback=print, stop_event=None, pause_event=None):
                 if stop_event and stop_event.is_set():
                     break
 
+                # Asegurar foco en la ventana de AX antes de buscar
+                try:
+                    gui.moveTo(sector_a[0] + sector_a[2]//2, sector_a[1] + 10)
+                    gui.click()
+                    time.sleep(0.3)
+                except Exception:
+                    pass
+
                 try:
                     todas_vacias = list(gui.locateAllOnScreen(
                         CHK_VACIO, region=sector_a,
