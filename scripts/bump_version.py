@@ -1,11 +1,11 @@
 #!/usr/bin/env python
 """
-bump_version.py — incrementa la versión en _version.py.
+bump_version.py — Incrementa la versión en _version.py.
 
 Uso:
-    python bump_version.py patch     # +0.00.01 (por defecto, usado por pre-commit)
-    python bump_version.py minor     # +0.01.00
-    python bump_version.py major     # +01.00.00
+    python scripts/bump_version.py patch     # +0.00.01 (por defecto)
+    python scripts/bump_version.py minor     # +0.01.00
+    python scripts/bump_version.py major     # +01.00.00
 
 Sin argumentos: patch.
 """
@@ -14,13 +14,13 @@ import re
 import sys
 from pathlib import Path
 
-VERSION_FILE = Path(__file__).parent / "_version.py"
+# _version.py está en la raíz del proyecto
+VERSION_FILE = Path(__file__).resolve().parent.parent / "_version.py"
 
 _PATTERN = re.compile(r'__version__\s*=\s*"(\d+)\.(\d+)\.(\d+)"')
 
 
-def read_version() -> tuple[str, str, int, int, int]:
-    """Lee _version.py y retorna (contenido_completo, raw_version, major, minor, patch)."""
+def read_version() -> tuple:
     content = VERSION_FILE.read_text(encoding="utf-8")
     m = _PATTERN.search(content)
     if not m:
@@ -31,18 +31,15 @@ def read_version() -> tuple[str, str, int, int, int]:
     return content, raw, major, minor, patch
 
 
-def write_version(content: str, new_raw: str, new_ver: str) -> None:
-    """Guarda _version.py con la nueva versión y muestra el cambio."""
+def write_version(content, new_raw, new_ver):
     new_content = content.replace(new_raw, f'__version__ = "{new_ver}"')
     VERSION_FILE.write_text(new_content, encoding="utf-8")
     print(f"v-{new_ver}")
 
 
-def main() -> None:
+def main():
     part = (sys.argv[1] if len(sys.argv) > 1 else "patch").lower()
-
     content, raw, major, minor, patch = read_version()
-    old_ver = f"{major:02d}.{minor:02d}.{patch:02d}"
 
     if part == "major":
         major += 1
@@ -51,7 +48,7 @@ def main() -> None:
     elif part == "minor":
         minor += 1
         patch = 0
-    else:  # patch
+    else:
         patch += 1
 
     new_ver = f"{major:02d}.{minor:02d}.{patch:02d}"
