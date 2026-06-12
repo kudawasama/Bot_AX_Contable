@@ -245,7 +245,6 @@ class BotAXGui:
         self._action_btn(a, "Export Logs",      self.open_logs)
         self._action_btn(a, "Clear Errors",     self.clear_errors)
         self._action_btn(a, "Reiniciar",        self.refresh_reset)
-        self._action_btn(a, "Reload",            self.reload_modules)
 
     # ----------------------------------------------------------
     #  RIGHT PANEL
@@ -591,35 +590,6 @@ class BotAXGui:
         except Exception:
             pass
         self.log("🔄 Reinicio completado. Listo para empezar.")
-
-    def reload_modules(self):
-        """Recarga los módulos del bot sin cerrar la app."""
-        import importlib
-        if self.bot_thread and self.bot_thread.is_alive():
-            self.log("⚠ Detén el Engine antes de recargar.")
-            return
-        self.log("🔄 Recargando módulos...")
-        try:
-            import config as _cfg
-            import vision as _vis
-            import bot_main as _bot
-            import logger as _log
-            importlib.reload(_cfg)
-            importlib.reload(_vis)
-            importlib.reload(_log)
-            importlib.reload(_bot)
-            # Re-asignar referencias globales
-            import sys
-            sys.modules['config'] = _cfg
-            sys.modules['vision'] = _vis
-            sys.modules['bot_main'] = _bot
-            sys.modules['logger'] = _log
-            # Actualizar logger global
-            _vis.get_logger()
-            self.log("✅ Módulos recargados. Los cambios están activos.")
-            self.log("💡 Presiona Start Engine para empezar.")
-        except Exception as e:
-            self.log(f"❌ Error recargando módulos: {e}")
 
     # ── Log interactivo ──────────────────────────────────────
 
