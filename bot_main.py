@@ -173,9 +173,16 @@ def run_bot(log_callback=print, stop_event=None, pause_event=None):
                 intentos_scroll += 1
                 log(f"No hay casillas nuevas. Buscando botón de scroll ({intentos_scroll}/2)...")
                 try:
-                    pos_flecha = gui.locateCenterOnScreen(BTN_ABAJO, region=sector_scroll, confidence=0.8, grayscale=True)
+                    pos_flecha = gui.locateCenterOnScreen(BTN_ABAJO, region=sector_scroll, confidence=0.7, grayscale=True)
                 except Exception:
                     pos_flecha = None
+                
+                # Si no se encuentra en el sector, buscar en toda la pantalla
+                if not pos_flecha:
+                    try:
+                        pos_flecha = gui.locateCenterOnScreen(BTN_ABAJO, confidence=0.65, grayscale=True)
+                    except Exception:
+                        pos_flecha = None
                 
                 if pos_flecha:
                     log("Botón de scroll encontrado. Presionando 3 veces...")
