@@ -133,10 +133,17 @@ def run_bot(log_callback=print, stop_event=None, pause_event=None):
                     break
 
                 try:
-                    todas_vacias = list(gui.locateAllOnScreen(CHK_VACIO, region=sector_a, confidence=0.9, grayscale=True))
+                    todas_vacias = list(gui.locateAllOnScreen(CHK_VACIO, region=sector_a, confidence=0.8, grayscale=True))
                     todas_vacias.sort(key=lambda loc: loc.top)
                 except Exception:
                     todas_vacias = []
+                # Si no encontró en el sector, buscar en pantalla completa (puede haberse movido)
+                if not todas_vacias:
+                    try:
+                        todas_vacias = list(gui.locateAllOnScreen(CHK_VACIO, confidence=0.75, grayscale=True))
+                        todas_vacias.sort(key=lambda loc: loc.top)
+                    except Exception:
+                        todas_vacias = []
 
                 casilla_objetivo = None
                 id_actual = "DESCONOCIDO"
