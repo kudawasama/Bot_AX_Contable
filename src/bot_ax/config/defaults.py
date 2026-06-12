@@ -25,12 +25,13 @@ class VisionDefaults:
     """Valores por defecto para template matching."""
     confianza_alta: float = 0.9
     confianza_media: float = 0.8
+    confianza_marcado: float = 0.95  # más estricto para check_usuario_marcado (12×12)
     confianza_baja: float = 0.7
     confianza_scroll_sector: float = 0.7
     confianza_scroll_full: float = 0.65
     timeout_normal: int = 30
     timeout_resultado: int = 3600  # 60 min
-    scroll_intentos: int = 2
+    scroll_intentos: int = 4
     scroll_clicks: int = 5
 
 

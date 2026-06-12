@@ -137,7 +137,7 @@ def run_bot(log_callback=print, stop_event=None, pause_event=None):
                     try:
                         marcados = list(gui.locateAllOnScreen(
                             CHK_MARCADO, region=sector_a,
-                            confidence=VISION.confianza_media, grayscale=True
+                            confidence=VISION.confianza_marcado, grayscale=True
                         ))
                         def _no_esta_marcado(loc):
                             cx, cy = gui.center(loc)
