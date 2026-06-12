@@ -153,7 +153,7 @@ def run_bot(log_callback=print, stop_event=None, pause_event=None):
                 # Encontrar el checkbox marcado más abajo (último procesado)
                 ultimo_marcado_y = 0
                 try:
-                    marcados = list(gui.locateAllOnScreen(CHK_MARCADO, region=sector_a, confidence=0.8, grayscale=True))
+                    marcados = list(gui.locateAllOnScreen(CHK_MARCADO, region=sector_a, confidence=0.7, grayscale=True))
                     if marcados:
                         ultimo_marcado_y = max(gui.center(m).y for m in marcados)
                 except Exception:
