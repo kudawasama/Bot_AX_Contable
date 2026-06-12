@@ -25,7 +25,6 @@ class VisionDefaults:
     """Valores por defecto para template matching."""
     confianza_alta: float = 0.9
     confianza_media: float = 0.8
-    confianza_marcado: float = 0.95  # más estricto para check_usuario_marcado (12×12)
     confianza_baja: float = 0.7
     confianza_scroll_sector: float = 0.7
     confianza_scroll_full: float = 0.65
