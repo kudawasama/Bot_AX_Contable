@@ -244,6 +244,7 @@ class BotAXGui:
         self._action_btn(a, "View Snapshots",   self.open_screenshots)
         self._action_btn(a, "Export Logs",      self.open_logs)
         self._action_btn(a, "Clear Errors",     self.clear_errors)
+        self._action_btn(a, "Reiniciar",        self.refresh_reset)
 
     # ----------------------------------------------------------
     #  RIGHT PANEL
@@ -564,6 +565,31 @@ class BotAXGui:
         self.log("🧹 Contadores reseteados.")
         # También scrollear a los errores en el log
         self._show_errors()
+
+    def refresh_reset(self):
+        """Limpia todo + refresca la vista de AX para empezar de cero."""
+        import pyautogui
+        # 1. Resetear contadores (como Clear Errors)
+        self.ok_count = 0
+        self.err_count = 0
+        self.cycle = 0
+        self.lbl_ok.config(text="0")
+        self.lbl_err.config(text="0")
+        self.lbl_cy.config(text="0")
+        self._update_bar(self.bar_ok, self.bar_ok_rect, 0, 0)
+        self._update_bar(self.bar_err, self.bar_err_rect, 0, 0)
+        self._update_bar(self.bar_cy, self.bar_cy_rect, 0, 0)
+        # 2. Borrar blacklist.json
+        bl = os.path.join(os.path.dirname(os.path.abspath(__file__)), "blacklist.json")
+        if os.path.exists(bl):
+            os.remove(bl)
+        # 3. Ir al inicio de la lista de AX (Home key)
+        try:
+            pyautogui.press('home')
+            self.log("🏠 Lista de AX llevada al inicio.")
+        except Exception:
+            pass
+        self.log("🔄 Reinicio completado. Listo para empezar.")
 
     # ── Log interactivo ──────────────────────────────────────
 
