@@ -172,15 +172,6 @@ def run_bot(log_callback=print, stop_event=None, pause_event=None):
                 except Exception:
                     pos_flecha = None
 
-                if not pos_flecha:
-                    try:
-                        pos_flecha = gui.locateCenterOnScreen(
-                            BTN_ABAJO,
-                            confidence=VISION.confianza_scroll_full, grayscale=True
-                        )
-                    except Exception:
-                        pos_flecha = None
-
                 if pos_flecha:
                     log("Botón de scroll encontrado. Presionando 3 veces...")
                     gui.moveTo(pos_flecha.x, pos_flecha.y, duration=0.2)

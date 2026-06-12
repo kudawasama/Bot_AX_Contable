@@ -76,15 +76,17 @@ Cada iteración procesa UN diario.
 │ 2.2 SCROLL (si no hay checkboxes en Sector A)   │
 │                                                  │
 │   Busca Avanzar_Abajo.png (16×15 píxeles)        │
-│   1° en Sector C (confianza 0.7)                 │
-│   2° pantalla completa (confianza 0.65)          │
+│   Solo en Sector C (confianza 0.7)               │
+│   Sin búsqueda en pantalla completa              │
 │                                                  │
 │   ¿Encuentra botón scroll?                       │
 │   ├─ No → scroll por clic + rueda               │
-│   └─ Sí → 5 clics en el botón                   │
+│   └─ Sí → 3 clics en el botón                   │
 │                                                  │
-│   Repite hasta 4 intentos                        │
-│   Si tras 4 intentos no hay checkboxes → FIN     │
+│   ↓ Una vez terminado el scroll:                 │
+│   → VOLVER a 2.1 (buscar en Sector A)           │
+│                                                  │
+│   Si tras 3 intentos no hay checkboxes → FIN     │
 └─────────────────────────────────────────────────┘
          │
          ▼
@@ -205,14 +207,13 @@ Las coordenadas se guardan en `config_sectores.json`.
 ```
 Sector A → ¿checkbox_vacio.png?
   ├─ Sí → procesa
-  └─ No → intento 1/4:
+  └─ No → intento 1/3:
            → Busca Avanzar_Abajo.png en Sector C (0.7)
-           → ¿No? Busca en pantalla completa (0.65)
            → ¿No? Clic + rueda mouse (-10)
-           → ¿Sí? 5 clics en el botón
-           → Vuelve a buscar checkbox_vacio.png en Sector A
-           → ¿No? intento 2/4... hasta 4/4
-           → ¿Tras 4 intentos sin checkboxes? → FIN
+           → ¿Sí? 3 clics en el botón
+           → Vuelve a Sector A → ¿checkbox_vacio.png?
+           → ¿No? intento 2/3... hasta 3/3
+           → ¿Tras 3 intentos sin checkboxes? → FIN
 ```
 
 ---
