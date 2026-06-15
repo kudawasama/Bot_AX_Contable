@@ -1,5 +1,6 @@
 import tkinter as tk
-from tkinter import scrolledtext
+from tkinter import scrolledtext, font
+from tkinter import ttk
 import threading
 import queue
 import sys
@@ -19,27 +20,17 @@ class QueueLogger:
 class BotAXGui:
     def __init__(self, root):
         self.root = root
-        self.root.title("Bot AX Contable v1.00.00")
+        self.root.title("Bot AX Contable — v1.00.00")
         
-        # Paleta Catppuccin Mocha Refinada
-        self.bg_color = "#1e1e2e"    # Fondo
-        self.fg_color = "#cdd6f4"    # Texto
-        self.rosewater = "#f5e0dc"
-        self.flamingo = "#f2cdcd"
-        self.pink = "#f5c2e7"
-        self.mauve = "#cba6f7"
-        self.red = "#f38ba8"
-        self.maroon = "#eba0ac"
-        self.peach = "#fab387"
-        self.yellow = "#f9e2af"
-        self.green = "#a6e3a1"
-        self.teal = "#94e2d5"
-        self.sky = "#89dceb"
-        self.sapphire = "#74c7ec"
-        self.blue = "#89b4fa"
-        self.lavender = "#b4befe"
-        self.surface0 = "#313244"
-        self.overlay0 = "#6c7086"
+        # Paleta moderna y corporativa
+        self.bg_color = "#0f1720"    # Fondo profundo
+        self.panel = "#0b1220"
+        self.card = "#0f1728"
+        self.fg_color = "#e6eef8"    # Texto claro
+        self.accent = "#2dd4bf"      # acento teal
+        self.warn = "#f59e0b"        # amarillo
+        self.danger = "#ef4444"
+        self.muted = "#94a3b8"
         
         self.root.configure(bg=self.bg_color)
         
@@ -52,112 +43,133 @@ class BotAXGui:
         sys.stdout = QueueLogger(self.log_queue)
         sys.stderr = sys.stdout
         
+        self.setup_styles()
         self.setup_ui()
         self.check_queue()
 
+    def setup_styles(self):
+        style = ttk.Style()
+        try:
+            style.theme_use('clam')
+        except Exception:
+            pass
+        style.configure('TFrame', background=self.bg_color)
+        style.configure('Card.TFrame', background=self.card, relief='flat')
+        style.configure('Header.TLabel', background=self.bg_color, foreground=self.fg_color, font=('Segoe UI', 14, 'bold'))
+        style.configure('Sub.TLabel', background=self.bg_color, foreground=self.muted, font=('Segoe UI', 9))
+        style.configure('Accent.TButton', background=self.accent, foreground=self.bg_color, font=('Segoe UI', 10, 'bold'))
+        style.map('Accent.TButton', background=[('active', self.accent)])
+        style.configure('Danger.TButton', background=self.danger, foreground='white')
+        style.configure('Stat.TLabel', background=self.card, foreground=self.fg_color, font=('Segoe UI', 11, 'bold'))
+
     def setup_ui(self):
-        self.font_mono = ("Consolas", 9)
-        self.font_mono_bold = ("Consolas", 10, "bold")
-        
+        self.font_mono = ("Consolas", 10)
+        self.font_ui = ('Segoe UI', 10)
+
         # CONTENEDOR PRINCIPAL
-        self.main_container = tk.Frame(self.root, bg=self.bg_color)
-        self.main_container.pack(fill="both", expand=True, padx=15, pady=15)
+        self.main_container = ttk.Frame(self.root)
+        self.main_container.pack(fill="both", expand=True, padx=18, pady=18)
 
-        # --- TOP PILLS (ESTILO BARRA SUPERIOR) ---
-        top_bar = tk.Frame(self.main_container, bg=self.bg_color)
-        top_bar.pack(fill="x", pady=(0, 20))
+        # Layout: Header, body (sidebar + content), footer
+
+        # --- HEADER ---
+        header = ttk.Frame(self.main_container)
+        header.pack(fill='x', pady=(0, 14))
+        ttk.Label(header, text='Bot AX Contable', style='Header.TLabel').pack(side='left')
+        ttk.Label(header, text='v1.00.00', style='Sub.TLabel').pack(side='left', padx=(8,0))
+        ttk.Label(header, text=f'  •  {datetime.now().strftime("%Y-%m-%d %H:%M")}', style='Sub.TLabel').pack(side='left', padx=8)
         
-        # Simulación de Pills como en la imagen
-        self.add_pill(top_bar, " 󰄶  monnos ", self.pink, self.bg_color)
-        self.add_pill(top_bar, " ~ ", self.peach, self.bg_color)
-        self.add_pill(top_bar, f" 󰥔  {datetime.now().strftime('%H:%M')} ", self.blue, self.bg_color)
-        tk.Label(top_bar, text=" > bot_ax --run", bg=self.bg_color, fg=self.fg_color, font=self.font_mono).pack(side="left", padx=5)
+        # Right controls (start/stop)
+        ctrl_right = ttk.Frame(header)
+        ctrl_right.pack(side='right')
+        self.btn_start = ttk.Button(ctrl_right, text='START ENGINE', style='Accent.TButton', command=self.start_bot)
+        self.btn_start.pack(side='left', padx=6)
+        self.btn_stop = ttk.Button(ctrl_right, text='STOP', style='Danger.TButton', command=self.stop_bot)
+        self.btn_stop.pack(side='left')
+        self.btn_stop.state(['disabled'])
 
-        # --- CUERPO ---
-        body = tk.Frame(self.main_container, bg=self.bg_color)
-        body.pack(fill="both", expand=True)
+        # --- BODY ---
+        body = ttk.Frame(self.main_container)
+        body.pack(fill='both', expand=True)
 
-        # Izquierda: Mascota (ASCII)
-        left_side = tk.Frame(body, bg=self.bg_color, width=180)
-        left_side.pack(side="left", fill="y", padx=(0, 20))
-        
-        ascii_art = """
-   (\\_/)
-   ( •.•)
-   c(\" )(\" )
-   
-   -------
-    SYSTEM
-    READY
-   -------
-        """
-        tk.Label(left_side, text=ascii_art, bg=self.bg_color, fg=self.pink, font=("Courier", 11), justify="center").pack(pady=40)
+        # Sidebar
+        sidebar = ttk.Frame(body, width=220, style='TFrame')
+        sidebar.pack(side='left', fill='y', padx=(0,12))
+        ttk.Label(sidebar, text='Navegación', style='Sub.TLabel').pack(anchor='nw', pady=(2,8))
+        ttk.Button(sidebar, text='Estado', command=lambda: None).pack(fill='x', pady=4)
+        ttk.Button(sidebar, text='Registro / Logs', command=lambda: None).pack(fill='x', pady=4)
+        ttk.Button(sidebar, text='Configuración', command=lambda: None).pack(fill='x', pady=4)
+        ttk.Separator(sidebar, orient='horizontal').pack(fill='x', pady=8)
+        ttk.Button(sidebar, text='Abrir capturas', command=self.open_screenshots).pack(fill='x', pady=2)
+        ttk.Button(sidebar, text='Revisar logs', command=self.open_logs).pack(fill='x', pady=2)
 
-        # Derecha: Los Bloques
-        right_content = tk.Frame(body, bg=self.bg_color)
-        right_content.pack(side="left", fill="both", expand=True)
+        # Content area
+        right_content = ttk.Frame(body)
+        right_content.pack(side='left', fill='both', expand=True)
 
-        # Bloque 1: BOT CONTROLLER (Fastfetch Header Style)
-        ctrl_frame = self.create_styled_box(right_content, " fastfetch - 1.00.00 ", self.red)
-        
-        btn_box = tk.Frame(ctrl_frame, bg=self.bg_color)
-        btn_box.pack(fill="x", pady=5)
-        
-        self.btn_start = self.add_action_btn(btn_box, "[ START ENGINE ]", self.green, self.start_bot)
-        self.btn_stop = self.add_action_btn(btn_box, "[ KILL PROCESS ]", self.red, self.stop_bot, state="disabled")
+        # Top cards: stats and controls
+        cards = ttk.Frame(right_content)
+        cards.pack(fill='x', pady=(0,10))
 
-        # Bloque 2: HARDWARE / CONFIG (Estilo Hardware)
-        cfg_frame = self.create_styled_box(right_content, " Hardware / Config ", self.teal)
-        self.add_info_line(cfg_frame, "Region Setup", "Update coordinates", self.sky, self.run_setup)
-        self.add_info_line(cfg_frame, "Visual Logs", "Open screenshots", self.sky, self.open_screenshots)
-        self.add_info_line(cfg_frame, "Text Logs", "Review history", self.sky, self.open_logs)
+        stat_frame = ttk.Frame(cards, style='Card.TFrame')
+        stat_frame.pack(side='left', fill='both', expand=True, padx=(0,8))
+        ttk.Label(stat_frame, text='Uptime', style='Stat.TLabel').pack(anchor='w', padx=12, pady=(8,2))
+        self.uptime_label = ttk.Label(stat_frame, text='00:00:00', style='Sub.TLabel')
+        self.uptime_label.pack(anchor='w', padx=12, pady=(0,8))
 
-        # Bloque 3: TERMINAL (Estilo Terminal)
-        term_frame = self.create_styled_box(right_content, " Live Terminal ", self.yellow)
-        self.log_widget = scrolledtext.ScrolledText(term_frame, bg=self.bg_color, fg=self.fg_color, font=self.font_mono, 
-                                                 borderwidth=0, highlightthickness=0, height=10, insertbackground=self.fg_color)
-        self.log_widget.pack(fill="both", expand=True, padx=5, pady=5)
-        self.log_widget.config(state="disabled")
+        actions_frame = ttk.Frame(cards)
+        actions_frame.pack(side='left', fill='x')
+        self.progress = ttk.Progressbar(actions_frame, orient='horizontal', length=220, mode='determinate')
+        self.progress.pack(padx=6, pady=6)
 
-        # Bloque 4: UPTIME / STATS (Estilo Uptime)
-        stats_frame = self.create_styled_box(right_content, " Session Stats ", self.mauve)
-        self.lbl_exito = tk.Label(stats_frame, text="Journals Success ........ 0", bg=self.bg_color, fg=self.green, font=self.font_mono)
-        self.lbl_exito.pack(anchor="w", padx=10)
-        self.lbl_error = tk.Label(stats_frame, text="Critical Errors ......... 0", bg=self.bg_color, fg=self.red, font=self.font_mono)
-        self.lbl_error.pack(anchor="w", padx=10)
+        # Config quick actions
+        cfg_frame = ttk.LabelFrame(right_content, text='Hardware / Config', padding=8)
+        cfg_frame.pack(fill='x', pady=(0,10))
+        ttk.Button(cfg_frame, text='Region Setup', command=self.run_setup).pack(side='left', padx=6, pady=4)
+        ttk.Button(cfg_frame, text='Abrir capturas', command=self.open_screenshots).pack(side='left', padx=6, pady=4)
+        ttk.Button(cfg_frame, text='Abrir logs', command=self.open_logs).pack(side='left', padx=6, pady=4)
 
-        # --- FOOTER (Small & Discrete) ---
-        footer = tk.Frame(self.main_container, bg=self.bg_color)
-        footer.pack(fill="x", side="bottom", pady=(10, 0))
-        
-        tk.Label(footer, text="v1.00.00", bg=self.bg_color, fg=self.overlay0, font=("Consolas", 7)).pack(side="left")
-        tk.Label(footer, text=" | ", bg=self.bg_color, fg=self.surface0, font=("Consolas", 7)).pack(side="left")
-        tk.Label(footer, text="Created by: Cotano_", bg=self.bg_color, fg=self.mauve, font=("Consolas", 7, "italic")).pack(side="left")
+        # Terminal / Logs
+        term_frame = ttk.LabelFrame(right_content, text='Live Terminal', padding=6)
+        term_frame.pack(fill='both', expand=True)
+        self.log_widget = scrolledtext.ScrolledText(term_frame, bg='#071321', fg=self.fg_color, font=self.font_mono, 
+                             borderwidth=0, highlightthickness=0, height=12, insertbackground=self.fg_color)
+        self.log_widget.pack(fill='both', expand=True, padx=4, pady=4)
+        self.log_widget.config(state='disabled')
+
+        # Session stats
+        stats_frame = ttk.Frame(right_content)
+        stats_frame.pack(fill='x', pady=(8,0))
+        self.lbl_exito = ttk.Label(stats_frame, text='Journals Success: 0', style='Sub.TLabel')
+        self.lbl_exito.pack(side='left', padx=6)
+        self.lbl_error = ttk.Label(stats_frame, text='Critical Errors: 0', style='Sub.TLabel')
+        self.lbl_error.pack(side='left', padx=6)
+
+        # --- FOOTER ---
+        footer = ttk.Frame(self.main_container)
+        footer.pack(fill='x', side='bottom', pady=(10,0))
+        ttk.Label(footer, text='Created by: Cotano_', style='Sub.TLabel').pack(side='left')
 
     def add_pill(self, parent, text, color, bg):
-        p = tk.Label(parent, text=text, bg=color, fg=bg, font=self.font_mono_bold, padx=10, pady=2)
-        p.pack(side="left", padx=2)
+        p = tk.Label(parent, text=text, bg=color, fg=bg, font=self.font_mono)
+        p.pack(side='left', padx=2)
 
     def create_styled_box(self, parent, title, color):
-        f = tk.LabelFrame(parent, text=title, bg=self.bg_color, fg=color, font=self.font_mono_bold, 
-                         labelanchor="n", borderwidth=1, relief="solid", padx=10, pady=5)
-        f.pack(fill="x", pady=(0, 10))
+        f = tk.LabelFrame(parent, text=title, bg=self.bg_color)
+        f.pack(fill='x', pady=(0,10))
         return f
 
     def add_action_btn(self, parent, text, color, cmd, state="normal"):
-        b = tk.Button(parent, text=text, bg=self.bg_color, fg=color, font=self.font_mono_bold, 
-                    borderwidth=0, activebackground=self.surface0, activeforeground=color, 
-                    cursor="hand2", command=cmd, state=state)
-        b.pack(side="left", expand=True)
+        b = ttk.Button(parent, text=text, command=cmd)
+        if state != 'normal': b.state(['disabled'])
+        b.pack(side='left', expand=True, padx=6)
         return b
 
     def add_info_line(self, parent, label, value, color, cmd):
-        f = tk.Frame(parent, bg=self.bg_color)
-        f.pack(fill="x")
-        tk.Label(f, text=f"{label:.<15}", bg=self.bg_color, fg=self.fg_color, font=self.font_mono).pack(side="left")
-        b = tk.Button(f, text=value, bg=self.bg_color, fg=color, font=self.font_mono, borderwidth=0, 
-                     activebackground=self.surface0, activeforeground=color, cursor="hand2", command=cmd)
-        b.pack(side="left")
+        f = ttk.Frame(parent)
+        f.pack(fill='x', pady=2)
+        ttk.Label(f, text=label, style='Sub.TLabel').pack(side='left')
+        ttk.Button(f, text=value, command=cmd).pack(side='left', padx=8)
 
     def log(self, message):
         self.log_queue.put(message)
@@ -166,45 +178,58 @@ class BotAXGui:
         try:
             while True:
                 msg = self.log_queue.get_nowait()
-                self.log_widget.config(state="normal")
-                ts = datetime.now().strftime("%H:%M:%S")
-                indicator = "::"
-                if "exitoso" in msg.lower() or "completado" in msg.lower(): indicator = "OK"
-                elif "error" in msg.lower() or "timeout" in msg.lower(): indicator = "!!"
-                
-                self.log_widget.insert(tk.END, f"[{ts}] {indicator} {msg}\n")
+                self.log_widget.config(state='normal')
+                ts = datetime.now().strftime('%H:%M:%S')
+                indicator = '::'
+                if 'exitoso' in msg.lower() or 'completado' in msg.lower():
+                    indicator = 'OK'
+                elif 'error' in msg.lower() or 'timeout' in msg.lower():
+                    indicator = '!!'
+
+                self.log_widget.insert(tk.END, f'[{ts}] {indicator} {msg}\n')
                 self.log_widget.see(tk.END)
-                self.log_widget.config(state="disabled")
-                
-                if "completado" in msg.lower() or "exitoso" in msg.lower():
+                self.log_widget.config(state='disabled')
+
+                if 'completado' in msg.lower() or 'exitoso' in msg.lower():
                     self.diarios_exitosos += 1
-                    self.lbl_exito.config(text=f"Journals Success ........ {self.diarios_exitosos}")
-                elif "error" in msg.lower() or "timeout" in msg.lower():
-                    if "ignorado" not in msg.lower():
+                    self.lbl_exito.config(text=f'Journals Success: {self.diarios_exitosos}')
+                elif 'error' in msg.lower() or 'timeout' in msg.lower():
+                    if 'ignorado' not in msg.lower():
                         self.diarios_errores += 1
-                        self.lbl_error.config(text=f"Critical Errors ......... {self.diarios_errores}")
+                        self.lbl_error.config(text=f'Critical Errors: {self.diarios_errores}')
         except queue.Empty: pass
         self.root.after(100, self.check_queue)
 
     def start_bot(self):
-        if self.bot_thread and self.bot_thread.is_alive(): return
+        if self.bot_thread and self.bot_thread.is_alive():
+            return
         self.stop_event.clear()
-        self.log("Booting system...")
-        self.btn_start.config(state="disabled", fg=self.overlay0)
-        self.btn_stop.config(state="normal", fg=self.red)
+        self.log('Booting system...')
+        try:
+            self.btn_start.state(['disabled'])
+            self.btn_stop.state(['!disabled'])
+        except Exception:
+            pass
         self.bot_thread = threading.Thread(target=self.run_bot_thread, daemon=True)
         self.bot_thread.start()
 
     def stop_bot(self):
         self.stop_event.set()
         self.log("SIGKILL sent to bot process.")
-        self.btn_stop.config(state="disabled", fg=self.overlay0)
+        try:
+            self.btn_stop.state(['disabled'])
+            self.btn_start.state(['!disabled'])
+        except Exception:
+            pass
 
     def run_bot_thread(self):
         try: run_bot(log_callback=self.log, stop_event=self.stop_event)
         finally:
-            self.btn_start.after(0, lambda: self.btn_start.config(state="normal", fg=self.green))
-            self.btn_stop.after(0, lambda: self.btn_stop.config(state="disabled", fg=self.overlay0))
+            try:
+                self.btn_start.after(0, lambda: self.btn_start.state(['!disabled']))
+                self.btn_stop.after(0, lambda: self.btn_stop.state(['disabled']))
+            except Exception:
+                pass
 
     def run_setup(self):
         if self.bot_thread and self.bot_thread.is_alive(): return
