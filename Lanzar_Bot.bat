@@ -15,11 +15,12 @@ if errorlevel 1 (
     exit /b 1
 )
 :: Verificar que el script existe
-if not exist "app_gui.py" (
-    echo ERROR: No se encontro app_gui.py en la carpeta actual.
+if not exist "src\ui\gui_classic.py" (
+    echo ERROR: No se encontro src\ui\gui_classic.py en la carpeta actual.
     pause
     exit /b 1
 )
 :: Ejecutar la interfaz grafica
-start "" "%LOCALAPPDATA%\Programs\Python\Python312\pythonw.exe" app_gui.py
+set PYTHONPATH=.
+start "" "%LOCALAPPDATA%\Programs\Python\Python312\pythonw.exe" -m src.ui.gui_classic
 exit

@@ -13,13 +13,12 @@
 REPO_ROOT=$(git rev-parse --show-toplevel 2>/dev/null) || exit 0
 cd "$REPO_ROOT" || exit 0
 
-# Buscar _version.py en raíz o en src/bot_ax/
+# Buscar version.py en src/core/
 VPY=""
-[ -f "_version.py" ] && VPY="_version.py"
-[ -f "src/bot_ax/_version.py" ] && VPY="src/bot_ax/_version.py"
+[ -f "src/core/version.py" ] && VPY="src/core/version.py"
 [ -z "$VPY" ] && exit 0
 
-# Si el usuario tocó _version.py manualmente, no auto-bumpear
+# Si el usuario tocó version.py manualmente, no auto-bumpear
 if git diff --cached --name-only 2>/dev/null | grep -q "$VPY"; then
     git add "$VPY" 2>/dev/null || true
     exit 0
@@ -30,9 +29,9 @@ ADDED=$(git diff --cached --diff-filter=A --name-only 2>/dev/null | grep -c . ||
 DELETED=$(git diff --cached --diff-filter=D --name-only 2>/dev/null | grep -c . || true)
 
 if [ "$ADDED" -gt 0 ] || [ "$DELETED" -gt 0 ]; then
-    python bump_version.py minor 2>/dev/null || true
+    python scripts/bump_version.py minor 2>/dev/null || true
 else
-    python bump_version.py patch 2>/dev/null || true
+    python scripts/bump_version.py patch 2>/dev/null || true
 fi
 
 git add "$VPY" 2>/dev/null || true

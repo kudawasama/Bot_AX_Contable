@@ -15,11 +15,12 @@ if errorlevel 1 (
     exit /b 1
 )
 :: Verificar que el script existe
-if not exist "bot_ax_registro.py" (
-    echo ERROR: No se encontro bot_ax_registro.py en la carpeta actual.
+if not exist "src\ui\gui_gemini.py" (
+    echo ERROR: No se encontro src\ui\gui_gemini.py en la carpeta actual.
     pause
     exit /b 1
 )
 :: Ejecutar la interfaz grafica
-start "" "%LOCALAPPDATA%\Programs\Python\Python312\pythonw.exe" bot_ax_registro.py
+set PYTHONPATH=.
+start "" "%LOCALAPPDATA%\Programs\Python\Python312\pythonw.exe" -m src.ui.gui_gemini
 exit

@@ -1,6 +1,0 @@
-Primary screen size: Size(width=1366, height=768)
-Full screen screenshot saved to diag_full_screen_163919.png
-Checking pattern: patrones/checkbox_vacio.png
-  -> FOUND at Box(left=np.int64(320), top=np.int64(237), width=21, height=17)
-Checking pattern: patrones/btn_registrar_menu.png
-  -> Error searching: 
