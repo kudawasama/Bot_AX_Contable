@@ -142,7 +142,7 @@ def run_bot(log_callback=print, stop_event=None, pause_event=None):
 
                 try:
                     todas_vacias = list(gui.locateAllOnScreen(CHK_VACIO,
-                        region=sector_a, confidence=0.9, grayscale=True))
+                        region=sector_a, confidence=0.8, grayscale=True))
                     todas_vacias.sort(key=lambda loc: loc.top)
                 except Exception:
                     todas_vacias = []
