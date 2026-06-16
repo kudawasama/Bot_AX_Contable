@@ -142,26 +142,10 @@ def run_bot(log_callback=print, stop_event=None, pause_event=None):
 
                 try:
                     todas_vacias = list(gui.locateAllOnScreen(CHK_VACIO,
-                        region=sector_a, confidence=0.9, grayscale=True))
+                        region=sector_a, confidence=0.8, grayscale=True))
                     todas_vacias.sort(key=lambda loc: loc.top)
                 except Exception:
                     todas_vacias = []
-
-                # FILTRO POSICIONAL: excluir empties que coinciden con un checkbox marcado
-                # (evita falsos positivos del OCR por anti-aliasing/patron similar)
-                if todas_vacias and CHK_MARCADO:
-                    try:
-                        marcados = list(gui.locateAllOnScreen(CHK_MARCADO, region=sector_a, confidence=0.7, grayscale=True))
-                        def _no_esta_marcado(loc):
-                            cx, cy = gui.center(loc)
-                            for m in marcados:
-                                mx, my = gui.center(m)
-                                if abs(cx - mx) < 10 and abs(cy - my) < 10:
-                                    return False  # misma posicion que un marcado
-                            return True
-                        todas_vacias = [loc for loc in todas_vacias if _no_esta_marcado(loc)]
-                    except Exception:
-                        pass
 
                 casilla_objetivo = None
                 id_actual = "DESCONOCIDO"
