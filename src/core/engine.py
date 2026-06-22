@@ -12,9 +12,10 @@ from src.core.config import (
     IMG_ERROR, BTN_ABAJO, IMG_FORMULARIOS, BASE_DIR
 )
 from src.services.vision import (
-    buscar_y_clickear, buscar_estado_checkbox, esperar_resultado_registro, 
+    buscar_y_clickear, buscar_estado_checkbox, esperar_resultado_registro,
     leer_id_diario, capturar_pantalla_error, normalizar_id_diario
 )
+from src.core.event_log import event_log
 
 try:
     import keyboard
@@ -115,6 +116,14 @@ def run_bot(
     if not sector_scroll:
         log("ADVERTENCIA: Sector Scroll (Sector C) no definido.")
  
+    # Evento estructurado: inicio del bot con parametros de configuracion
+    event_log(
+        "bot_start",
+        sector_a=sector_a,
+        sector_b=sector_b,
+        blacklist_count=len(diarios_con_error),
+    )
+
     log("\n[Instrucción] El bot se está ejecutando.")
     if stop_event is None:
         log("[Instrucción] MANTÉN PRESIONADA LA TECLA 'ESC' PARA DETENER.\n")
@@ -131,7 +140,9 @@ def run_bot(
             try:
                 if gui.locateOnScreen(IMG_FORMULARIOS, confidence=0.8, grayscale=True):
                     log("!!! SEGURIDAD: Se detectó 'Formularios Abiertos'. Deteniendo bot.")
-                    capturar_pantalla_error("formularios_abiertos_stop")
+                    _captura_form = capturar_pantalla_error("formularios_abiertos_stop")
+                    event_log("formulario_abierto_detectado", captura_path=_captura_form)
+                    event_log("bot_stop", reason="formularios_abiertos")
                     break
             except Exception:
                 pass
@@ -139,9 +150,11 @@ def run_bot(
             # Verificación de parada externa
             if stop_event and stop_event.is_set():
                 log("Bot detenido por la interfaz.")
+                event_log("bot_stop", reason="user_esc")
                 break
             if not stop_event and HAS_KEYBOARD and keyboard.is_pressed('esc'):
                 log("Bot detenido por el usuario (ESC).")
+                event_log("bot_stop", reason="user_esc")
                 break
 
             # Bucle de pausa
@@ -154,6 +167,7 @@ def run_bot(
                 break
 
             log(f"\n--- Iniciando Ciclo {ciclo} ---")
+            event_log("ciclo_start", ciclo_num=ciclo)
             
             # Paso A: Buscar casillas vacías y elegir la mejor
             intentos_scroll: int = 0
@@ -215,8 +229,15 @@ def run_bot(
                     if id_normalizado in diarios_con_error:
                         if intentos_scroll == 0:
                             log(f"  -> Ignorando {identificador} (lista negra, normalizado: {id_normalizado}).")
+                        event_log("checkbox_skip_blacklist", id_normalizado=id_normalizado)
                         continue
                     
+                    event_log(
+                        "checkbox_found",
+                        id_bruto=identificador,
+                        id_normalizado=id_normalizado,
+                        coords=[coord[0], coord[1]],
+                    )
                     casilla_objetivo = coord
                     id_actual = identificador
                     break
@@ -234,6 +255,7 @@ def run_bot(
 
                 if pos_flecha:
                     log("Botón de scroll encontrado. Presionando 1 vez...")
+                    event_log("scroll_performed", intento=intentos_scroll, metodo="boton")
                     gui.moveTo(pos_flecha.x, pos_flecha.y, duration=0.2)
                     for _ in range(1):
                         gui.click()
@@ -248,8 +270,10 @@ def run_bot(
                         gui.click()
                         time.sleep(0.2)
                         gui.scroll(-10)
+                        event_log("scroll_performed", intento=intentos_scroll, metodo="click")
                     except Exception:
                         gui.press('pgdn')
+                        event_log("scroll_performed", intento=intentos_scroll, metodo="pgdn")
                     time.sleep(1.5)
 
                 # Limpiar la caché de posiciones procesadas tras desplazar la pantalla,
@@ -259,6 +283,7 @@ def run_bot(
 
             if not casilla_objetivo:
                 log("No se encontraron más diarios tras 3 intentos de scroll. Fin.")
+                event_log("bot_stop", reason="no_more_diarios")
                 break
 
             log(f"==> PROCESANDO DIARIO: {normalizar_id_diario(id_actual)}")
@@ -279,11 +304,24 @@ def run_bot(
                 if stop_event and stop_event.is_set(): 
                     break
                 log(f"Error: No se encontró el botón de registrar para {id_actual}.")
-                capturar_pantalla_error(id_actual)
+                _captura_menu = capturar_pantalla_error(id_actual)
+                event_log("timeout_menu", segundos=30, captura_path=_captura_menu)
                 diarios_con_error.append(normalizar_id_diario(id_actual))
                 ciclo += 1
                 time.sleep(0.5)
                 continue
+            else:
+                # encontrado_menu es (x, y) o True; registrar el clic del menú
+                _menu_coords = encontrado_menu if isinstance(encontrado_menu, tuple) else None
+                _in_sector_b = False
+                if _menu_coords and sector_b:
+                    _in_sector_b = (sector_b[0] <= _menu_coords[0] <= sector_b[0] + sector_b[2] and
+                                    sector_b[1] <= _menu_coords[1] <= sector_b[1] + sector_b[3])
+                event_log(
+                    "menu_click",
+                    coords=list(_menu_coords) if _menu_coords else [],
+                    in_sector=_in_sector_b,
+                )
             
             # Paso C: Confirmación
             time.sleep(0.5) 
@@ -298,16 +336,30 @@ def run_bot(
                  if stop_event and stop_event.is_set(): 
                      break
                  log(f"Error: No se encontró la confirmación para {id_actual}.")
-                 capturar_pantalla_error(id_actual)
+                 _captura_confirm = capturar_pantalla_error(id_actual)
+                 event_log("timeout_confirm", segundos=20)
                  diarios_con_error.append(normalizar_id_diario(id_actual))
                  ciclo += 1
                  time.sleep(0.5)
                  continue
+            else:
+                # encontrado_confirm es (x, y) o True; registrar el clic de confirmar
+                _confirm_coords = encontrado_confirm if isinstance(encontrado_confirm, tuple) else None
+                _in_sector_b = False
+                if _confirm_coords and sector_b:
+                    _in_sector_b = (sector_b[0] <= _confirm_coords[0] <= sector_b[0] + sector_b[2] and
+                                    sector_b[1] <= _confirm_coords[1] <= sector_b[1] + sector_b[3])
+                event_log(
+                    "confirm_click",
+                    coords=list(_confirm_coords) if _confirm_coords else [],
+                    in_sector=_in_sector_b,
+                )
             
             # Paso D: Esperar resultado
             px, py = punto_click_a
             time.sleep(2)
             
+            _ts_inicio_resultado = time.time()
             resultado = esperar_resultado_registro(
                 ruta_obj_exito=CHK_MARCADO,
                 ruta_obj_error=IMG_ERROR,
@@ -315,19 +367,36 @@ def run_bot(
                 timeout=3600,
                 stop_event=stop_event
             )
+            _tiempo_total = round(time.time() - _ts_inicio_resultado, 2)
             
             if resultado == 'exito':
                 log(f"[RESULT:OK] -> Registro de {normalizar_id_diario(id_actual)} completado.")
+                event_log(
+                    "result_exito",
+                    id_normalizado=normalizar_id_diario(id_actual),
+                    tiempo_total_segundos=_tiempo_total,
+                )
                 registrar_log(id_actual, "EXITOSO")
                 time.sleep(2)
             elif resultado == 'cancelado':
                 log("Registro cancelado por el usuario.")
+                event_log("bot_stop", reason="user_esc")
                 break
             elif resultado == 'error':
                  log(f"[RESULT:ERROR] Se detectó un Error en {id_actual}. A la lista negra.")
-                 capturar_pantalla_error(id_actual)
+                 _captura_err = capturar_pantalla_error(id_actual)
+                 event_log(
+                     "result_error",
+                     id_normalizado=normalizar_id_diario(id_actual),
+                     captura_path=_captura_err,
+                 )
                  registrar_log(id_actual, "ERROR")
                  diarios_con_error.append(normalizar_id_diario(id_actual))
+                 event_log(
+                     "blacklist_updated",
+                     id_added=normalizar_id_diario(id_actual),
+                     total=len(diarios_con_error),
+                 )
                  # Guardar blacklist actualizada en la raíz
                  try:
                      with open(blacklist_file, "w", encoding="utf-8") as f:
@@ -349,7 +418,13 @@ def run_bot(
                  time.sleep(1)
             else:
                  log(f"[RESULT:ERROR] Timeout extremo para {id_actual}.")
-                 capturar_pantalla_error(id_actual)
+                 _captura_to = capturar_pantalla_error(id_actual)
+                 event_log(
+                     "result_timeout",
+                     id_normalizado=normalizar_id_diario(id_actual),
+                     segundos_esperados=3600,
+                 )
+                 event_log("bot_stop", reason="timeout_extremo")
                  break
                  
             ciclo += 1
@@ -357,8 +432,14 @@ def run_bot(
             
     except KeyboardInterrupt:
         log("\nBot detenido manualmente.")
+        event_log("bot_stop", reason="user_esc")
+    except gui.FailSafeException as e:
+        log(f"\nFAIL-SAFE de PyAutoGUI activado: {e}")
+        event_log("failsafe_triggered", detalle_error=str(e))
+        event_log("bot_stop", reason="error")
     except Exception as e:
         log(f"\nError inesperado: {e}")
+        event_log("bot_stop", reason="error")
         
     log("\nEjecución finalizada.")
     return True

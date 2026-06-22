@@ -10,6 +10,8 @@ import threading
 
 from src.core.config import TESSERACT_CMD
 from src.core.logger import get_logger
+from src.core.event_log import event_log
+from src.core.event_log import event_log
 
 logger = get_logger()
 
@@ -121,12 +123,13 @@ def buscar_y_clickear(
             if not ubicacion:
                 try:
                     ubicacion = pyautogui.locateCenterOnScreen(
-                        ruta_imagen, 
+                        ruta_imagen,
                         confidence=max(0.7, confidencialidad - 0.1),
                         grayscale=True
                     )
                     if ubicacion and sector_region:
                         logger.warning(f"{nombre_corto(ruta_imagen)} fuera de sector B")
+                        event_log("sector_b_fallback", elemento=nombre_corto(ruta_imagen))
                 except pyautogui.ImageNotFoundException:
                     pass
 
@@ -153,6 +156,8 @@ def buscar_y_clickear(
             pass
         except Exception as e:
             logger.error(f"Error durante la búsqueda de imagen: {e}")
+            if "fail-safe" in str(e).lower():
+                event_log("failsafe_triggered", detalle_error=str(e))
             
         time.sleep(0.5) 
         
@@ -253,6 +258,7 @@ def esperar_resultado_registro(
              )
              if ubi_popup:
                  logger.info("-> EXITO! (pop-up confirmado)")
+                 event_log("result_exito_popup")
                  pyautogui.press('esc')
                  time.sleep(0.3)
                  pyautogui.press('enter')
@@ -270,6 +276,7 @@ def esperar_resultado_registro(
              )
              if ubi_error:
                  logger.warning("-> ERROR de Registro AX!")
+                 event_log("result_error_ax")
                  return 'error'
         except pyautogui.ImageNotFoundException:
              pass
