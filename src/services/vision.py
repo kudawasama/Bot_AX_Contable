@@ -233,20 +233,25 @@ def esperar_resultado_registro(
     logger.info(f"Esperando resultado (timeout: {timeout/60:.0f}min)...")
     
     ultimo_mensaje: float = inicio
+    ultimo_jiggle: float = inicio
     while time.time() - inicio < timeout:
         if stop_event and stop_event.is_set():
             return 'cancelado'
             
-        # Loguear progreso cada 30 segundos
-        if time.time() - ultimo_mensaje > 30:
-            logger.info(f"...esperando ({int(time.time() - inicio)}s)")
-            ultimo_mensaje = time.time()
-            # Desplazar mouse sutilmente para prevenir bloqueo o suspensión
+        ahora = time.time()
+        # Desplazar mouse sutilmente cada 12s para prevenir bloqueo o suspensión
+        if ahora - ultimo_jiggle > 12:
             try:
-                pyautogui.moveRel(1, 0)
-                pyautogui.moveRel(-1, 0)
+                pyautogui.moveRel(3, 0)
+                pyautogui.moveRel(-3, 0)
             except Exception:
                 pass
+            ultimo_jiggle = ahora
+
+        # Loguear progreso cada 30 segundos
+        if ahora - ultimo_mensaje > 30:
+            logger.info(f"...esperando ({int(ahora - inicio)}s)")
+            ultimo_mensaje = ahora
             
         # 1. Buscar ventana modal de éxito en toda la pantalla
         try:

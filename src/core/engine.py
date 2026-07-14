@@ -357,7 +357,14 @@ def run_bot(
             
             # Paso D: Esperar resultado
             px, py = punto_click_a
-            time.sleep(2)
+            # Pequeña espera activa: mueve el mouse 3px cada 1s para evitar suspensión
+            for _ in range(2):
+                try:
+                    gui.moveRel(2, 0)
+                    gui.moveRel(-2, 0)
+                except Exception:
+                    pass
+                time.sleep(1)
             
             _ts_inicio_resultado = time.time()
             resultado = esperar_resultado_registro(
