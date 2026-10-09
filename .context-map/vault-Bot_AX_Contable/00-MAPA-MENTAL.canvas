@@ -64,9 +64,9 @@
       "height": 50
     },
     {
-      "id": "4864a391-4e5c-57f1-8efc-d10cf22e55c4",
+      "id": "8c6e6cfd-efb8-55ed-8bf2-839e70dada87",
       "type": "file",
-      "file": "4.0-RIESGOS/Archivos de alta complejidad scripts_observer_analyze.py, src_ui_gui_classic.py, src_core_engine.py.md",
+      "file": "4.0-RIESGOS/Archivos de alta complejidad scripts_observer_analyze.py, src_ui_gui_classic.py, scripts_chequeo_sal.md",
       "x": 1040,
       "y": 0,
       "width": 240,
@@ -87,6 +87,15 @@
       "file": "4.0-RIESGOS/Entendido y aplicado solo Bot_AX_Contable. Y me quedo con el hallazgo más importante de la sesión, q.md",
       "x": 1040,
       "y": 120,
+      "width": 240,
+      "height": 50
+    },
+    {
+      "id": "d1baa5bd-39ea-5553-8d51-b55f3a7cd33e",
+      "type": "file",
+      "file": "4.0-RIESGOS/Implemento T1 y T3. Leo el archivo actual para reescribirlo de una vez y sin riesgo de parches parci.md",
+      "x": 1040,
+      "y": 180,
       "width": 240,
       "height": 50
     }
@@ -165,6 +174,14 @@
       "label": ""
     },
     {
+      "id": "e6cde3b5-23dd-51c7-b614-28df561f0f11",
+      "fromNode": "fe1f0c36-2819-5b60-8dee-d620bf0c75e9",
+      "fromSide": "right",
+      "toNode": "d1baa5bd-39ea-5553-8d51-b55f3a7cd33e",
+      "toSide": "left",
+      "label": ""
+    },
+    {
       "id": "07421350-7c69-52df-902a-9afd6d513c9b",
       "fromNode": "b6222708-19d6-58d6-9862-d6f1515d37d2",
       "fromSide": "right",
@@ -181,26 +198,34 @@
       "label": ""
     },
     {
-      "id": "d103cf85-1ca2-590e-877f-9c34c6699cb8",
+      "id": "9521245b-135b-50f9-8a90-398150fd99e6",
       "fromNode": "e1816036-41c7-5e0e-9431-47747735af62",
       "fromSide": "right",
-      "toNode": "4864a391-4e5c-57f1-8efc-d10cf22e55c4",
+      "toNode": "8c6e6cfd-efb8-55ed-8bf2-839e70dada87",
       "toSide": "left",
       "label": ""
     },
     {
-      "id": "0758a7ca-1ef2-5127-8be5-06418c857674",
-      "fromNode": "4864a391-4e5c-57f1-8efc-d10cf22e55c4",
+      "id": "371f13ed-26aa-5aa0-b279-eff827cdff26",
+      "fromNode": "8c6e6cfd-efb8-55ed-8bf2-839e70dada87",
       "fromSide": "right",
       "toNode": "51ab7fbb-e480-561c-834c-777c47994dc4",
       "toSide": "left",
       "label": ""
     },
     {
-      "id": "eb4d193a-5a91-5358-a333-aca9d3e8d539",
-      "fromNode": "4864a391-4e5c-57f1-8efc-d10cf22e55c4",
+      "id": "98cd36b7-e1bf-56a6-bafc-1e9a2a3e0365",
+      "fromNode": "8c6e6cfd-efb8-55ed-8bf2-839e70dada87",
       "fromSide": "right",
       "toNode": "bceb5ea6-1ba1-5260-83d9-71ef8a42b778",
+      "toSide": "left",
+      "label": ""
+    },
+    {
+      "id": "4627ff30-33cf-50c5-8e2a-ebbd65b5ef05",
+      "fromNode": "8c6e6cfd-efb8-55ed-8bf2-839e70dada87",
+      "fromSide": "right",
+      "toNode": "d1baa5bd-39ea-5553-8d51-b55f3a7cd33e",
       "toSide": "left",
       "label": ""
     },
@@ -209,6 +234,14 @@
       "fromNode": "51ab7fbb-e480-561c-834c-777c47994dc4",
       "fromSide": "right",
       "toNode": "bceb5ea6-1ba1-5260-83d9-71ef8a42b778",
+      "toSide": "left",
+      "label": ""
+    },
+    {
+      "id": "6b7023d0-5031-50ce-866e-f424326600e8",
+      "fromNode": "51ab7fbb-e480-561c-834c-777c47994dc4",
+      "fromSide": "right",
+      "toNode": "d1baa5bd-39ea-5553-8d51-b55f3a7cd33e",
       "toSide": "left",
       "label": ""
     }

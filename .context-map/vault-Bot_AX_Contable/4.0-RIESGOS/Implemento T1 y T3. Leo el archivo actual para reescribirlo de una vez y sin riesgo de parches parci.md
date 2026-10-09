@@ -1,28 +1,28 @@
 ---
 type: riesgo
 status: activo
-created: 2026-10-09T16:00:58
+created: 2026-10-09T16:37:46
 project: "Bot_AX_Contable"
-tags: ["riesgo", "class:chore"]
-source: "scanner"
+tags: ["riesgo", "anlisis", "class:chore", "revisarcommitsypendientess"]
+source: "chat"
 ---
 
-# ⚠️ Archivos de alta complejidad: scripts/observer_analyze.py, src/ui/gui_classic.py, src/core/engine.py
+# ⚠️ Implemento T1 y T3. Leo el archivo actual para reescribirlo de una vez y sin riesgo de parches parciales:
 
-> #riesgo #activo #UI
+> #riesgo #activo #DEVOPS
 
-Zona de alta complejidad: Archivos de alta complejidad (6 total): scripts/observer_analyze.py; src/ui/gui_classic.py; src/core/engine.py.
+Riesgo: Implemento T1 y T3. Leo el archivo actual para reescribirlo de una vez y sin riesgo de parches parciales:.
 
 ## 🧠 Contexto Narrativo con Alma
 
 ### ⚠️ 1. ¿Qué RIESGO técnico es?
-Riesgo técnico o zona de alta complejidad referente a 'Archivos de alta complejidad: scripts/observer_analyze.py, src/ui/gui_classic.py, src/core/engine.py'.
+Riesgo técnico o zona de alta complejidad referente a 'Implemento T1 y T3. Leo el archivo actual para reescribirlo de una vez y sin riesgo de parches parciales:'.
 
 ### 📍 2. ¿Dónde se ubica el problema?
-Detectado en el módulo/componente vía `scanner`.
+Detectado en el módulo/componente vía `chat`.
 
 ### 💥 3. ¿Qué IMPACTO tiene si se ignora?
-Incrementa la probabilidad de desacoplamientos o fallos al refactorizar. Zona de alta complejidad: Archivos de alta complejidad (6 total): scripts/observer_analyze.py; src/ui/gui_classic.py; src/core/engine.py.
+Incrementa la probabilidad de desacoplamientos o fallos al refactorizar. Riesgo: Implemento T1 y T3. Leo el archivo actual para reescribirlo de una vez y sin riesgo de parches parciales:.
 
 ### 🛡️ 4. ¿Cómo MITIGAR este riesgo?
 1. Modularizar el componente reduciendo el número de líneas/responsabilidades.
@@ -38,9 +38,7 @@ Incrementa la probabilidad de desacoplamientos o fallos al refactorizar. Zona de
 
 ## 📋 Evidencia
 
-- Archivo: scripts/observer_analyze.py
-- Archivo: src/ui/gui_classic.py
-- Archivo: src/core/engine.py
+- Cantidad: 1
 
 ## 🔗 Conexiones
 
