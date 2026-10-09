@@ -79,6 +79,12 @@ de 5 minutos, y que el repositorio esté limpio de configuración ambigua.
 
 Orden recomendado: **A → C → B**. Empezar por lo que reduce el riesgo futuro sin tocar al bot.
 
+> **Estado (2026-10-09):**
+> - **A1** ✅ hecho y verificado (el analizador lee `events.jsonl`; 8 pruebas).
+> - **A3** ✅ hecho y verificado (`scripts/chequeo_salud.py`; 7 pruebas + demo con datos reales).
+> - **A2** y **A4** pendientes. Lotes **B**, **C** y **D** sin iniciar.
+> - Suite: 38/38 · CI en verde · versión v-00.20.00
+
 ---
 
 ## 5. LOTE A — Observabilidad y automatización (riesgo nulo)

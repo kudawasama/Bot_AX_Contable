@@ -6,6 +6,39 @@ Todos los cambios relevantes de este proyecto. El formato sigue
 
 ---
 
+## [v-00.20.00] — 2026-10-09 (Fase 2 · Lote A: observabilidad)
+
+### Añadido
+- **El analizador lee la telemetría estructurada (A1).** `scripts/observer_analyze.py`
+  incorpora `leer_eventos`, `resumir_eventos`, `ultimo_timestamp_eventos/` `log` y
+  `telemetria_mas_nueva_que_log`; el reporte suma la sección
+  *TELEMETRÍA ESTRUCTURADA* (éxitos, errores, timeouts, fallbacks, IDs con error y
+  sesiones por fecha) y **avisa cuando `bot_ax.log` quedó atrás** respecto de
+  `logs/events.jsonl` — el síntoma exacto del incidente del 8–9 de octubre.
+  `generar_reporte()` acepta `eventos` de forma opcional (compatibilidad total) y hay
+  una opción nueva `--eventos`.
+  *Hallazgo durante la implementación:* la primera versión comparaba por **fecha** y no
+  detectaba el desfase (bastaba una línea del mismo día para que el log pareciera al día);
+  se corrigió a comparación por **marca de tiempo**, con prueba de regresión.
+- **Chequeo de salud en un comando (A3).** `scripts/chequeo_salud.py` responde
+  "¿está trabajando bien el bot?" con cinco alertas: `TELEMETRIA_CONGELADA`,
+  `SIN_ACTIVIDAD`, `TASA_ERROR_ALTA`, `CONFIG_INVALIDA` y `SIN_EVIDENCIA`.
+  Opciones `--json`, `--raiz` y `--estricto` (código de salida 1 para cron/CI).
+  Diseño: valida la configuración por su cuenta (un chequeo de salud no debe depender
+  del código del "paciente") y compara el **contenido** del log, no su fecha de
+  modificación.
+- **Pruebas:** `tests/test_observer_analyze.py` (8) y `tests/test_chequeo_salud.py` (7).
+  Suite total: **38/38**.
+
+### Verificación
+- Analizador end-to-end contra el repo real: reporta la sesión en curso
+  (2026-10-09) y activa el aviso de log desactualizado.
+- Chequeo de salud contra los archivos reales copiados a un temporal con una sesión
+  simulada activa: detectó **245,8 min** de atraso del log y devolvió `exit 1`.
+- CI (GitHub Actions, runner Windows): `pruebas` y `lint` en verde.
+
+---
+
 ## [v-00.14.01] — 2026-10-09
 
 ### Cambiado
