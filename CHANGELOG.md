@@ -6,6 +6,41 @@ Todos los cambios relevantes de este proyecto. El formato sigue
 
 ---
 
+## [v-00.23.00] — 2026-10-09 (Fase 2 · Lote A cierre: T2, T4 y T5)
+
+### Corregido
+- **La opción `--registro` del analizador ya no se ignora (T2).** Se aceptaba en la línea
+  de comandos pero `main()` nunca la pasaba a `leer_registros()`, así que el analizador
+  leía siempre todos los `registro_*.txt` del proyecto y el filtro del operador no servía.
+  Ahora acepta un archivo puntual o una carpeta. Verificado con el registro real: 82
+  registros del día en lugar de todo el histórico.
+- **La métrica de lista negra distingue la sesión del histórico (T4).** El reporte mostraba
+  "cobertura 5,8%" sin explicar que `blacklist.json` se vacía con *Clear Errors* /
+  *Reiniciar*, y el número se leía como un fallo del bot. Ahora muestra dos preguntas
+  separadas: cobertura de la **última sesión** (14 errores, 100% ya en la lista el
+  2026-10-09) e **histórico** (129 IDs con error alguna vez · 114 nunca en la lista ·
+  16 reintentados), con una nota explicativa.
+  *Hallazgo durante la implementación:* el primer cálculo sumaba las dos fuentes
+  (registro + telemetría) y marcaba **116 de 129** IDs como "reintentados" — un diario que
+  falla una vez queda en ambos archivos. Corregido a **días distintos con error**, con
+  prueba de regresión. Los 16 restantes son reintentos reales: diarios que volvieron a
+  fallar otro día, es decir los que la lista negra no retuvo entre jornadas.
+
+### Añadido
+- **`Chequear_Salud_Bot.bat` (T5)**: doble clic para ver el informe de salud. Es de solo
+  lectura (no toca al bot ni la pantalla) y no reemplaza ni modifica los lanzadores.
+  Probado realmente ejecutándolo con la entrada estándar cerrada.
+- **README**: sección "¿Está trabajando bien el bot?" con los comandos y la tabla de las
+  6 alertas; el `.bat` figura en la estructura del proyecto.
+- **CI**: paso de humo que ejecuta `chequeo_salud.py --json` para que la herramienta no se
+  rompa en silencio (en CI no hay `logs/`, así que solo verifica que arranca y responde).
+
+### Verificación
+- 6 pruebas nuevas (2 de T2, 4 de T4) → suite completa **53/53**.
+- T2 y T4 verificados con los datos reales del proyecto; el `.bat` probado de verdad.
+
+---
+
 ## [v-00.21.01] — 2026-10-09 (Fase 2 · Lote A cierre: T1 y T3)
 
 ### Añadido

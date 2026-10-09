@@ -92,6 +92,26 @@ O doble clic en `Lanzar_Bot.bat` (clásica) o `Lanzar_Bot_Registro.bat` (Gemini 
 | **Stop Engine** | Detiene el proceso (vía `stop_event`) |
 | **Pause** | Pausa/reanuda el ciclo |
 
+## 🩺 ¿Está trabajando bien el bot?
+
+```bash
+python scripts/chequeo_salud.py            # informe legible
+python scripts/chequeo_salud.py --json     # para scripts
+python scripts/chequeo_salud.py --estricto # exit 1 si hay alertas (cron/CI)
+```
+
+O doble clic en `Chequear_Salud_Bot.bat`. Es de **solo lectura**: no toca al bot en
+ejecución ni la pantalla, así que se puede usar en cualquier momento.
+
+| Alerta | Qué significa |
+|--------|---------------|
+| `SESION_TERMINADA_POR_ERROR` | La última sesión murió (crash de PyAutoGUI o timeout extremo) |
+| `TELEMETRIA_CONGELADA` | El bot está activo pero `logs/bot_ax.log` quedó atrás de la telemetría |
+| `SIN_ACTIVIDAD` | Sesión abierta sin eventos más allá de lo normal (65 min si el bot está esperando el resultado de AX) |
+| `TASA_ERROR_ALTA` | Más de 25% de errores en el día |
+| `CONFIG_INVALIDA` | `config_sectores.json` o `blacklist.json` ilegibles |
+| `SIN_EVIDENCIA` | No hay telemetría ni log que analizar |
+
 ## 📋 Formato de logs
 
 ```
@@ -149,6 +169,7 @@ O doble clic en `Lanzar_Bot.bat` (clásica) o `Lanzar_Bot_Registro.bat` (Gemini 
 Bot_AX_Contable/
 ├── Lanzar_Bot.bat              # Lanzador → GUI clásica
 ├── Lanzar_Bot_Registro.bat     # Lanzador → GUI Gemini Engine
+├── Chequear_Salud_Bot.bat      # Chequeo de salud del bot (solo lectura)
 ├── src/
 │   ├── core/
 │   │   ├── engine.py           # Ciclo principal del bot (run_bot)

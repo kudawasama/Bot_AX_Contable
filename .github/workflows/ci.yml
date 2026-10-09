@@ -45,6 +45,12 @@ jobs:
       - name: Ejecutar la suite de pruebas
         run: python -m pytest -q
 
+      - name: Humo del chequeo de salud
+        # En CI no existen logs/ ni registro_*.txt (están en .gitignore), así que el
+        # objetivo es verificar que la herramienta arranca y devuelve JSON válido,
+        # no evaluar salud real.
+        run: python scripts/chequeo_salud.py --json
+
   lint:
     name: Lint informativo (ruff)
     runs-on: windows-latest

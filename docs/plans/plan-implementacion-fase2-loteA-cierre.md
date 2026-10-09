@@ -69,12 +69,17 @@ chequeo nunca grita en falso durante los registros largos normales.
 | **T5** | Utilidad local (`Chequear_Salud_Bot.bat`), README y humo en CI (A4 reformulado) | Nulo | `.bat` nuevo, `README.md`, `.github/workflows/ci.yml` |
 
 > **Estado (2026-10-09):**
-> - **T1** ✅ hecho y verificado (alerta `SESION_TERMINADA_POR_ERROR`; 5 pruebas + demo con
->   los datos reales de la caída de las 15:24).
-> - **T3** ✅ hecho y verificado (umbral de espera de 65 min; 3 pruebas + chequeo en vivo
->   con el bot esperando resultado).
-> - **T2**, **T4** y **T5** pendientes. Suite: 46/46 · CI en verde.
-> - Nota: los lotes B, C y D del plan paraguas siguen sin iniciar.
+> - **T1** ✅ alerta `SESION_TERMINADA_POR_ERROR` (5 pruebas + demo con los datos reales
+>   de la caída de las 15:24).
+> - **T2** ✅ opción `--registro` funcional (2 pruebas + verificación con el registro real).
+> - **T3** ✅ umbral de espera de 65 min (3 pruebas + chequeo en vivo).
+> - **T4** ✅ métrica de lista negra honesta (4 pruebas + corrección del doble conteo de
+>   fuentes: 116 → 16 reintentos reales).
+> - **T5** ✅ `Chequear_Salud_Bot.bat` probado de verdad, README con la tabla de alertas y
+>   humo del chequeo en CI.
+> - **Lote A cerrado.** Suite: 53/53 · CI en verde.
+> - Los lotes **B** (runtime, requiere bot detenido), **C** (higiene del repo) y **D**
+>   (fuera de alcance) del plan paraguas siguen sin iniciar.
 
 **Fuera de alcance (con motivo)**
 - **B2 heartbeat**: elimina de raíz el problema de "no hay eventos durante la espera",

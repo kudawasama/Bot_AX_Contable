@@ -170,5 +170,110 @@ class TestReporteConTelemetria:
         assert reporte["patrones"]["telemetria_estructurada"]["log_desactualizado"] is False
 
 
+class TestLecturaDeRegistros:
+    """Pruebas del lector de registro_*.txt (incluye el arreglo de --registro)."""
+
+    def test_lee_solo_el_registro_indicado(self, tmp_path: Path):
+        """--registro debe limitar la lectura a ese archivo (antes se ignoraba).
+
+        BUG CORREGIDO: la opción se aceptaba en la línea de comandos pero ``main()``
+        nunca la pasaba a ``leer_registros()``, así que el analizador leía siempre
+        todos los ``registro_*.txt`` del proyecto y el filtro del operador no servía.
+        """
+        (tmp_path / "registro_2026-10-08.txt").write_text(
+            "[09:00:00] Diario: W00337501Diat - Resultado: ERROR\n", encoding="utf-8")
+        (tmp_path / "registro_2026-10-09.txt").write_text(
+            "[10:00:00] Diario: W00337505Diat - Resultado: EXITOSO\n", encoding="utf-8")
+
+        entradas = observer_analyze.leer_registros(
+            tmp_path, str(tmp_path / "registro_2026-10-09.txt")
+        )
+
+        assert len(entradas) == 1
+        assert entradas[0]["id_normalizado"] == "00337505"
+        assert entradas[0]["fecha"] == "2026-10-09"
+
+    def test_sin_argumento_lee_todos(self, tmp_path: Path):
+        """Sin --registro se mantiene el comportamiento histórico."""
+        (tmp_path / "registro_2026-10-08.txt").write_text(
+            "[09:00:00] Diario: W00337501Diat - Resultado: ERROR\n", encoding="utf-8")
+        (tmp_path / "registro_2026-10-09.txt").write_text(
+            "[10:00:00] Diario: W00337505Diat - Resultado: EXITOSO\n", encoding="utf-8")
+
+        entradas = observer_analyze.leer_registros(tmp_path)
+
+        assert len(entradas) == 2
+
+
+class TestAnalisisBlacklist:
+    """Pruebas de la métrica de lista negra (sesión actual vs histórico)."""
+
+    def test_historico_detecta_reintentos(self):
+        """Un mismo ID con dos errores históricos queda marcado como reintentado."""
+        eventos = [
+            {"ts": "2026-10-08T10:00:00", "event": "result_error", "id_normalizado": "00337501"},
+            {"ts": "2026-10-09T10:00:00", "event": "result_error", "id_normalizado": "00337501"},
+            {"ts": "2026-10-09T10:05:00", "event": "result_error", "id_normalizado": "00337504"},
+        ]
+
+        analisis = observer_analyze.analizar_blacklist([], ["00337501"], eventos)
+
+        assert analisis["errores_historicos_unicos"] == 2
+        assert analisis["reintentados"] == {"00337501": 2}
+        assert analisis["nunca_en_blacklist"] == ["00337504"]
+
+    def test_cobertura_de_la_ultima_sesion(self):
+        """La cobertura útil es la de la última sesión, no la del histórico completo."""
+        eventos = [
+            {"ts": "2026-10-08T10:00:00", "event": "result_error", "id_normalizado": "00337501"},
+            {"ts": "2026-10-09T11:00:00", "event": "result_error", "id_normalizado": "00337511"},
+            {"ts": "2026-10-09T11:05:00", "event": "result_error", "id_normalizado": "00337519"},
+            {"ts": "2026-10-09T11:05:30", "event": "blacklist_updated", "id_added": "00337519"},
+        ]
+
+        analisis = observer_analyze.analizar_blacklist([], ["00337501", "00337519"], eventos)
+
+        assert analisis["ultima_sesion_fecha"] == "2026-10-09"
+        assert analisis["ultima_sesion_errores"] == 2
+        assert analisis["cobertura_ultima_sesion_pct"] == 50.0
+
+    def test_sin_datos_devuelve_ceros(self):
+        """Sin registros ni telemetría no debe romper ni inventar porcentajes."""
+        analisis = observer_analyze.analizar_blacklist([], [], [])
+
+        assert analisis["errores_historicos_unicos"] == 0
+        assert analisis["cobertura_ultima_sesion_pct"] == 0
+        assert analisis["reintentados"] == {}
+
+    def test_no_cuenta_reintento_por_la_misma_fecha_en_dos_fuentes(self):
+        """Regresión: un error de un día aparece en el registro Y en la telemetría.
+
+        Sumar ambas fuentes marcaba como "reintentado" a casi cualquier ID (en los
+        datos reales salían 116 de 129). Un reintento real es volver a fallar **otro
+        día**, así que se cuentan días distintos, no ocurrencias.
+        """
+        entradas = [{"id_normalizado": "00337501", "resultado": "ERROR", "fecha": "2026-10-09"}]
+        eventos = [
+            {"ts": "2026-10-09T10:00:00", "event": "result_error", "id_normalizado": "00337501"},
+        ]
+
+        analisis = observer_analyze.analizar_blacklist(entradas, [], eventos)
+
+        assert analisis["errores_historicos_unicos"] == 1
+        assert analisis["reintentados"] == {}
+
+    def test_cuenta_reintento_entre_dias_distintos(self):
+        """Un ID que falla en dos días distintos sí es un reintento real."""
+        entradas = [{"id_normalizado": "00337501", "resultado": "ERROR", "fecha": "2026-10-08"}]
+        eventos = [
+            {"ts": "2026-10-09T10:00:00", "event": "result_error", "id_normalizado": "00337501"},
+        ]
+
+        analisis = observer_analyze.analizar_blacklist(entradas, [], eventos)
+
+        assert analisis["errores_historicos_unicos"] == 1
+        assert analisis["reintentados"] == {"00337501": 2}
+
+
 if __name__ == "__main__":
     pytest.main([__file__, "-v"])

@@ -30,13 +30,33 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # 1. LECTORES DE EVIDENCIA
 # ──────────────────────────────────────────────────────────────
 
-def leer_registros(directorio: Path) -> list[dict]:
-    """Lee todos los registro_*.txt y devuelve lista de entradas parseadas."""
+def leer_registros(directorio: Path, ruta_especifica: str | None = None) -> list[dict]:
+    """Lee los ``registro_*.txt`` y devuelve las entradas parseadas.
+
+    CORRECCIÓN (bug): la opción ``--registro`` se aceptaba en la línea de comandos
+    pero ``main()`` nunca la pasaba a esta función, así que el analizador leía siempre
+    todos los ``registro_*.txt`` del proyecto y el filtro del operador no servía de nada.
+
+    Args:
+        directorio (Path): Raíz del proyecto (búsqueda por defecto).
+        ruta_especifica (str | None): Archivo ``registro_*.txt`` o carpeta que los
+            contiene. Es lo que recibe la opción ``--registro``.
+
+    Returns:
+        list[dict]: Entradas con fecha, hora, ID bruto/normalizado, resultado y archivo.
+    """
     entradas = []
     patron = re.compile(
         r'\[(\d{2}:\d{2}:\d{2})\]\s+Diario:\s+(.+?)\s+-\s+Resultado:\s+(\w+)'
     )
-    for archivo in sorted(directorio.glob("registro_*.txt")):
+    if ruta_especifica:
+        ruta = Path(ruta_especifica)
+        archivos = sorted(ruta.glob("registro_*.txt")) if ruta.is_dir() else [ruta]
+    else:
+        archivos = sorted(directorio.glob("registro_*.txt"))
+    for archivo in archivos:
+        if not archivo.exists():
+            continue
         fecha_str = archivo.stem.replace("registro_", "")
         texto = archivo.read_text(encoding="utf-8")
         for linea in texto.splitlines():
@@ -606,6 +626,74 @@ def detectar_gaps_blacklist(entradas: list[dict], blacklist: list[str]) -> dict:
     }
 
 
+def analizar_blacklist(entradas: list[dict], blacklist: list[str], eventos: list[dict]) -> dict:
+    """Compara la lista negra con el histórico de errores y con la última sesión.
+
+    POR QUÉ: el reporte mostraba "cobertura 5,8%" sin explicar que ``blacklist.json``
+    se vacía con los botones *Clear Errors* / *Reiniciar* de la GUI. El número se leía
+    como un fallo del bot cuando en realidad era una lista reiniciada. La telemetría
+    estructurada conserva **todos** los errores históricos, así que permite separar dos
+    preguntas distintas:
+
+        - "¿qué errores de la última sesión ya están en la lista?" (cobertura útil), y
+        - "¿qué IDs fallaron alguna vez y nunca se saltaron?" (histórico real).
+
+    Args:
+        entradas (list[dict]): Entradas de los ``registro_*.txt``.
+        blacklist (list[str]): IDs presentes hoy en ``blacklist.json``.
+        eventos (list[dict]): Eventos de ``logs/events.jsonl``.
+
+    Returns:
+        dict: ``blacklist_total``, ``errores_historicos_unicos``, ``nunca_en_blacklist``,
+        ``reintentados`` (ID → cantidad de **días distintos** con error),
+        ``ultima_sesion_fecha``, ``ultima_sesion_errores``,
+        ``cobertura_ultima_sesion_pct`` y ``nota``.
+    """
+    # Días distintos por ID: un diario que falló una sola vez aparece en el registro
+    # del día Y en la telemetría, así que sumar las dos fuentes lo contaría como
+    # "reintentado" sin serlo. Lo que define un reintento real es volver a fallar
+    # otro día.
+    dias_por_id: dict[str, set[str]] = defaultdict(set)
+    for entrada in entradas:
+        if entrada["resultado"] == "ERROR":
+            dias_por_id[entrada["id_normalizado"]].add(str(entrada.get("fecha", "")))
+    for evento in eventos:
+        if str(evento.get("event", "")) == "result_error" and evento.get("id_normalizado"):
+            dias_por_id[str(evento["id_normalizado"])].add(str(evento.get("ts", ""))[:10])
+
+    historico: set[str] = set(dias_por_id)
+    reintentados: dict[str, int] = {}
+    for identificador, dias in sorted(dias_por_id.items()):
+        dias_con_fecha = {dia for dia in dias if dia}
+        if len(dias_con_fecha) > 1:
+            reintentados[identificador] = len(dias_con_fecha)
+
+    por_fecha: dict[str, set[str]] = defaultdict(set)
+    for evento in eventos:
+        if str(evento.get("event", "")) == "result_error" and evento.get("id_normalizado"):
+            por_fecha[str(evento.get("ts", ""))[:10]].add(str(evento["id_normalizado"]))
+
+    ultima_fecha = max(por_fecha) if por_fecha else ""
+    ids_ultima = por_fecha.get(ultima_fecha, set())
+    en_lista = ids_ultima & set(blacklist)
+
+    return {
+        "blacklist_total": len(blacklist),
+        "errores_historicos_unicos": len(historico),
+        "nunca_en_blacklist": sorted(historico - set(blacklist)),
+        "reintentados": reintentados,
+        "ultima_sesion_fecha": ultima_fecha,
+        "ultima_sesion_errores": len(ids_ultima),
+        "cobertura_ultima_sesion_pct": (
+            round(len(en_lista) / len(ids_ultima) * 100, 1) if ids_ultima else 0
+        ),
+        "nota": (
+            "blacklist.json se vacía con Clear Errors / Reiniciar: úsala como lista negra "
+            "de la sesión. El histórico de errores vive en logs/events.jsonl."
+        ),
+    }
+
+
 def detectar_timeouts(lineas_log: list[str]) -> list[dict]:
     """Extrae eventos de timeout del log.
 
@@ -802,6 +890,7 @@ def generar_reporte(entradas, blacklist, lineas_log, capturas, eventos=None) -> 
             "errores_agrupados": detectar_errores_agrupados(entradas),
             "fallback_sector_b": detectar_fallback_sector_b(lineas_log),
             "gaps_blacklist": detectar_gaps_blacklist(entradas, blacklist),
+            "analisis_blacklist": analizar_blacklist(entradas, blacklist, eventos),
             "timeouts": detectar_timeouts(lineas_log),
             "errores_ax": detectar_errores_ax(lineas_log),
             "errores_failsafe": detectar_errores_failsafe(lineas_log),
@@ -886,11 +975,19 @@ def imprimir_reporte(reporte: dict) -> None:
 
     print(f"\n🔍 PATRÓN: COBERTURA BLACKLIST")
     bl = p["gaps_blacklist"]
-    print(f"  Cobertura: {bl['cobertura_blacklist_pct']}%")
-    if bl["errores_no_en_blacklist"]:
-        print(f"  ERRORES no en blacklist: {bl['errores_no_en_blacklist']}")
-    if bl["blacklist_sin_error_reciente"]:
-        print(f"  Blacklist sin error reciente: {bl['blacklist_sin_error_reciente']}")
+    ab = p["analisis_blacklist"]
+    print(f"  Lista negra actual: {ab['blacklist_total']} diarios")
+    print(f"  Última sesión ({ab['ultima_sesion_fecha'] or 'sin datos'}): "
+          f"{ab['ultima_sesion_errores']} errores, "
+          f"{ab['cobertura_ultima_sesion_pct']}% ya en la lista")
+    print(f"  Histórico: {ab['errores_historicos_unicos']} IDs con error alguna vez · "
+          f"{len(ab['nunca_en_blacklist'])} nunca en la lista · "
+          f"{len(ab['reintentados'])} reintentados")
+    if ab["reintentados"]:
+        print(f"    Reintentados (ID: cantidad): {ab['reintentados']}")
+    print(f"  Nota: {ab['nota']}")
+    if bl["cobertura_blacklist_pct"]:
+        print(f"  (referencia histórica sobre registros: {bl['cobertura_blacklist_pct']}%)")
 
     print(f"\n🔍 PATRÓN: TIMEOUTS")
     tos = p["timeouts"]
@@ -989,7 +1086,7 @@ def main():
     )
     args = parser.parse_args()
 
-    entradas = leer_registros(BASE_DIR)
+    entradas = leer_registros(BASE_DIR, args.registro)
     blacklist = leer_blacklist(BASE_DIR)
     lineas_log = leer_log(BASE_DIR, args.log)
     capturas = listar_capturas(BASE_DIR)
