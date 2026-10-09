@@ -1,6 +1,6 @@
 ---
 type: conexiones
-created: 2026-10-09T11:55:01
+created: 2026-10-09T14:57:46
 ---
 
 # 🔗 Todas las Conexiones
@@ -66,8 +66,16 @@ menciones cruzadas) — el mapa mental conectado.
 
 ### 🔗 Encontré un problema real y lo voy a arreglar con su prueba 
 
+- [[4.0-RIESGOS/Encontré un problema real y lo voy a arreglar con su prueba de regresión. Primero el diagnóstico exa.md|Encontré un problema real y lo voy a arreglar con su prueba ]] ↔ [[4.0-RIESGOS/Entendido y aplicado solo Bot_AX_Contable. Y me quedo con el hallazgo más importante de la sesión, q.md|Entendido y aplicado: solo Bot_AX_Contable. Y me quedo con e]]
 - [[4.0-RIESGOS/Encontré un problema real y lo voy a arreglar con su prueba de regresión. Primero el diagnóstico exa.md|Encontré un problema real y lo voy a arreglar con su prueba ]] ↔ [[2.0-IDEAS/2.3-Ideas-Completas-e-Implementadas/AUTOMATIZACION/AUTOMATIZACION-Completas.md|[898600f] feat: observer watchdog — vigilancia en vivo del b]]
 - [[4.0-RIESGOS/Encontré un problema real y lo voy a arreglar con su prueba de regresión. Primero el diagnóstico exa.md|Encontré un problema real y lo voy a arreglar con su prueba ]] ↔ [[2.0-IDEAS/2.3-Ideas-Completas-e-Implementadas/AUTOMATIZACION/AUTOMATIZACION-Completas.md|Centraliza todos los defaults numéricos para facilitar ajust]]
 - [[4.0-RIESGOS/Encontré un problema real y lo voy a arreglar con su prueba de regresión. Primero el diagnóstico exa.md|Encontré un problema real y lo voy a arreglar con su prueba ]] ↔ [[2.0-IDEAS/2.3-Ideas-Completas-e-Implementadas/AUTOMATIZACION/AUTOMATIZACION-Completas.md|event_log("scroll_performed", intento=intentos_scroll, metod]]
 - [[4.0-RIESGOS/Encontré un problema real y lo voy a arreglar con su prueba de regresión. Primero el diagnóstico exa.md|Encontré un problema real y lo voy a arreglar con su prueba ]] ↔ [[2.0-IDEAS/2.3-Ideas-Completas-e-Implementadas/AUTOMATIZACION/AUTOMATIZACION-Completas.md|Si el bot no está corriendo o todo va bien → silencio total ]]
-- [[4.0-RIESGOS/Encontré un problema real y lo voy a arreglar con su prueba de regresión. Primero el diagnóstico exa.md|Encontré un problema real y lo voy a arreglar con su prueba ]] ↔ [[2.0-IDEAS/2.3-Ideas-Completas-e-Implementadas/AUTOMATIZACION/AUTOMATIZACION-Completas.md|Conversación en Antigravity IDE: Bot_AX_Contable (1 mensajes]]
+
+### 🔗 Entendido y aplicado: solo Bot_AX_Contable. Y me quedo con e
+
+- [[4.0-RIESGOS/Entendido y aplicado solo Bot_AX_Contable. Y me quedo con el hallazgo más importante de la sesión, q.md|Entendido y aplicado: solo Bot_AX_Contable. Y me quedo con e]] ↔ [[4.0-RIESGOS/Encontré un problema real y lo voy a arreglar con su prueba de regresión. Primero el diagnóstico exa.md|Encontré un problema real y lo voy a arreglar con su prueba ]]
+- [[4.0-RIESGOS/Entendido y aplicado solo Bot_AX_Contable. Y me quedo con el hallazgo más importante de la sesión, q.md|Entendido y aplicado: solo Bot_AX_Contable. Y me quedo con e]] ↔ [[2.0-IDEAS/2.3-Ideas-Completas-e-Implementadas/AUTOMATIZACION/AUTOMATIZACION-Completas.md|[898600f] feat: observer watchdog — vigilancia en vivo del b]]
+- [[4.0-RIESGOS/Entendido y aplicado solo Bot_AX_Contable. Y me quedo con el hallazgo más importante de la sesión, q.md|Entendido y aplicado: solo Bot_AX_Contable. Y me quedo con e]] ↔ [[2.0-IDEAS/2.3-Ideas-Completas-e-Implementadas/AUTOMATIZACION/AUTOMATIZACION-Completas.md|Centraliza todos los defaults numéricos para facilitar ajust]]
+- [[4.0-RIESGOS/Entendido y aplicado solo Bot_AX_Contable. Y me quedo con el hallazgo más importante de la sesión, q.md|Entendido y aplicado: solo Bot_AX_Contable. Y me quedo con e]] ↔ [[2.0-IDEAS/2.3-Ideas-Completas-e-Implementadas/AUTOMATIZACION/AUTOMATIZACION-Completas.md|event_log("scroll_performed", intento=intentos_scroll, metod]]
+- [[4.0-RIESGOS/Entendido y aplicado solo Bot_AX_Contable. Y me quedo con el hallazgo más importante de la sesión, q.md|Entendido y aplicado: solo Bot_AX_Contable. Y me quedo con e]] ↔ [[2.0-IDEAS/2.3-Ideas-Completas-e-Implementadas/AUTOMATIZACION/AUTOMATIZACION-Completas.md|Si el bot no está corriendo o todo va bien → silencio total ]]

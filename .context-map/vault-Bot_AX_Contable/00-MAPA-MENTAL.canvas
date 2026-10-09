@@ -80,6 +80,15 @@
       "y": 60,
       "width": 240,
       "height": 50
+    },
+    {
+      "id": "bceb5ea6-1ba1-5260-83d9-71ef8a42b778",
+      "type": "file",
+      "file": "4.0-RIESGOS/Entendido y aplicado solo Bot_AX_Contable. Y me quedo con el hallazgo más importante de la sesión, q.md",
+      "x": 1040,
+      "y": 120,
+      "width": 240,
+      "height": 50
     }
   ],
   "edges": [
@@ -96,6 +105,14 @@
       "fromNode": "507e3429-ff50-57b5-9688-23c04c38c683",
       "fromSide": "right",
       "toNode": "51ab7fbb-e480-561c-834c-777c47994dc4",
+      "toSide": "left",
+      "label": ""
+    },
+    {
+      "id": "39de7f81-97f3-57df-bdc0-ed53238f9fa5",
+      "fromNode": "507e3429-ff50-57b5-9688-23c04c38c683",
+      "fromSide": "right",
+      "toNode": "bceb5ea6-1ba1-5260-83d9-71ef8a42b778",
       "toSide": "left",
       "label": ""
     },
@@ -184,6 +201,14 @@
       "fromNode": "e1816036-41c7-5e0e-9431-47747735af62",
       "fromSide": "right",
       "toNode": "4864a391-4e5c-57f1-8efc-d10cf22e55c4",
+      "toSide": "left",
+      "label": ""
+    },
+    {
+      "id": "9007464b-d262-5ad5-9ed2-6277b1507d8b",
+      "fromNode": "51ab7fbb-e480-561c-834c-777c47994dc4",
+      "fromSide": "right",
+      "toNode": "bceb5ea6-1ba1-5260-83d9-71ef8a42b778",
       "toSide": "left",
       "label": ""
     }

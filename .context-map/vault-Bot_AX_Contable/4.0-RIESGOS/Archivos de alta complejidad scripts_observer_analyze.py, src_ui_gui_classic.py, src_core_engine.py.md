@@ -1,7 +1,7 @@
 ---
 type: riesgo
 status: activo
-created: 2026-10-09T11:55:00
+created: 2026-10-09T14:57:45
 project: "Bot_AX_Contable"
 tags: ["riesgo", "class:chore"]
 source: "scanner"

@@ -16,16 +16,16 @@ Antes de tocar código, pregúntate y responde con el contexto del vault
 ## Resumen Ejecutivo
 
 **Proyecto**: Bot_AX_Contable
-**Nodos totales**: 65
-**Distribución**: BASE: 6, FUTURO: 3, CORRECCION: 25, CAMBIO: 7, IDEA: 22, RIESGO: 2
+**Nodos totales**: 67
+**Distribución**: BASE: 7, FUTURO: 3, CORRECCION: 25, CAMBIO: 7, IDEA: 22, RIESGO: 3
 **Readiness**: 75/100
 
 
 ## Estado del Proyecto
 
 - **Ideas**: 22 (features, conceptos)
-- **Bases**: 6 (fundamentos)
-- **Riesgos**: 2 (problemas potenciales)
+- **Bases**: 7 (fundamentos)
+- **Riesgos**: 3 (problemas potenciales)
 - **Cambios**: 7 (modificaciones)
 - **Pendientes**: 3 (tareas por hacer)
 - **Correcciones**: 25 (bugs/fixes)
@@ -40,6 +40,7 @@ Antes de tocar código, pregúntate y responde con el contexto del vault
 
 - Archivos de alta complejidad: scripts/observer_analyze.py, src/ui/gui_cl…
 - Encontré un problema real y lo voy a arreglar con su prueba de regresión…
+- Entendido y aplicado: solo Bot_AX_Contable. Y me quedo con el hallazgo m…
 
 ## 📝 Pendientes
 
@@ -59,5 +60,5 @@ Antes de tocar código, pregúntate y responde con el contexto del vault
 ---
 
 > Este brief fue generado automáticamente por ContextMap IA.
-> Última compilación: 2026-10-09 11:55
+> Última compilación: 2026-10-09 14:57
 > Optimizado para Prompt Caching (Claude 3.7 Sonnet, Gemini 2.5 Pro/Flash, GPT-4o).
