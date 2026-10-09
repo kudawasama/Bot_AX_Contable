@@ -26,6 +26,22 @@ Cada tarea incluye: **objetivo**, **archivos afectados**, **criterio de aceptaci
 Estos defectos existen **hoy** y deben resolverse primero porque rompen o degradan el
 desarrollo diario.
 
+### Estado de avance (actualizado 2026-10-09)
+
+| Tarea | Estado |
+|-------|--------|
+| C-1 — suite de tests rota (`import vision` / `import config`) | ✅ Resuelto — `tests/conftest.py` + imports a `src.*`; 23/23 pruebas |
+| C-2 — import duplicado en `vision.py` | ✅ Resuelto |
+| C-3 — hack de mockeo (`BOT_AX_TEST_MODE` + `types.ModuleType`) | ✅ Resuelto — dobles inertes en `conftest.py` |
+| C-4 — directorio fantasma `src/bot_ax/` | ⏸ Pendiente (decidir junto con la rama legado) |
+| C-5 — ruta de Tesseract hardcodeada | ✅ Resuelto — `_resolver_tesseract()` en `src/core/config.py` |
+| C-6 — `.bat` con rutas fijas | ⚠️ Implementado y **revertido a propósito** en v-00.14.01 (no se toca el punto de entrada diario mientras el bot está en producción) |
+| C-7 — `config_sectores.json` modificado sin commitear | ✅ Resuelto — versionado (decisión documentada) |
+| C-8 — hook de pre-commit frágil / bump no determinista | ⏸ Pendiente (hoy se mitiga fijando la versión a mano) |
+| C-9 — README desactualizado | ✅ Resuelto |
+| R-4 — sin CI | ✅ Resuelto — `.github/workflows/ci.yml` (pytest en runner Windows + ruff informativo) |
+| **Nuevo** — pérdida silenciosa de trazas en `logs/bot_ax.log` | ✅ Resuelto — `ArchivoRotativoRobusto` (v-00.13.02) + `tests/test_logger.py` |
+
 ### C-1. Suite de tests rota — `tests/test_vision.py` no importa `vision`
 
 - **Hallazgo:** `pytest --collect-only` falla con `ModuleNotFoundError: No module named 'vision'`.

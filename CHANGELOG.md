@@ -6,6 +6,26 @@ Todos los cambios relevantes de este proyecto. El formato sigue
 
 ---
 
+## [v-00.14.01] — 2026-10-09
+
+### Cambiado
+- **Lanzadores devueltos a su forma original (C-6 se pospone).** El bot está en
+  producción y `Lanzar_Bot.bat` / `Lanzar_Bot_Registro.bat` son el punto de entrada
+  que el operador ejecuta a diario: no se cambia eso mientras el bot está trabajando.
+  La versión portable (`%~dp0` + `where pythonw`) quedó implementada, verificada y
+  descrita en la tarea **C-6** del plan; para reaplicarla basta revertir el commit que
+  la revirtió. Los dos archivos volvieron byte por byte a su contenido anterior
+  (hashes idénticos al commit `3ef8880`, comprobado).
+- **Se mantienen** la portabilidad de Tesseract (C-5) y el handler
+  `ArchivoRotativoRobusto` (v-00.13.02): ninguno altera el comportamiento verificado
+  en la máquina de producción.
+
+### Corregido
+- `README.md`: la descripción de los lanzadores vuelve a corresponder con lo que
+  realmente hacen (comprueban la unidad `H:` y usan la ruta fija de Python 3.12).
+
+---
+
 ## [v-00.13.02] — 2026-10-09
 
 ### Corregido
@@ -49,6 +69,8 @@ Todos los cambios relevantes de este proyecto. El formato sigue
     (funciona en cualquier unidad/PC) y el intérprete se resuelve
     (`pythonw` de Python 3.12 → `where pythonw` del PATH) en vez de estar quemado.
     Verificado con una copia de prueba invocada desde fuera del repositorio.
+    **⚠️ REVERTIDO en v-00.14.01** por decisión de estabilidad (C-6 queda pendiente):
+    los lanzadores volvieron a su forma original.
 - **`config_sectores.json` versionado (C-7/R-6).** La calibración real en uso
   (`sector_a` 300px, `sector_b` 283px, `sector_scroll` 37px) llevaba meses
   modificada sin commit y sin respaldo: ahora está en el repositorio. Se quitó de

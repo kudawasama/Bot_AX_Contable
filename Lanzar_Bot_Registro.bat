@@ -1,10 +1,16 @@
 @echo off
 title Bot AX Registro - Lanzador Gemini Engine
-:: Portabilidad (hallazgo C-6): la raiz del proyecto es la carpeta que contiene
-:: este .bat, no una ruta fija. Funciona montado en H:, C:, G:, etc.
-cd /d "%~dp0"
+:: Verificar que la unidad H: existe
+if not exist "H:\" (
+    echo ERROR: La unidad H: no esta disponible. Conecta Google Drive.
+    pause
+    exit /b 1
+)
+:: Entrar a la carpeta del proyecto
+cd /d "H:\Mi unidad\Desarrollo y Proyectos\GitHub\Bot_AX_Contable"
 if errorlevel 1 (
-    echo ERROR: No se pudo acceder a la carpeta del proyecto: %~dp0
+    echo ERROR: No se pudo acceder a la carpeta del proyecto.
+    echo Ruta: H:\Mi unidad\Desarrollo y Proyectos\GitHub\Bot_AX_Contable
     pause
     exit /b 1
 )
@@ -14,18 +20,7 @@ if not exist "src\ui\gui_gemini.py" (
     pause
     exit /b 1
 )
-:: Resolver interprete (primera coincidencia disponible):
-::   1) Instalacion oficial de Python 3.12 del usuario (la que usa el bot)
-::   2) pythonw.exe del PATH del sistema
-set "PYW="
-if exist "%LOCALAPPDATA%\Programs\Python\Python312\pythonw.exe" set "PYW=%LOCALAPPDATA%\Programs\Python\Python312\pythonw.exe"
-if not defined PYW for /f "delims=" %%i in ('where pythonw 2^>nul') do if not defined PYW set "PYW=%%i"
-if not defined PYW (
-    echo ERROR: No se encontro pythonw.exe. Instala Python 3.11+ o agregalo al PATH.
-    pause
-    exit /b 1
-)
 :: Ejecutar la interfaz grafica
-set PYTHONPATH=%cd%
-start "" "%PYW%" -m src.ui.gui_gemini
+set PYTHONPATH=.
+start "" "%LOCALAPPDATA%\Programs\Python\Python312\pythonw.exe" -m src.ui.gui_gemini
 exit
