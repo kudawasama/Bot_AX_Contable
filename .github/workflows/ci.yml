@@ -48,9 +48,6 @@ jobs:
   lint:
     name: Lint informativo (ruff)
     runs-on: windows-latest
-    # Adopción progresiva: todavía no bloquea el pipeline. Cuando el código esté
-    # limpio, quitar `continue-on-error` para convertirlo en puerta obligatoria.
-    continue-on-error: true
 
     steps:
       - name: Checkout del repositorio
@@ -65,4 +62,9 @@ jobs:
         run: python -m pip install ruff
 
       - name: Analizar src/, tests/ y scripts/
-        run: python -m ruff check src/ tests/ scripts/ --output-format=concise
+        # Adopción progresiva: el proyecto arrastra deuda de lint (~200 avisos con
+        # las reglas por defecto de ruff). `--exit-zero` publica el informe en el
+        # log sin bloquear el pipeline. Cuando el código esté limpio, quitar
+        # `--exit-zero` para convertirlo en puerta obligatoria.
+        continue-on-error: true
+        run: python -m ruff check src/ tests/ scripts/ --output-format=concise --exit-zero
