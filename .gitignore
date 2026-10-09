@@ -8,7 +8,9 @@ registro_procesamiento.txt
 !Imagenes/*.png
 
 # Archivos de configuración locales
-config_sectores.json
+# NOTA (2026-10-09): config_sectores.json SÍ se versiona — es la calibración de
+# producción de los sectores y debe respaldarse (decisión documentada: C-7/R-6).
+# La copia de referencia de fábrica vive en config_sectores.json.default.
 
 # Logs y diagnosticos
 crash_log.txt
