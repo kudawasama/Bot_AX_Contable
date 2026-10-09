@@ -59,15 +59,15 @@ ctxmap refresh .
 ## Resumen Ejecutivo
 
 **Proyecto**: Bot_AX_Contable
-**Nodos totales**: 67
-**Distribución**: BASE: 7, FUTURO: 3, CORRECCION: 25, CAMBIO: 7, IDEA: 22, RIESGO: 3
+**Nodos totales**: 69
+**Distribución**: BASE: 8, FUTURO: 3, CORRECCION: 25, CAMBIO: 7, IDEA: 23, RIESGO: 3
 **Readiness**: 75/100
 
 
 ## Estado del Proyecto
 
-- **Ideas**: 22 (features, conceptos)
-- **Bases**: 7 (fundamentos)
+- **Ideas**: 23 (features, conceptos)
+- **Bases**: 8 (fundamentos)
 - **Riesgos**: 3 (problemas potenciales)
 - **Cambios**: 7 (modificaciones)
 - **Pendientes**: 3 (tareas por hacer)
@@ -118,5 +118,5 @@ _Sin páginas todavía. Captura con `ctxmap inbox add "<texto>"` o `ctxmap inges
 ---
 
 > Este brief fue generado automáticamente por ContextMap IA.
-> Última compilación: 2026-10-09 14:57
+> Última compilación: 2026-10-09 15:03
 > Optimizado para Prompt Caching (Claude 3.7 Sonnet, Gemini 2.5 Pro/Flash, GPT-4o).

@@ -3,7 +3,7 @@
 > `AGENTS.md` dice **QUÉ** hacer (normas) y `docs/GOBERNANZA-AGENTES.md` el
 > detalle; esta skill es el **CÓMO operativo**: comandos exactos, criterios de
 > calidad y metodología para escribir notas con alma.
-> Última actualización: 2026-10-09 14:57
+> Última actualización: 2026-10-09 15:03
 
 ---
 
