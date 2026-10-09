@@ -6,6 +6,31 @@ Todos los cambios relevantes de este proyecto. El formato sigue
 
 ---
 
+## [v-00.13.02] — 2026-10-09
+
+### Corregido
+- **Pérdida silenciosa de las trazas del bot (`logs/bot_ax.log`).**
+  - *Síntoma:* desde el **2026-10-08 10:52** el archivo no recibió ni una línea
+    nueva, mientras el bot siguió trabajando: hoy (2026-10-09) la sesión dejó 148
+    eventos en `logs/events.jsonl`, 23 ciclos y 6 errores en
+    `registro_2026-10-09.txt`, pero **cero** líneas en `bot_ax.log`.
+  - *Causa:* `RotatingFileHandler` mantiene un descriptor abierto durante toda la
+    ejecución; los logs viven en Google Drive (unidad H:) y, al reemplazarse o
+    re-sincronizarse el archivo, el descriptor queda huérfano y las escrituras se
+    pierden sin rastro (el bot corre con `pythonw`, sin stderr donde avisar).
+  - *Efecto:* `scripts/observer_analyze.py` quedó ciego para todo lo posterior al
+    8 de octubre (sus patrones de errores AX, timeouts y fallbacks terminan ahí);
+    solo veía las sesiones por los `registro_*.txt`.
+  - *Solución:* nuevo handler `ArchivoRotativoRobusto` en `src/core/logger.py`:
+    mismo formato y misma rotación (5 MB, 3 backups), pero abre el archivo en modo
+    *append* en cada emisión, así que un archivo reemplazado en disco se vuelve a
+    crear siempre. Nunca lanza excepciones (un log perdido no puede detener el bot).
+  - *Verificación:* `tests/test_logger.py` (5 pruebas, incluida la regresión
+    "el archivo se reemplaza en disco → la siguiente traza sí se escribe") y prueba
+    contra la ruta real de Google Drive (dos líneas nuevas el 2026-10-09 11:53).
+
+---
+
 ## [v-00.13.00] — 2026-10-09 (sesión de profesionalización)
 
 ### Corregido
