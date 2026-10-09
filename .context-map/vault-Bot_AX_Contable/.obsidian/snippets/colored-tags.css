@@ -1,0 +1,31 @@
+/* ContextMap — etiquetas por contexto (autogenerado) */
+/* Cada etiqueta con su color: ideas=teal, riesgo=rojo, DEVOPS=índigo... */
+
+.tag[href="#BASEDEDATOS"], .cm-hashtag[href="#BASEDEDATOS"] { background-color: #0891b2; color: #ffffff; }
+.tag[href="#DEVOPS"], .cm-hashtag[href="#DEVOPS"] { background-color: #4338ca; color: #ffffff; }
+.tag[href="#ETL"], .cm-hashtag[href="#ETL"] { background-color: #0e7490; color: #ffffff; }
+.tag[href="#GENERAL"], .cm-hashtag[href="#GENERAL"] { background-color: #475569; color: #ffffff; }
+.tag[href="#TESTING"], .cm-hashtag[href="#TESTING"] { background-color: #15803d; color: #ffffff; }
+.tag[href="#TUI"], .cm-hashtag[href="#TUI"] { background-color: #7c3aed; color: #ffffff; }
+.tag[href="#UI"], .cm-hashtag[href="#UI"] { background-color: #be185d; color: #ffffff; }
+.tag[href="#activo"], .cm-hashtag[href="#activo"] { background-color: #1d4ed8; color: #ffffff; }
+.tag[href="#backlog"], .cm-hashtag[href="#backlog"] { background-color: #92400e; color: #ffffff; }
+.tag[href="#base"], .cm-hashtag[href="#base"] { background-color: #475569; color: #ffffff; }
+.tag[href="#cambio"], .cm-hashtag[href="#cambio"] { background-color: #c2410c; color: #ffffff; }
+.tag[href="#completado"], .cm-hashtag[href="#completado"] { background-color: #15803d; color: #ffffff; }
+.tag[href="#correccion"], .cm-hashtag[href="#correccion"] { background-color: #c2410c; color: #ffffff; }
+.tag[href="#futuro"], .cm-hashtag[href="#futuro"] { background-color: #6d28d9; color: #ffffff; }
+.tag[href="#gobierno"], .cm-hashtag[href="#gobierno"] { background-color: #065f46; color: #ffffff; }
+.tag[href="#historia"], .cm-hashtag[href="#historia"] { background-color: #a16207; color: #ffffff; }
+.tag[href="#ideas"], .cm-hashtag[href="#ideas"] { background-color: #0e7490; color: #ffffff; }
+.tag[href="#importador"], .cm-hashtag[href="#importador"] { background-color: #0e7490; color: #ffffff; }
+.tag[href="#indice"], .cm-hashtag[href="#indice"] { background-color: #334155; color: #ffffff; }
+.tag[href="#manual"], .cm-hashtag[href="#manual"] { background-color: #0f766e; color: #ffffff; }
+.tag[href="#mapa-mental"], .cm-hashtag[href="#mapa-mental"] { background-color: #1d4ed8; color: #ffffff; }
+.tag[href="#mcp"], .cm-hashtag[href="#mcp"] { background-color: #1e40af; color: #ffffff; }
+.tag[href="#mejora"], .cm-hashtag[href="#mejora"] { background-color: #15803d; color: #ffffff; }
+.tag[href="#pendiente"], .cm-hashtag[href="#pendiente"] { background-color: #b45309; color: #ffffff; }
+.tag[href="#prueba"], .cm-hashtag[href="#prueba"] { background-color: #475569; color: #ffffff; }
+.tag[href="#riesgo"], .cm-hashtag[href="#riesgo"] { background-color: #b91c1c; color: #ffffff; }
+.tag[href="#sesiones"], .cm-hashtag[href="#sesiones"] { background-color: #6d28d9; color: #ffffff; }
+.tag, .cm-hashtag { border-radius: 6px; padding: 0 6px; font-weight: 500; }

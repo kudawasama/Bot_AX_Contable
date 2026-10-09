@@ -1,0 +1,62 @@
+BASE|Proyecto 'Bot_AX_Contable' — 308 archivos, 288542 líneas, sin entrypoints|scanner
+BASE|Documentación principal: README.md|scanner
+RIESGO|Archivos de alta complejidad (5 total): observer_analyze.py (749 líneas); gui_cl|scanner
+FUTURO|TODO: L4: Centraliza todos los defaults numéricos para facilitar ajustes.|scanner
+FUTURO|TODO: L47: _logger.setLevel(logging.DEBUG)|scanner
+FUTURO|TODO: L59: file_handler.setLevel(logging.DEBUG)|scanner
+FUTURO|TODO: L258: event_log("scroll_performed", intento=intentos_scroll, metodo="boton|scanner
+FUTURO|TODO: L273: event_log("scroll_performed", intento=intentos_scroll, metodo="click|scanner
+BASE|Repositorio git con 100 commits totales, branch: main|git
+CORRECCION|[3ef8880] fix: jiggle de mouse cada 12s / 1s para evitar suspension del notebook|git
+IDEA|[898600f] feat: observer watchdog — vigilancia en vivo del bot via cron|git
+IDEA|[64e2d1c] feat: observer analyzer + event logging estructurado (JSONL)|git
+CAMBIO|[c91f5d7] docs: documentar especificacion del proceso del bot contable y agregar|git
+CORRECCION|[2aad23d] refactor: Reestructuracion modular del proyecto bajo src/, ordenamient|git
+CAMBIO|[5cd53f0] docs: crear flujo del ciclo exacto del bot (según descripción)|git
+CORRECCION|[3e5617d] fix: restaurar CHK_VACIO a 0.9 (unico cambio entre commit que funciona|git
+CORRECCION|[6612fac] Revert "fix: restaurar deteccion check vacio - confianza 0.9 + filtro |git
+CORRECCION|[738559f] fix: restaurar deteccion check vacio - confianza 0.9 + filtro posicion|git
+CORRECCION|[8596fb1] fix: bajar confianza CHK_VACIO de 0.9 a 0.8 por anti-aliasing|git
+CORRECCION|[a835dfa] merge: unificar fix/lint (GUI moderna + app_gui_qt + launchers) con ma|git
+CAMBIO|[2b6460d] chore: limpiar __pycache__ del tracking de git|git
+CAMBIO|[deaafb6] refactor: modernización GUI + launchers portable|git
+CORRECCION|[ab65367] fix: bajar a 0.7 deteccion check marcado para encontrar el ultimo|git
+CORRECCION|[b074875] fix: continuar desde el ultimo checkbox marcado hacia abajo|git
+CORRECCION|[8b077e4] fix: ajustar sector A solo a columna checkboxes (x=300, w=55)|git
+CORRECCION|[672e913] fix: auto-bump categoriza cambios (add/delete=minor, modify=patch)|git
+CORRECCION|[8ebabbe] fix: restaurar auto-bump patch simple|git
+CORRECCION|[43353fe] fix: desactivar auto-bump, version manual|git
+CORRECCION|[4e89205] fix: bajar confianza scroll sector de 0.7 a 0.6|git
+BASE|Proyecto 'Bot_AX_Contable' — 337 archivos, 290541 líneas, sin entrypoints|scanner
+RIESGO|Archivos de alta complejidad (5 total): scripts/observer_analyze.py; src/ui/gui_|scanner
+FUTURO|TODO (src/bot_ax/config/defaults.py:L4): Centraliza todos los defaults numéricos|scanner
+FUTURO|TODO (src/core/logger.py:L47): _logger.setLevel(logging.DEBUG)|scanner
+FUTURO|TODO (src/core/logger.py:L59): file_handler.setLevel(logging.DEBUG)|scanner
+FUTURO|TODO (src/core/engine.py:L258): event_log("scroll_performed", intento=intentos_s|scanner
+FUTURO|TODO (src/core/engine.py:L273): event_log("scroll_performed", intento=intentos_s|scanner
+FUTURO|TODO (src/core/engine.py:L276): event_log("scroll_performed", intento=intentos_s|scanner
+FUTURO|TODO (src/ui/gui_classic.py:L271): self._log_btn("✕A", "Limpiar todo el log", se|scanner
+FUTURO|TODO (src/ui/gui_classic.py:L609): """Borra todos los errores mostrados en panta|scanner
+FUTURO|TODO (src/ui/gui_classic.py:L617): self.log("🗑 Todos los errores eliminados del |scanner
+FUTURO|TODO (src/ui/gui_gemini.py:L70): """Construye todos los elementos gráficos y pan|scanner
+FUTURO|TODO (scripts/debug_ocr.py:L14): def debug_captura_ocr() -> None:|scanner
+FUTURO|TODO (scripts/debug_ocr.py:L43): gui.screenshot(os.path.join(base_dir, "debug_oc|scanner
+FUTURO|TODO (scripts/debug_ocr.py:L44): gui.screenshot(os.path.join(base_dir, "debug_oc|scanner
+FUTURO|TODO (scripts/debug_ocr.py:L45): gui.screenshot(os.path.join(base_dir, "debug_oc|scanner
+FUTURO|TODO (scripts/debug_ocr.py:L48): print("  - debug_ocr_pos1.png (Región offset ac|scanner
+FUTURO|TODO (scripts/debug_ocr.py:L49): print("  - debug_ocr_pos2.png (Franja izquierda|scanner
+FUTURO|TODO (scripts/debug_ocr.py:L50): print("  - debug_ocr_pos3.png (Franja derecha d|scanner
+FUTURO|TODO (scripts/debug_ocr.py:L56): debug_captura_ocr()|scanner
+FUTURO|TODO (scripts/observer_analyze.py:L34): """Lee todos los registro_*.txt y devuel|scanner
+FUTURO|TODO (scripts/observer_analyze.py:L326): Bug corregido (ratio_fallback_pct > 100|scanner
+FUTURO|TODO (scripts/observer_analyze.py:L341): Además, contar TODOS los formatos histó|scanner
+FUTURO|TODO (scripts/observer_analyze.py:L352): # Contar clics de menú (todos los forma|scanner
+FUTURO|TODO (scripts/observer_analyze.py:L486): Detecta los 3 formatos históricos (todo|scanner
+FUTURO|TODO (scripts/observer_analyze.py:L723): help="Ruta específica de registro (defa|scanner
+FUTURO|TODO (scripts/observer_watch.py:L10): Si el bot no está corriendo o todo va bien|scanner
+FUTURO|TODO (scripts/observer_watch.py:L166): # Leer todos los eventos de la sesión par|scanner
+FUTURO|TODO (scripts/observer_watch.py:L167): todos_eventos = []|scanner
+FUTURO|TODO (scripts/observer_watch.py:L172): todos_eventos.append(json.loads(linea.str|scanner
+FUTURO|TODO (scripts/observer_watch.py:L179): exitos = sum(1 for e in todos_eventos if |scanner
+FUTURO|TODO (scripts/observer_watch.py:L180): errores = sum(1 for e in todos_eventos if|scanner
+BASE|Proyecto 'Bot_AX_Contable' — 353 archivos, 292138 líneas, sin entrypoints|scanner
