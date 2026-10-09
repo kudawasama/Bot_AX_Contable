@@ -1,15 +1,15 @@
+"""Tests para el módulo config.py (funciones de configuración de sectores).
+
+Corrección (hallazgo C-1 del plan de implementación): el módulo real vive en
+``src/core/config.py`` desde el refactor modular ``2aad23d``; antes este archivo
+hacía ``import config``, lo que rompía la colección de pytest.
 """
-Tests para el módulo config.py (funciones de configuración).
-"""
-import sys
-import os
+
 import json
+import os
 import tempfile
 
-# Agregar el directorio del proyecto al path para importar módulos
-sys.path.insert(0, os.path.join(os.path.dirname(__file__), ".."))
-
-import config
+from src.core import config
 
 
 class TestCargarConfiguracion:

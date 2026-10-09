@@ -11,7 +11,6 @@ import threading
 from src.core.config import TESSERACT_CMD
 from src.core.logger import get_logger
 from src.core.event_log import event_log
-from src.core.event_log import event_log
 
 logger = get_logger()
 
