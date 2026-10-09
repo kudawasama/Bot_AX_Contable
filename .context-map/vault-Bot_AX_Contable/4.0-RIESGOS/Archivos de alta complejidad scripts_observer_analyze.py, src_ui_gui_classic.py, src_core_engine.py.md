@@ -1,7 +1,7 @@
 ---
 type: riesgo
 status: activo
-created: 2026-10-09T15:03:08
+created: 2026-10-09T16:00:58
 project: "Bot_AX_Contable"
 tags: ["riesgo", "class:chore"]
 source: "scanner"
@@ -11,7 +11,7 @@ source: "scanner"
 
 > #riesgo #activo #UI
 
-Zona de alta complejidad: Archivos de alta complejidad (5 total): scripts/observer_analyze.py; src/ui/gui_classic.py; src/core/engine.py.
+Zona de alta complejidad: Archivos de alta complejidad (6 total): scripts/observer_analyze.py; src/ui/gui_classic.py; src/core/engine.py.
 
 ## 🧠 Contexto Narrativo con Alma
 
@@ -22,7 +22,7 @@ Riesgo técnico o zona de alta complejidad referente a 'Archivos de alta complej
 Detectado en el módulo/componente vía `scanner`.
 
 ### 💥 3. ¿Qué IMPACTO tiene si se ignora?
-Incrementa la probabilidad de desacoplamientos o fallos al refactorizar. Zona de alta complejidad: Archivos de alta complejidad (5 total): scripts/observer_analyze.py; src/ui/gui_classic.py; src/core/engine.py.
+Incrementa la probabilidad de desacoplamientos o fallos al refactorizar. Zona de alta complejidad: Archivos de alta complejidad (6 total): scripts/observer_analyze.py; src/ui/gui_classic.py; src/core/engine.py.
 
 ### 🛡️ 4. ¿Cómo MITIGAR este riesgo?
 1. Modularizar el componente reduciendo el número de líneas/responsabilidades.

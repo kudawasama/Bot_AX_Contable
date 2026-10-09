@@ -1,6 +1,6 @@
 ---
 type: conexiones
-created: 2026-10-09T15:03:09
+created: 2026-10-09T16:00:58
 ---
 
 # 🔗 Todas las Conexiones
@@ -29,8 +29,9 @@ menciones cruzadas) — el mapa mental conectado.
 
 ### 🔗 Archivos de alta complejidad: scripts/observer_analyze.py, s
 
-- [[4.0-RIESGOS/Archivos de alta complejidad scripts_observer_analyze.py, src_ui_gui_classic.py, src_core_engine.py.md|Archivos de alta complejidad: scripts/observer_analyze.py, s]] ↔ [[2.0-IDEAS/2.3-Ideas-Completas-e-Implementadas/AUTOMATIZACION/AUTOMATIZACION-Completas.md|Centraliza todos los defaults numéricos para facilitar ajust]]
-- [[4.0-RIESGOS/Archivos de alta complejidad scripts_observer_analyze.py, src_ui_gui_classic.py, src_core_engine.py.md|Archivos de alta complejidad: scripts/observer_analyze.py, s]] ↔ [[2.0-IDEAS/2.3-Ideas-Completas-e-Implementadas/AUTOMATIZACION/AUTOMATIZACION-Completas.md|event_log("scroll_performed", intento=intentos_scroll, metod]]
+- [[4.0-RIESGOS/Archivos de alta complejidad scripts_observer_analyze.py, src_ui_gui_classic.py, src_core_engine.py.md|Archivos de alta complejidad: scripts/observer_analyze.py, s]] ↔ [[4.0-RIESGOS/Encontré un problema real y lo voy a arreglar con su prueba de regresión. Primero el diagnóstico exa.md|Encontré un problema real y lo voy a arreglar con su prueba ]]
+- [[4.0-RIESGOS/Archivos de alta complejidad scripts_observer_analyze.py, src_ui_gui_classic.py, src_core_engine.py.md|Archivos de alta complejidad: scripts/observer_analyze.py, s]] ↔ [[4.0-RIESGOS/Entendido y aplicado solo Bot_AX_Contable. Y me quedo con el hallazgo más importante de la sesión, q.md|Entendido y aplicado: solo Bot_AX_Contable. Y me quedo con e]]
+- [[4.0-RIESGOS/Archivos de alta complejidad scripts_observer_analyze.py, src_ui_gui_classic.py, src_core_engine.py.md|Archivos de alta complejidad: scripts/observer_analyze.py, s]] ↔ [[2.0-IDEAS/2.3-Ideas-Completas-e-Implementadas/DEVOPS/DEVOPS-Completas.md|Hecho. Revert aplicado, respaldado y verificado.]]
 
 ### 🔗 Centraliza todos los defaults numéricos para facilitar ajust
 
@@ -86,7 +87,7 @@ menciones cruzadas) — el mapa mental conectado.
 - [[2.0-IDEAS/2.3-Ideas-Completas-e-Implementadas/DEVOPS/DEVOPS-Completas.md|# Leer todos los eventos de la sesión para el resumen]] ↔ [[2.0-IDEAS/2.3-Ideas-Completas-e-Implementadas/DEVOPS/DEVOPS-Completas.md|Detecta los 3 formatos históricos (todos con nivel [INFO]):]]
 - [[2.0-IDEAS/2.3-Ideas-Completas-e-Implementadas/DEVOPS/DEVOPS-Completas.md|# Leer todos los eventos de la sesión para el resumen]] ↔ [[2.0-IDEAS/2.3-Ideas-Completas-e-Implementadas/DEVOPS/DEVOPS-Completas.md|help="Ruta específica de registro (default: todos los regist]]
 - [[2.0-IDEAS/2.3-Ideas-Completas-e-Implementadas/DEVOPS/DEVOPS-Completas.md|# Leer todos los eventos de la sesión para el resumen]] ↔ [[2.0-IDEAS/2.3-Ideas-Completas-e-Implementadas/DEVOPS/DEVOPS-Completas.md|Hecho. Revert aplicado, respaldado y verificado.]]
-- [[2.0-IDEAS/2.3-Ideas-Completas-e-Implementadas/DEVOPS/DEVOPS-Completas.md|# Leer todos los eventos de la sesión para el resumen]] ↔ [[4.0-RIESGOS/Archivos de alta complejidad scripts_observer_analyze.py, src_ui_gui_classic.py, src_core_engine.py.md|Archivos de alta complejidad: scripts/observer_analyze.py, s]]
+- [[2.0-IDEAS/2.3-Ideas-Completas-e-Implementadas/DEVOPS/DEVOPS-Completas.md|# Leer todos los eventos de la sesión para el resumen]] ↔ [[2.0-IDEAS/2.3-Ideas-Completas-e-Implementadas/AUTOMATIZACION/AUTOMATIZACION-Completas.md|Centraliza todos los defaults numéricos para facilitar ajust]]
 
 ### 🔗 todos_eventos = []
 
@@ -94,7 +95,7 @@ menciones cruzadas) — el mapa mental conectado.
 - [[2.0-IDEAS/2.3-Ideas-Completas-e-Implementadas/DEVOPS/DEVOPS-Completas.md|todos_eventos = []]] ↔ [[2.0-IDEAS/2.3-Ideas-Completas-e-Implementadas/DEVOPS/DEVOPS-Completas.md|Detecta los 3 formatos históricos (todos con nivel [INFO]):]]
 - [[2.0-IDEAS/2.3-Ideas-Completas-e-Implementadas/DEVOPS/DEVOPS-Completas.md|todos_eventos = []]] ↔ [[2.0-IDEAS/2.3-Ideas-Completas-e-Implementadas/DEVOPS/DEVOPS-Completas.md|help="Ruta específica de registro (default: todos los regist]]
 - [[2.0-IDEAS/2.3-Ideas-Completas-e-Implementadas/DEVOPS/DEVOPS-Completas.md|todos_eventos = []]] ↔ [[2.0-IDEAS/2.3-Ideas-Completas-e-Implementadas/DEVOPS/DEVOPS-Completas.md|Hecho. Revert aplicado, respaldado y verificado.]]
-- [[2.0-IDEAS/2.3-Ideas-Completas-e-Implementadas/DEVOPS/DEVOPS-Completas.md|todos_eventos = []]] ↔ [[4.0-RIESGOS/Archivos de alta complejidad scripts_observer_analyze.py, src_ui_gui_classic.py, src_core_engine.py.md|Archivos de alta complejidad: scripts/observer_analyze.py, s]]
+- [[2.0-IDEAS/2.3-Ideas-Completas-e-Implementadas/DEVOPS/DEVOPS-Completas.md|todos_eventos = []]] ↔ [[2.0-IDEAS/2.3-Ideas-Completas-e-Implementadas/AUTOMATIZACION/AUTOMATIZACION-Completas.md|Centraliza todos los defaults numéricos para facilitar ajust]]
 
 ### 🔗 todos_eventos.append(json.loads(linea.strip()))
 
@@ -102,7 +103,7 @@ menciones cruzadas) — el mapa mental conectado.
 - [[2.0-IDEAS/2.3-Ideas-Completas-e-Implementadas/DEVOPS/DEVOPS-Completas.md|todos_eventos.append(json.loads(linea.strip()))]] ↔ [[2.0-IDEAS/2.3-Ideas-Completas-e-Implementadas/DEVOPS/DEVOPS-Completas.md|Detecta los 3 formatos históricos (todos con nivel [INFO]):]]
 - [[2.0-IDEAS/2.3-Ideas-Completas-e-Implementadas/DEVOPS/DEVOPS-Completas.md|todos_eventos.append(json.loads(linea.strip()))]] ↔ [[2.0-IDEAS/2.3-Ideas-Completas-e-Implementadas/DEVOPS/DEVOPS-Completas.md|help="Ruta específica de registro (default: todos los regist]]
 - [[2.0-IDEAS/2.3-Ideas-Completas-e-Implementadas/DEVOPS/DEVOPS-Completas.md|todos_eventos.append(json.loads(linea.strip()))]] ↔ [[2.0-IDEAS/2.3-Ideas-Completas-e-Implementadas/DEVOPS/DEVOPS-Completas.md|Hecho. Revert aplicado, respaldado y verificado.]]
-- [[2.0-IDEAS/2.3-Ideas-Completas-e-Implementadas/DEVOPS/DEVOPS-Completas.md|todos_eventos.append(json.loads(linea.strip()))]] ↔ [[4.0-RIESGOS/Archivos de alta complejidad scripts_observer_analyze.py, src_ui_gui_classic.py, src_core_engine.py.md|Archivos de alta complejidad: scripts/observer_analyze.py, s]]
+- [[2.0-IDEAS/2.3-Ideas-Completas-e-Implementadas/DEVOPS/DEVOPS-Completas.md|todos_eventos.append(json.loads(linea.strip()))]] ↔ [[2.0-IDEAS/2.3-Ideas-Completas-e-Implementadas/AUTOMATIZACION/AUTOMATIZACION-Completas.md|Centraliza todos los defaults numéricos para facilitar ajust]]
 
 ### 🔗 exitos = sum(1 for e in todos_eventos if e.get("event") == "
 
@@ -110,7 +111,7 @@ menciones cruzadas) — el mapa mental conectado.
 - [[2.0-IDEAS/2.3-Ideas-Completas-e-Implementadas/DEVOPS/DEVOPS-Completas.md|exitos = sum(1 for e in todos_eventos if e.get("event") == "]] ↔ [[2.0-IDEAS/2.3-Ideas-Completas-e-Implementadas/DEVOPS/DEVOPS-Completas.md|Detecta los 3 formatos históricos (todos con nivel [INFO]):]]
 - [[2.0-IDEAS/2.3-Ideas-Completas-e-Implementadas/DEVOPS/DEVOPS-Completas.md|exitos = sum(1 for e in todos_eventos if e.get("event") == "]] ↔ [[2.0-IDEAS/2.3-Ideas-Completas-e-Implementadas/DEVOPS/DEVOPS-Completas.md|help="Ruta específica de registro (default: todos los regist]]
 - [[2.0-IDEAS/2.3-Ideas-Completas-e-Implementadas/DEVOPS/DEVOPS-Completas.md|exitos = sum(1 for e in todos_eventos if e.get("event") == "]] ↔ [[2.0-IDEAS/2.3-Ideas-Completas-e-Implementadas/DEVOPS/DEVOPS-Completas.md|Hecho. Revert aplicado, respaldado y verificado.]]
-- [[2.0-IDEAS/2.3-Ideas-Completas-e-Implementadas/DEVOPS/DEVOPS-Completas.md|exitos = sum(1 for e in todos_eventos if e.get("event") == "]] ↔ [[4.0-RIESGOS/Archivos de alta complejidad scripts_observer_analyze.py, src_ui_gui_classic.py, src_core_engine.py.md|Archivos de alta complejidad: scripts/observer_analyze.py, s]]
+- [[2.0-IDEAS/2.3-Ideas-Completas-e-Implementadas/DEVOPS/DEVOPS-Completas.md|exitos = sum(1 for e in todos_eventos if e.get("event") == "]] ↔ [[2.0-IDEAS/2.3-Ideas-Completas-e-Implementadas/AUTOMATIZACION/AUTOMATIZACION-Completas.md|Centraliza todos los defaults numéricos para facilitar ajust]]
 
 ### 🔗 errores = sum(1 for e in todos_eventos if e.get("event") == 
 
@@ -118,7 +119,7 @@ menciones cruzadas) — el mapa mental conectado.
 - [[2.0-IDEAS/2.3-Ideas-Completas-e-Implementadas/DEVOPS/DEVOPS-Completas.md|errores = sum(1 for e in todos_eventos if e.get("event") == ]] ↔ [[2.0-IDEAS/2.3-Ideas-Completas-e-Implementadas/DEVOPS/DEVOPS-Completas.md|Detecta los 3 formatos históricos (todos con nivel [INFO]):]]
 - [[2.0-IDEAS/2.3-Ideas-Completas-e-Implementadas/DEVOPS/DEVOPS-Completas.md|errores = sum(1 for e in todos_eventos if e.get("event") == ]] ↔ [[2.0-IDEAS/2.3-Ideas-Completas-e-Implementadas/DEVOPS/DEVOPS-Completas.md|help="Ruta específica de registro (default: todos los regist]]
 - [[2.0-IDEAS/2.3-Ideas-Completas-e-Implementadas/DEVOPS/DEVOPS-Completas.md|errores = sum(1 for e in todos_eventos if e.get("event") == ]] ↔ [[2.0-IDEAS/2.3-Ideas-Completas-e-Implementadas/DEVOPS/DEVOPS-Completas.md|Hecho. Revert aplicado, respaldado y verificado.]]
-- [[2.0-IDEAS/2.3-Ideas-Completas-e-Implementadas/DEVOPS/DEVOPS-Completas.md|errores = sum(1 for e in todos_eventos if e.get("event") == ]] ↔ [[4.0-RIESGOS/Archivos de alta complejidad scripts_observer_analyze.py, src_ui_gui_classic.py, src_core_engine.py.md|Archivos de alta complejidad: scripts/observer_analyze.py, s]]
+- [[2.0-IDEAS/2.3-Ideas-Completas-e-Implementadas/DEVOPS/DEVOPS-Completas.md|errores = sum(1 for e in todos_eventos if e.get("event") == ]] ↔ [[2.0-IDEAS/2.3-Ideas-Completas-e-Implementadas/AUTOMATIZACION/AUTOMATIZACION-Completas.md|Centraliza todos los defaults numéricos para facilitar ajust]]
 
 ### 🔗 Conversación en Antigravity IDE: Bot_AX_Contable (1 mensajes
 

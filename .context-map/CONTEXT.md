@@ -59,15 +59,15 @@ ctxmap refresh .
 ## Resumen Ejecutivo
 
 **Proyecto**: Bot_AX_Contable
-**Nodos totales**: 69
-**Distribución**: BASE: 8, FUTURO: 3, CORRECCION: 25, CAMBIO: 7, IDEA: 23, RIESGO: 3
+**Nodos totales**: 70
+**Distribución**: BASE: 9, FUTURO: 3, CORRECCION: 25, CAMBIO: 7, IDEA: 23, RIESGO: 3
 **Readiness**: 75/100
 
 
 ## Estado del Proyecto
 
 - **Ideas**: 23 (features, conceptos)
-- **Bases**: 8 (fundamentos)
+- **Bases**: 9 (fundamentos)
 - **Riesgos**: 3 (problemas potenciales)
 - **Cambios**: 7 (modificaciones)
 - **Pendientes**: 3 (tareas por hacer)
@@ -82,7 +82,7 @@ ctxmap refresh .
 ## Riesgos Críticos
 
 - ⚠️ **Archivos de alta complejidad: scripts/observer_analyze.py, src/ui/gui_classic.py**
-  Zona de alta complejidad: Archivos de alta complejidad (5 total): scripts/observer_analyze.py; src/ui/gui_classic.py; sr
+  Zona de alta complejidad: Archivos de alta complejidad (6 total): scripts/observer_analyze.py; src/ui/gui_classic.py; sr
 - ⚠️ **Encontré un problema real y lo voy a arreglar con su prueba de regresión. Primer**
   Riesgo: Encontré un problema real y lo voy a arreglar con su prueba de regresión. Primero el diagnóstico exacto:
 
@@ -118,5 +118,5 @@ _Sin páginas todavía. Captura con `ctxmap inbox add "<texto>"` o `ctxmap inges
 ---
 
 > Este brief fue generado automáticamente por ContextMap IA.
-> Última compilación: 2026-10-09 15:03
+> Última compilación: 2026-10-09 16:01
 > Optimizado para Prompt Caching (Claude 3.7 Sonnet, Gemini 2.5 Pro/Flash, GPT-4o).

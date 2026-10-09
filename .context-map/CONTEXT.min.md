@@ -16,15 +16,15 @@ Antes de tocar código, pregúntate y responde con el contexto del vault
 ## Resumen Ejecutivo
 
 **Proyecto**: Bot_AX_Contable
-**Nodos totales**: 69
-**Distribución**: BASE: 8, FUTURO: 3, CORRECCION: 25, CAMBIO: 7, IDEA: 23, RIESGO: 3
+**Nodos totales**: 70
+**Distribución**: BASE: 9, FUTURO: 3, CORRECCION: 25, CAMBIO: 7, IDEA: 23, RIESGO: 3
 **Readiness**: 75/100
 
 
 ## Estado del Proyecto
 
 - **Ideas**: 23 (features, conceptos)
-- **Bases**: 8 (fundamentos)
+- **Bases**: 9 (fundamentos)
 - **Riesgos**: 3 (problemas potenciales)
 - **Cambios**: 7 (modificaciones)
 - **Pendientes**: 3 (tareas por hacer)
@@ -60,5 +60,5 @@ Antes de tocar código, pregúntate y responde con el contexto del vault
 ---
 
 > Este brief fue generado automáticamente por ContextMap IA.
-> Última compilación: 2026-10-09 15:03
+> Última compilación: 2026-10-09 16:01
 > Optimizado para Prompt Caching (Claude 3.7 Sonnet, Gemini 2.5 Pro/Flash, GPT-4o).
