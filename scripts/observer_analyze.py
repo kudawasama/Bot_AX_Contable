@@ -92,6 +92,220 @@ def listar_capturas(directorio: Path) -> list[str]:
 
 
 # ──────────────────────────────────────────────────────────────
+# 1c. LECTURA DE TELEMETRÍA ESTRUCTURADA (logs/events.jsonl)
+# ──────────────────────────────────────────────────────────────
+#
+# POR QUÉ: el analizador se apoyaba solo en ``logs/bot_ax.log``, escrito por un
+# handler con descriptor abierto. Entre el 2026-10-08 10:52 y el 2026-10-09 11:53
+# ese descriptor quedó huérfano (Google Drive reemplazó el archivo) y el log dejó
+# de crecer: el analizador siguió reportando datos viejos sin avisar, mientras
+# ``logs/events.jsonl`` —escrito con open/append/close por evento— estaba al día.
+# Desde la v-00.13.02 el log de texto está blindado, pero la telemetría
+# estructurada debe ser fuente de primera clase: es a prueba de fallos y más
+# precisa que hacer regex sobre texto libre.
+
+_EVENTS_FILE: str = "events.jsonl"
+
+
+def ruta_eventos(directorio: Path) -> Path:
+    """Devuelve la ruta de ``logs/events.jsonl`` dentro del proyecto.
+
+    Args:
+        directorio (Path): Raíz del proyecto.
+
+    Returns:
+        Path: Ruta del archivo de telemetría estructurada.
+    """
+    return directorio / "logs" / _EVENTS_FILE
+
+
+def leer_eventos(ruta: Path) -> list[dict]:
+    """Lee la telemetría estructurada de ``logs/events.jsonl``.
+
+    Cada línea es un objeto JSON independiente (``{"ts": ..., "event": ...}``).
+    Las líneas vacías o corruptas (escritura interrumpida a medio vuelo) se
+    ignoran: un archivo parcialmente escrito nunca debe romper el análisis.
+
+    Args:
+        ruta (Path): Ruta del archivo JSONL.
+
+    Returns:
+        list[dict]: Eventos válidos, en orden de aparición.
+    """
+    if not Path(ruta).exists():
+        return []
+    eventos: list[dict] = []
+    with open(ruta, "r", encoding="utf-8", errors="replace") as archivo:
+        for linea in archivo:
+            linea = linea.strip()
+            if not linea:
+                continue
+            try:
+                evento = json.loads(linea)
+            except json.JSONDecodeError:
+                continue
+            if isinstance(evento, dict):
+                eventos.append(evento)
+    return eventos
+
+
+def ultima_fecha_eventos(eventos: list[dict]) -> str:
+    """Devuelve la fecha (``YYYY-MM-DD``) del evento más reciente.
+
+    Args:
+        eventos (list[dict]): Eventos de la telemetría.
+
+    Returns:
+        str: Fecha más reciente, o cadena vacía si no hay eventos con timestamp.
+    """
+    fechas = [str(e.get("ts", ""))[:10] for e in eventos if e.get("ts")]
+    return max(fechas) if fechas else ""
+
+
+def _parsear_timestamp_evento(ts: str) -> datetime | None:
+    """Convierte un timestamp ISO-8601 de la telemetría en ``datetime``.
+
+    Args:
+        ts (str): Marca de tiempo del evento (``2026-10-09T14:56:39.666522``).
+
+    Returns:
+        datetime | None: La marca convertida, o ``None`` si es inválida.
+    """
+    try:
+        return datetime.fromisoformat(str(ts))
+    except (ValueError, TypeError):
+        return None
+
+
+def ultimo_timestamp_eventos(eventos: list[dict]) -> datetime | None:
+    """Devuelve la marca de tiempo más reciente de la telemetría.
+
+    Args:
+        eventos (list[dict]): Eventos de la telemetría estructurada.
+
+    Returns:
+        datetime | None: La marca más reciente, o ``None`` si no hay ninguna.
+    """
+    marcas = [
+        marca for marca in (
+            _parsear_timestamp_evento(str(evento.get("ts", ""))) for evento in eventos
+        ) if marca is not None
+    ]
+    return max(marcas) if marcas else None
+
+
+def ultimo_timestamp_log(lineas_log: list[str]) -> datetime | None:
+    """Devuelve la marca de tiempo más reciente del log de texto.
+
+    Las líneas con timestamp malformado (solo fecha, sin hora) se ignoran para no
+    falsear la comparación con la telemetría.
+
+    Args:
+        lineas_log (list[str]): Líneas del log de texto.
+
+    Returns:
+        datetime | None: La marca más reciente, o ``None`` si no hay ninguna.
+    """
+    marcas: list[datetime] = []
+    for linea in lineas_log:
+        parsed = parsear_linea_log(linea)
+        if not parsed:
+            continue
+        try:
+            marcas.append(
+                datetime.strptime(f"{parsed['fecha']} {parsed['hora']}", "%Y-%m-%d %H:%M:%S")
+            )
+        except ValueError:
+            continue
+    return max(marcas) if marcas else None
+
+
+def telemetria_mas_nueva_que_log(lineas_log: list[str], eventos: list[dict]) -> bool:
+    """Indica si la telemetría tiene actividad posterior al log de texto.
+
+    Es la señal exacta del incidente 2026-10-08/09 (log congelado mientras los
+    eventos avanzaban). Cuando devuelve ``True``, los patrones basados en
+    ``bot_ax.log`` son parciales y deben leerse con esa advertencia.
+
+    POR QUÉ SE COMPARA POR MARCA DE TIEMPO Y NO POR FECHA: el 2026-10-09 el log
+    estaba congelado desde las 10:52 del día anterior, pero bastaba una sola
+    escritura del mismo día (por ejemplo una verificación manual) para que la
+    comparación por FECHA dictaminara "al día" y el aviso nunca apareciera.
+    Comparando marcas de tiempo se detecta el desfase real.
+
+    Args:
+        lineas_log (list[str]): Líneas del log de texto.
+        eventos (list[dict]): Eventos de la telemetría estructurada.
+
+    Returns:
+        bool: ``True`` si la telemetría es más reciente que el log.
+    """
+    marca_eventos = ultimo_timestamp_eventos(eventos)
+    if marca_eventos is None:
+        return False
+    marca_log = ultimo_timestamp_log(lineas_log)
+    return marca_log is None or marca_eventos > marca_log
+
+
+def resumir_lista_eventos(eventos: list[dict]) -> dict:
+    """Resume una lista de eventos (núcleo puro, sin acceso a disco).
+
+    Args:
+        eventos (list[dict]): Eventos ya parseados de ``events.jsonl``.
+
+    Returns:
+        dict: Contadores por tipo, éxitos, errores, IDs con error, timeouts,
+        fallbacks de Sector B, última fecha y desglose por sesión (fecha).
+    """
+    por_tipo: Counter = Counter()
+    ids_error: list[str] = []
+    sesiones: dict[str, dict[str, int]] = defaultdict(lambda: {"exitos": 0, "errores": 0})
+    timeouts = 0
+    fallbacks = 0
+
+    for evento in eventos:
+        tipo = str(evento.get("event", ""))
+        por_tipo[tipo] += 1
+        if tipo == "result_exito":
+            sesiones[str(evento.get("ts", ""))[:10]]["exitos"] += 1
+        elif tipo == "result_error":
+            sesiones[str(evento.get("ts", ""))[:10]]["errores"] += 1
+            identificador = evento.get("id_normalizado")
+            if identificador:
+                ids_error.append(str(identificador))
+        elif tipo in ("timeout_menu", "timeout_confirm", "result_timeout"):
+            timeouts += 1
+        elif tipo == "sector_b_fallback":
+            fallbacks += 1
+
+    return {
+        "total_eventos": len(eventos),
+        "por_tipo": dict(por_tipo),
+        "exitos": por_tipo.get("result_exito", 0),
+        "errores": por_tipo.get("result_error", 0),
+        "ids_error": ids_error,
+        "ids_error_unicos": len(set(ids_error)),
+        "timeouts": timeouts,
+        "fallbacks_sector_b": fallbacks,
+        "ultima_fecha": ultima_fecha_eventos(eventos),
+        "sesiones": {fecha: dict(valores) for fecha, valores in sorted(sesiones.items())},
+        "log_desactualizado": False,
+    }
+
+
+def resumir_eventos(ruta: Path) -> dict:
+    """Lee y resume ``logs/events.jsonl`` (telemetría estructurada).
+
+    Args:
+        ruta (Path): Ruta del archivo JSONL de eventos.
+
+    Returns:
+        dict: Igual que :func:`resumir_lista_eventos`.
+    """
+    return resumir_lista_eventos(leer_eventos(ruta))
+
+
+# ──────────────────────────────────────────────────────────────
 # 1b. UTILIDADES DE PARSING DE LÍNEAS DE LOG
 # ──────────────────────────────────────────────────────────────
 
@@ -526,7 +740,21 @@ def detectar_capturas_sin_match(capturas: list[str], entradas: list[dict]) -> li
 # 3. REPORTE
 # ──────────────────────────────────────────────────────────────
 
-def generar_reporte(entradas, blacklist, lineas_log, capturas) -> dict:
+def generar_reporte(entradas, blacklist, lineas_log, capturas, eventos=None) -> dict:
+    """Genera el reporte consolidado del análisis.
+
+    Args:
+        entradas: Entradas parseadas de los ``registro_*.txt``.
+        blacklist: IDs presentes en ``blacklist.json``.
+        lineas_log: Líneas de ``logs/bot_ax.log``.
+        capturas: Nombres de las capturas de error.
+        eventos: Eventos de ``logs/events.jsonl`` (telemetría estructurada).
+            Es opcional: sin este argumento el reporte se comporta igual que antes
+            (compatibilidad con llamadas existentes).
+
+    Returns:
+        dict: Reporte con métricas globales, sesiones por fecha y patrones.
+    """
     total = len(entradas)
     exitos = sum(1 for e in entradas if e["resultado"] == "EXITOSO")
     errores = sum(1 for e in entradas if e["resultado"] == "ERROR")
@@ -534,6 +762,13 @@ def generar_reporte(entradas, blacklist, lineas_log, capturas) -> dict:
 
     # Éxitos detectados desde el log
     exitos_log = detectar_exitos_log(lineas_log)
+
+    # Telemetría estructurada: fuente a prueba de fallos (open/append/close por
+    # evento). Se marca con ``log_desactualizado`` cuando el log de texto quedó
+    # atrás, que es exactamente el incidente del 2026-10-08/09.
+    eventos = eventos or []
+    telemetria = resumir_lista_eventos(eventos)
+    telemetria["log_desactualizado"] = telemetria_mas_nueva_que_log(lineas_log, eventos)
 
     # Sesiones por fecha
     sesiones = defaultdict(lambda: {"exitos": 0, "errores": 0})
@@ -553,6 +788,10 @@ def generar_reporte(entradas, blacklist, lineas_log, capturas) -> dict:
             "exitos_detectados_log": len(exitos_log),
             "blacklist_total": len(blacklist),
             "capturas_total": len(capturas),
+            "eventos_total": telemetria["total_eventos"],
+            "eventos_exitos": telemetria["exitos"],
+            "eventos_errores": telemetria["errores"],
+            "log_desactualizado": telemetria["log_desactualizado"],
         },
         "sesiones_por_fecha": {
             f: {"exitos": v["exitos"], "errores": v["errores"]}
@@ -568,6 +807,7 @@ def generar_reporte(entradas, blacklist, lineas_log, capturas) -> dict:
             "errores_failsafe": detectar_errores_failsafe(lineas_log),
             "exitos_log": exitos_log,
             "capturas_huerfanas": detectar_capturas_sin_match(capturas, entradas),
+            "telemetria_estructurada": telemetria,
         },
     }
 
@@ -587,6 +827,7 @@ def imprimir_reporte(reporte: dict) -> None:
     print(f"  Éxitos detectados en log: {mg['exitos_detectados_log']}")
     print(f"  Blacklist: {mg['blacklist_total']} diarios")
     print(f"  Capturas: {mg['capturas_total']}")
+    print(f"  Eventos estructurados: {mg['eventos_total']}")
 
     print(f"\n📅 SESIONES POR FECHA")
     for fecha, datos in reporte["sesiones_por_fecha"].items():
@@ -595,6 +836,22 @@ def imprimir_reporte(reporte: dict) -> None:
         print(f"  {fecha}: {datos['exitos']} OK, {datos['errores']} ERR (tasa: {tasa}%)")
 
     p = reporte["patrones"]
+
+    # Telemetría estructurada: fuente principal cuando el log de texto está atrás
+    telem = p["telemetria_estructurada"]
+    print(f"\n📡 TELEMETRÍA ESTRUCTURADA (logs/events.jsonl)")
+    print(f"  Eventos: {telem['total_eventos']}  |  Éxitos: {telem['exitos']}  |  Errores: {telem['errores']}")
+    print(f"  Timeouts: {telem['timeouts']}  |  Fallbacks Sector B: {telem['fallbacks_sector_b']}")
+    print(f"  Última actividad registrada: {telem['ultima_fecha'] or '(sin datos)'}")
+    if telem["ids_error"]:
+        print(f"  IDs con error ({telem['ids_error_unicos']} únicos): {telem['ids_error'][-10:]}")
+    if telem["sesiones"]:
+        print(f"  Sesiones registradas: {telem['sesiones']}")
+    if telem["log_desactualizado"]:
+        print(f"  ⚠️  El log de texto (bot_ax.log) está DESACTUALIZADO respecto de la telemetría:")
+        print(f"      los patrones que dependen de él son PARCIALES. Causa histórica conocida:")
+        print(f"      handler con descriptor abierto sobre Google Drive (corregido en v-00.13.02;")
+        print(f"      el arreglo se aplica al reiniciar el bot).")
 
     print(f"\n🔍 PATRÓN: RUIDO OCR")
     r = p["ruido_ocr"]
@@ -726,18 +983,24 @@ def main():
         "--json", action="store_true",
         help="Output en formato JSON en lugar de texto"
     )
+    parser.add_argument(
+        "--eventos", default=None,
+        help="Ruta específica de la telemetría (default: logs/events.jsonl)"
+    )
     args = parser.parse_args()
 
     entradas = leer_registros(BASE_DIR)
     blacklist = leer_blacklist(BASE_DIR)
     lineas_log = leer_log(BASE_DIR, args.log)
     capturas = listar_capturas(BASE_DIR)
+    ruta_telem = Path(args.eventos) if args.eventos else ruta_eventos(BASE_DIR)
+    eventos = leer_eventos(ruta_telem)
 
-    if not entradas and not lineas_log:
+    if not entradas and not lineas_log and not eventos:
         print("No se encontró evidencia para analizar.")
         return
 
-    reporte = generar_reporte(entradas, blacklist, lineas_log, capturas)
+    reporte = generar_reporte(entradas, blacklist, lineas_log, capturas, eventos)
 
     if args.json:
         print(json.dumps(reporte, ensure_ascii=False, indent=2))
