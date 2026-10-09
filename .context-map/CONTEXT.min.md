@@ -16,16 +16,16 @@ Antes de tocar código, pregúntate y responde con el contexto del vault
 ## Resumen Ejecutivo
 
 **Proyecto**: Bot_AX_Contable
-**Nodos totales**: 63
-**Distribución**: BASE: 5, FUTURO: 3, CORRECCION: 25, CAMBIO: 7, IDEA: 22, RIESGO: 1
-**Readiness**: 65/100
+**Nodos totales**: 65
+**Distribución**: BASE: 6, FUTURO: 3, CORRECCION: 25, CAMBIO: 7, IDEA: 22, RIESGO: 2
+**Readiness**: 75/100
 
 
 ## Estado del Proyecto
 
 - **Ideas**: 22 (features, conceptos)
-- **Bases**: 5 (fundamentos)
-- **Riesgos**: 1 (problemas potenciales)
+- **Bases**: 6 (fundamentos)
+- **Riesgos**: 2 (problemas potenciales)
 - **Cambios**: 7 (modificaciones)
 - **Pendientes**: 3 (tareas por hacer)
 - **Correcciones**: 25 (bugs/fixes)
@@ -39,6 +39,7 @@ Antes de tocar código, pregúntate y responde con el contexto del vault
 ## ⚠️ Riesgos
 
 - Archivos de alta complejidad: scripts/observer_analyze.py, src/ui/gui_cl…
+- Encontré un problema real y lo voy a arreglar con su prueba de regresión…
 
 ## 📝 Pendientes
 
@@ -50,11 +51,13 @@ Antes de tocar código, pregúntate y responde con el contexto del vault
 
 - `ctxmap search "<tema>"` / tool MCP `context_search` → pasajes de nodos y
   notas con citas (sin cargar ficheros completos).
+- Al volver a una sesión: `context_diff(since=<digest>)` → **solo lo que cambió**
+  (evita releer el brief si nada cambió).
 - Pendientes: `7.0-MANUAL/BACKLOG.md` · historia: `7.0-MANUAL/Diario/` · lecciones: `8.0-KNOWLEDGE/`.
 - Salud: `ctxmap check .` · peso: `ctxmap doctor --sizes` · vault: `.context-map/vault-*/`.
 
 ---
 
 > Este brief fue generado automáticamente por ContextMap IA.
-> Última compilación: 2026-10-09 11:16
+> Última compilación: 2026-10-09 11:55
 > Optimizado para Prompt Caching (Claude 3.7 Sonnet, Gemini 2.5 Pro/Flash, GPT-4o).

@@ -2,7 +2,7 @@
 
 > El `AGENTS.md` de la raíz dice QUÉ hacer; esta skill es el CÓMO:
 > comandos exactos, metodología para escribir notas con alma y reglas del vault.
-> Última actualización: 2026-10-09 11:16
+> Última actualización: 2026-10-09 11:55
 
 ---
 

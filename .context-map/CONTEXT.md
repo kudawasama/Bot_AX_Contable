@@ -59,16 +59,16 @@ ctxmap refresh .
 ## Resumen Ejecutivo
 
 **Proyecto**: Bot_AX_Contable
-**Nodos totales**: 63
-**Distribución**: BASE: 5, FUTURO: 3, CORRECCION: 25, CAMBIO: 7, IDEA: 22, RIESGO: 1
-**Readiness**: 65/100
+**Nodos totales**: 65
+**Distribución**: BASE: 6, FUTURO: 3, CORRECCION: 25, CAMBIO: 7, IDEA: 22, RIESGO: 2
+**Readiness**: 75/100
 
 
 ## Estado del Proyecto
 
 - **Ideas**: 22 (features, conceptos)
-- **Bases**: 5 (fundamentos)
-- **Riesgos**: 1 (problemas potenciales)
+- **Bases**: 6 (fundamentos)
+- **Riesgos**: 2 (problemas potenciales)
 - **Cambios**: 7 (modificaciones)
 - **Pendientes**: 3 (tareas por hacer)
 - **Correcciones**: 25 (bugs/fixes)
@@ -83,6 +83,10 @@ ctxmap refresh .
 
 - ⚠️ **Archivos de alta complejidad: scripts/observer_analyze.py, src/ui/gui_classic.py**
   Zona de alta complejidad: Archivos de alta complejidad (5 total): scripts/observer_analyze.py; src/ui/gui_classic.py; sr
+- ⚠️ **Encontré un problema real y lo voy a arreglar con su prueba de regresión. Primer**
+  Riesgo: Encontré un problema real y lo voy a arreglar con su prueba de regresión. Primero el diagnóstico exacto:
+
+- logs
 
 ## Tareas Pendientes
 
@@ -104,7 +108,7 @@ _Sin páginas todavía. Captura con `ctxmap inbox add "<texto>"` o `ctxmap inges
 
 ## 🧮 Eficiencia de Contexto & Presupuesto de Tokens
 
-- **Brief Principal (`CONTEXT.md`)**: `1090` tokens
+- **Brief Principal (`CONTEXT.md`)**: `1150` tokens
 - **Prefijo Invariante (Prompt Cache)**: `707` tokens deterministas (alta tasa de Cache Hit en Claude 3.7 / Gemini 2.5).
 - **Optimización de Ventana**: **>99% de ahorro de tokens** (carga inmediata del mapa narrativo vs. inspección masiva de código).
 
@@ -112,5 +116,5 @@ _Sin páginas todavía. Captura con `ctxmap inbox add "<texto>"` o `ctxmap inges
 ---
 
 > Este brief fue generado automáticamente por ContextMap IA.
-> Última compilación: 2026-10-09 11:16
+> Última compilación: 2026-10-09 11:55
 > Optimizado para Prompt Caching (Claude 3.7 Sonnet, Gemini 2.5 Pro/Flash, GPT-4o).

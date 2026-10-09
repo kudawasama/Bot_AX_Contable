@@ -1,0 +1,14 @@
+# GitHub Copilot — Instrucciones para Bot_AX_Contable
+
+> Generado automáticamente por **ContextMap** (2026-10-09).
+
+## Antes de sugerir código
+
+- Revisa `.context-map/CONTEXT.md` para entender el proyecto (stack, riesgos, tareas).
+- Respeta la arquitectura modular existente.
+- Usa convenciones del proyecto: docstrings en español, type hints strictly.
+
+## Verificación
+
+- Tests: `python -m pytest`
+- ContextMap: `python -m context_map.cli build --clean --brief`

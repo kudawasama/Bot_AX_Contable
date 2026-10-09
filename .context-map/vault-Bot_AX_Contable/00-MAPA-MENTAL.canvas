@@ -71,6 +71,15 @@
       "y": 0,
       "width": 240,
       "height": 50
+    },
+    {
+      "id": "51ab7fbb-e480-561c-834c-777c47994dc4",
+      "type": "file",
+      "file": "4.0-RIESGOS/Encontré un problema real y lo voy a arreglar con su prueba de regresión. Primero el diagnóstico exa.md",
+      "x": 1040,
+      "y": 60,
+      "width": 240,
+      "height": 50
     }
   ],
   "edges": [
@@ -79,6 +88,14 @@
       "fromNode": "507e3429-ff50-57b5-9688-23c04c38c683",
       "fromSide": "right",
       "toNode": "df1fb5a5-ee28-5404-91fa-52ff96a9427f",
+      "toSide": "left",
+      "label": ""
+    },
+    {
+      "id": "306dcae6-3290-54b0-b2e7-0917e87bbef9",
+      "fromNode": "507e3429-ff50-57b5-9688-23c04c38c683",
+      "fromSide": "right",
+      "toNode": "51ab7fbb-e480-561c-834c-777c47994dc4",
       "toSide": "left",
       "label": ""
     },
