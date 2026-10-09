@@ -4,17 +4,22 @@
 POR QUÉ EXISTE (incidente 2026-10-09):
     El bot registró 12 errores en una jornada y el log de texto (``bot_ax.log``)
     llevaba un día congelado. Nadie lo supo hasta revisar archivos a mano al día
-    siguiente. Antes de esto, responder "¿está trabajando bien el bot?" exigía
-    abrir el log, contar líneas y comparar con los registros.
+    siguiente. Ese mismo día, a las 15:24, el bot murió por el fail-safe de PyAutoGUI
+    (el mouse llegó a una esquina de la pantalla) y el chequeo informaba "OK"
+    simplemente porque no había sesión abierta. Antes de esto, responder "¿está
+    trabajando bien el bot?" exigía abrir el log, contar líneas y compararlos con los
+    registros.
 
 QUÉ REVISA (solo lectura, nunca toca al bot ni la pantalla):
-    1. TELEMETRIA_CONGELADA  — el bot está activo pero ``logs/bot_ax.log`` se quedó
+    1. SESION_TERMINADA_POR_ERROR — la última sesión cerró con crash (fail-safe) o
+       timeout extremo: el operador debe enterarse sin abrir archivos.
+    2. TELEMETRIA_CONGELADA — el bot está activo pero ``logs/bot_ax.log`` se quedó
        atrás respecto de ``logs/events.jsonl`` (síntoma exacto del incidente).
-    2. SIN_ACTIVIDAD         — hay una sesión abierta (``bot_start`` sin ``bot_stop``)
-       y no llegan eventos nuevos hace más de ``UMBRAL_SIN_EVENTOS_MIN`` minutos.
-    3. TASA_ERROR_ALTA       — los errores de hoy superan ``UMBRAL_TASA_ERROR_PCT``.
-    4. CONFIG_INVALIDA       — ``config_sectores.json`` o ``blacklist.json`` ilegibles.
-    5. SIN_EVIDENCIA         — no hay ni telemetría ni log (nada que analizar).
+    3. SIN_ACTIVIDAD — hay una sesión abierta y no llegan eventos nuevos más allá del
+       umbral que corresponde al punto del ciclo (ver ``umbral_sin_actividad``).
+    4. TASA_ERROR_ALTA — los errores de hoy superan ``UMBRAL_TASA_ERROR_PCT``.
+    5. CONFIG_INVALIDA — ``config_sectores.json`` o ``blacklist.json`` ilegibles.
+    6. SIN_EVIDENCIA — no hay ni telemetría ni log (nada que analizar).
 
 DECISIÓN DE DISEÑO: este script valida la configuración por su cuenta (no importa
 ``src.core.config``). Un chequeo de salud que depende del código del "paciente" puede
@@ -31,7 +36,7 @@ Uso:
 import argparse
 import json
 import sys
-from datetime import datetime
+from datetime import datetime, timedelta
 from pathlib import Path
 from typing import Any, Optional
 
@@ -61,6 +66,18 @@ UMBRAL_TASA_ERROR_PCT: float = 25.0
 # Eventos de la telemetría que marcan el inicio y el fin de una sesión
 EVENTO_INICIO: str = "bot_start"
 EVENTO_FIN: str = "bot_stop"
+# Motivos de cierre de sesión que NO son normales (user_esc y no_more_diarios sí lo son)
+RAZONES_ANOMALAS: set[str] = {"error", "timeout_extremo"}
+# Horas hacia atrás en las que una caída todavía se considera reciente
+UMBRAL_CAIDA_HORAS: int = 24
+# Evento que registra el aborto por fail-safe de PyAutoGUI
+EVENTO_CAIDA: str = "failsafe_triggered"
+# El bot espera el resultado de AX sin emitir eventos de telemetría (solo escribe en
+# el log de texto) y esa espera puede durar hasta 60 min: aplicar el umbral normal de
+# 15 min produce falsos SIN_ACTIVIDAD en los registros lentos.
+UMBRAL_ESPERA_RESULTADO_MIN: int = 65
+# Último evento que indica que el bot quedó esperando el resultado de AX
+EVENTOS_EN_ESPERA: set[str] = {"confirm_click"}
 
 
 # ──────────────────────────────────────────────────────────────
@@ -156,6 +173,21 @@ def validar_blacklist(ruta: Path) -> tuple[bool, str]:
     return True, "ok"
 
 
+def _parsear_ts(ts: Any) -> Optional[datetime]:
+    """Convierte un timestamp ISO-8601 de la telemetría en ``datetime``.
+
+    Args:
+        ts (Any): Marca de tiempo del evento.
+
+    Returns:
+        Optional[datetime]: La marca convertida, o ``None`` si es inválida.
+    """
+    try:
+        return datetime.fromisoformat(str(ts))
+    except (ValueError, TypeError):
+        return None
+
+
 def _sesion_activa(eventos: list[dict]) -> bool:
     """Indica si la última marca de sesión es un inicio sin cierre.
 
@@ -173,6 +205,78 @@ def _sesion_activa(eventos: list[dict]) -> bool:
     return ultimo == EVENTO_INICIO
 
 
+def analizar_ultima_sesion(eventos: list[dict]) -> dict:
+    """Analiza cómo terminó la última sesión del bot.
+
+    POR QUÉ: el 2026-10-09 el bot murió a las 15:24 por el fail-safe de PyAutoGUI
+    (el mouse llegó a una esquina de la pantalla) y el operador no se enteró: la
+    sesión quedó cerrada con ``reason="error"`` y, como no había sesión abierta, el
+    chequeo informaba "OK". Una caída no puede depender de que alguien abra el log.
+
+    Args:
+        eventos (list[dict]): Eventos de la telemetría (en orden de aparición).
+
+    Returns:
+        dict: ``cerrada`` (bool), ``razon`` (motivo del ``bot_stop``), ``marca_cierre``
+        (datetime o None), ``caida`` (marca del último fail-safe de la sesión) y
+        ``ultimo_diario`` (último ID asociado a un evento de la sesión).
+    """
+    ultimo_inicio: int = -1
+    for indice, evento in enumerate(eventos):
+        if str(evento.get("event", "")) == EVENTO_INICIO:
+            ultimo_inicio = indice
+    sesion: list[dict] = eventos[ultimo_inicio:] if ultimo_inicio >= 0 else list(eventos)
+
+    razon: str = ""
+    marca_cierre: Optional[datetime] = None
+    for evento in sesion:
+        if str(evento.get("event", "")) == EVENTO_FIN:
+            razon = str(evento.get("reason", ""))
+            marca_cierre = _parsear_ts(evento.get("ts"))
+
+    caida: Optional[datetime] = None
+    for evento in reversed(sesion):
+        if str(evento.get("event", "")) == EVENTO_CAIDA:
+            caida = _parsear_ts(evento.get("ts"))
+            break
+
+    ultimo_diario: Optional[str] = None
+    for evento in reversed(sesion):
+        identificador = evento.get("id_normalizado")
+        if identificador:
+            ultimo_diario = str(identificador)
+            break
+
+    return {
+        "cerrada": bool(razon),
+        "razon": razon,
+        "marca_cierre": marca_cierre,
+        "caida": caida,
+        "ultimo_diario": ultimo_diario,
+    }
+
+
+def umbral_sin_actividad(eventos: list[dict]) -> int:
+    """Minutos sin eventos antes de alertar, según el punto del ciclo del bot.
+
+    El bot espera el resultado de AX **sin emitir eventos de telemetría** (solo escribe
+    en ``bot_ax.log``), y esa espera puede ser de hasta 60 minutos. Aplicarle el umbral
+    normal de 15 minutos produce falsos ``SIN_ACTIVIDAD`` en cualquier registro lento.
+
+    Args:
+        eventos (list[dict]): Eventos de la telemetría.
+
+    Returns:
+        int: ``UMBRAL_ESPERA_RESULTADO_MIN`` si el último evento dejó al bot esperando
+        el resultado de AX; ``UMBRAL_SIN_EVENTOS_MIN`` en cualquier otro caso.
+    """
+    if not eventos:
+        return UMBRAL_SIN_EVENTOS_MIN
+    if str(eventos[-1].get("event", "")) in EVENTOS_EN_ESPERA:
+        return UMBRAL_ESPERA_RESULTADO_MIN
+    return UMBRAL_SIN_EVENTOS_MIN
+
+
 # ──────────────────────────────────────────────────────────────
 # Chequeo principal
 # ──────────────────────────────────────────────────────────────
@@ -186,8 +290,8 @@ def chequeo(raiz: Path, ahora: Optional[datetime] = None) -> dict:
 
     Returns:
         dict: Estado con ``ok``, ``alertas``, ``sesion_activa``, ``log_al_dia``,
-        ``eventos_al_dia``, ``ultimo_evento_min``, ``tasa_exito_hoy`` y métricas
-        informativas del día.
+        ``eventos_al_dia``, ``ultimo_evento_min``, ``tasa_exito_hoy``,
+        ``caida_reciente``, ``ultima_sesion`` y métricas informativas del día.
     """
     raiz = Path(raiz)
     momento: datetime = ahora or datetime.now()
@@ -202,9 +306,10 @@ def chequeo(raiz: Path, ahora: Optional[datetime] = None) -> dict:
     if marca_eventos is not None:
         ultimo_evento_min = round((momento - marca_eventos).total_seconds() / 60, 1)
 
+    umbral_actividad: int = umbral_sin_actividad(eventos)
     activa: bool = _sesion_activa(eventos)
     actividad_reciente: bool = activa or (
-        ultimo_evento_min is not None and ultimo_evento_min <= UMBRAL_SIN_EVENTOS_MIN
+        ultimo_evento_min is not None and ultimo_evento_min <= umbral_actividad
     )
 
     minutos_atraso_log: Optional[float] = None
@@ -224,6 +329,17 @@ def chequeo(raiz: Path, ahora: Optional[datetime] = None) -> dict:
         round(exitos_hoy / registros_hoy * 100, 1) if registros_hoy else None
     )
 
+    # ¿Cómo terminó la última sesión? (una caída debe reportarse, no quedar invisible)
+    ultima_sesion = analizar_ultima_sesion(eventos)
+    marca_caida: Optional[datetime] = ultima_sesion["marca_cierre"] or ultima_sesion["caida"]
+    caida_reciente: bool = False
+    if (
+        ultima_sesion["cerrada"]
+        and ultima_sesion["razon"] in RAZONES_ANOMALAS
+        and marca_caida is not None
+    ):
+        caida_reciente = (momento - marca_caida) <= timedelta(hours=UMBRAL_CAIDA_HORAS)
+
     valida_config, detalle_config = validar_json_sectores(raiz / "config_sectores.json")
     valida_blacklist, detalle_blacklist = validar_blacklist(raiz / "blacklist.json")
 
@@ -235,6 +351,21 @@ def chequeo(raiz: Path, ahora: Optional[datetime] = None) -> dict:
             "detalle": "No hay telemetría (logs/events.jsonl) ni log (logs/bot_ax.log).",
         })
 
+    if caida_reciente and marca_caida is not None:
+        detalle = (
+            f"La última sesión terminó con razón '{ultima_sesion['razon']}'"
+            f" ({marca_caida.strftime('%Y-%m-%d %H:%M')})"
+        )
+        if ultima_sesion["caida"] is not None:
+            detalle += (
+                "; se abortó por el FAIL-SAFE de PyAutoGUI"
+                f" ({ultima_sesion['caida'].strftime('%H:%M:%S')}) — revisar si alguien"
+                " movió el mouse a una esquina de la pantalla"
+            )
+        if ultima_sesion["ultimo_diario"]:
+            detalle += f". Último diario visto: {ultima_sesion['ultimo_diario']}"
+        alertas.append({"codigo": "SESION_TERMINADA_POR_ERROR", "detalle": detalle})
+
     if eventos and actividad_reciente and not log_al_dia:
         alertas.append({
             "codigo": "TELEMETRIA_CONGELADA",
@@ -245,12 +376,12 @@ def chequeo(raiz: Path, ahora: Optional[datetime] = None) -> dict:
             ),
         })
 
-    if activa and ultimo_evento_min is not None and ultimo_evento_min > UMBRAL_SIN_EVENTOS_MIN:
+    if activa and ultimo_evento_min is not None and ultimo_evento_min > umbral_actividad:
         alertas.append({
             "codigo": "SIN_ACTIVIDAD",
             "detalle": (
                 f"Sesión abierta sin eventos hace {ultimo_evento_min} min "
-                f"(umbral: {UMBRAL_SIN_EVENTOS_MIN})."
+                f"(umbral: {umbral_actividad})."
             ),
         })
 
@@ -278,10 +409,24 @@ def chequeo(raiz: Path, ahora: Optional[datetime] = None) -> dict:
         "actividad_reciente": actividad_reciente,
         "log_al_dia": log_al_dia,
         "eventos_al_dia": (
-            ultimo_evento_min is not None and ultimo_evento_min <= UMBRAL_SIN_EVENTOS_MIN
+            ultimo_evento_min is not None and ultimo_evento_min <= umbral_actividad
         ),
+        "umbral_actividad_min": umbral_actividad,
         "ultimo_evento_min": ultimo_evento_min,
         "minutos_atraso_log": minutos_atraso_log,
+        "caida_reciente": caida_reciente,
+        "ultima_sesion": {
+            "cerrada": ultima_sesion["cerrada"],
+            "razon": ultima_sesion["razon"],
+            "marca_cierre": (
+                ultima_sesion["marca_cierre"].isoformat()
+                if ultima_sesion["marca_cierre"] else None
+            ),
+            "failsafe": (
+                ultima_sesion["caida"].isoformat() if ultima_sesion["caida"] else None
+            ),
+            "ultimo_diario": ultima_sesion["ultimo_diario"],
+        },
         "exitos_hoy": exitos_hoy,
         "errores_hoy": errores_hoy,
         "registros_hoy": registros_hoy,
@@ -306,7 +451,8 @@ def imprimir_resultado(resultado: dict) -> None:
     estado = "OK" if resultado["ok"] else "CON ALERTAS"
     print(f"\n  Estado general: {estado}")
     print(f"  Sesión activa: {resultado['sesion_activa']}"
-          f"  |  Actividad reciente: {resultado['actividad_reciente']}")
+          f"  |  Actividad reciente: {resultado['actividad_reciente']}"
+          f"  (umbral {resultado['umbral_actividad_min']} min)")
     print(f"  Log de texto al día: {resultado['log_al_dia']}"
           f"  |  Telemetría al día: {resultado['eventos_al_dia']}")
     ultimo = resultado["ultimo_evento_min"]
@@ -314,6 +460,11 @@ def imprimir_resultado(resultado: dict) -> None:
     tasa = resultado["tasa_exito_hoy"]
     print(f"  Hoy: {resultado['exitos_hoy']} OK / {resultado['errores_hoy']} ERR"
           f"  |  Tasa de éxito: {tasa if tasa is not None else 'sin registros'}%")
+
+    sesion_previa = resultado["ultima_sesion"]
+    if sesion_previa["cerrada"]:
+        print(f"  Última sesión cerrada: {sesion_previa['razon']}"
+              f" ({sesion_previa['marca_cierre'] or 'sin marca'})")
 
     if resultado["alertas"]:
         print(f"\n  ALERTAS ({len(resultado['alertas'])})")
