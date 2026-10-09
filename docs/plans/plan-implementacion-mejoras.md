@@ -42,6 +42,10 @@ desarrollo diario.
 | R-4 — sin CI | ✅ Resuelto — `.github/workflows/ci.yml` (pytest en runner Windows + ruff informativo) |
 | **Nuevo** — pérdida silenciosa de trazas en `logs/bot_ax.log` | ✅ Resuelto — `ArchivoRotativoRobusto` (v-00.13.02) + `tests/test_logger.py` |
 
+> **Siguiente fase:** [`docs/plans/plan-implementacion-fase2.md`](plan-implementacion-fase2.md)
+> — observabilidad, calidad de datos y automatización (2026-10-09), con lotes por nivel de
+> riesgo y tareas bite-sized verificables.
+
 ### C-1. Suite de tests rota — `tests/test_vision.py` no importa `vision`
 
 - **Hallazgo:** `pytest --collect-only` falla con `ModuleNotFoundError: No module named 'vision'`.
