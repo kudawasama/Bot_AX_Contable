@@ -1,8 +1,8 @@
 ---
 type: moc
-created: 2026-10-09T16:37:46
+created: 2026-10-09T16:47:15
 project: "Bot_AX_Contable"
-total_nodes: 76
+total_nodes: 77
 total_edges: 0
 tags: [context-map, indice, moc]
 ---
@@ -15,8 +15,8 @@ tags: [context-map, indice, moc]
 
 ## 📊 Métricas
 
-- 📦 Nodos Totales: **76**
-- 🧱 BASE: **10**
+- 📦 Nodos Totales: **77**
+- 🧱 BASE: **11**
 - 💡 IDEA: **27**
 - ⚠️ RIESGO: **4**
 - 🔄 CAMBIO/CORRECCION: **32**

@@ -1,6 +1,6 @@
 ---
 type: conexiones
-created: 2026-10-09T16:37:47
+created: 2026-10-09T16:47:16
 ---
 
 # 🔗 Todas las Conexiones
