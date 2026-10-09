@@ -1,7 +1,7 @@
 ---
 type: riesgo
 status: activo
-created: 2026-08-12T08:45:39
+created: 2026-10-09T11:16:13
 project: "Bot_AX_Contable"
 tags: ["riesgo", "class:chore"]
 source: "scanner"
@@ -44,11 +44,6 @@ Incrementa la probabilidad de desacoplamientos o fallos al refactorizar. Zona de
 
 ## 🔗 Conexiones
 
-- [[2.0-IDEAS/2.3-Ideas-Completas-e-Implementadas/UI/UI-Completas.md|self._log_btn("✕A", "Limpiar todo el log", self._clear_log, ]]
-- [[2.0-IDEAS/2.3-Ideas-Completas-e-Implementadas/UI/UI-Completas.md|self.log("🗑 Todos los errores eliminados del log.")]]
-- [[2.0-IDEAS/2.3-Ideas-Completas-e-Implementadas/AUTOMATIZACION/AUTOMATIZACION-Completas.md|Centraliza todos los defaults numéricos para facilitar ajust]]
-- [[2.0-IDEAS/2.3-Ideas-Completas-e-Implementadas/AUTOMATIZACION/AUTOMATIZACION-Completas.md|event_log("scroll_performed", intento=intentos_scroll, metod]]
-- [[2.0-IDEAS/2.3-Ideas-Completas-e-Implementadas/CLI/CLI-Completas.md|event_log("scroll_performed", intento=intentos_scroll, metod]]
 
 ---
 [[4.0-RIESGOS/4.0-RIESGOS|⬅ Volver a 4.0 Riesgos]]

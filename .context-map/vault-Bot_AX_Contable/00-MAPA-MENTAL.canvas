@@ -1,203 +1,174 @@
 {
   "nodes": [
     {
-      "id": "edb0d4b3-53fe-4634-b3e2-97e288ebd72b",
+      "id": "507e3429-ff50-57b5-9688-23c04c38c683",
       "type": "file",
       "file": "2.0-IDEAS/2.3-Ideas-Completas-e-Implementadas/AUTOMATIZACION/AUTOMATIZACION-Completas.md",
-      "x": 0,
+      "x": 520,
       "y": 0,
-      "width": 260,
-      "height": 60
+      "width": 240,
+      "height": 50
     },
     {
-      "id": "fd14cee5-305b-4eac-a69a-91d9791ca74f",
-      "type": "file",
-      "file": "2.0-IDEAS/2.3-Ideas-Completas-e-Implementadas/GENERAL/GENERAL-Completas.md",
-      "x": 220,
-      "y": 0,
-      "width": 260,
-      "height": 60
-    },
-    {
-      "id": "57a069a2-85d7-41fc-93fb-9e7207560106",
-      "type": "file",
-      "file": "4.0-RIESGOS/Archivos de alta complejidad scriptsobserver_analyze.py, srcuigui_classic.py, srccoreengine.py.md",
-      "x": 440,
-      "y": 0,
-      "width": 260,
-      "height": 60
-    },
-    {
-      "id": "cdebdf0e-89cb-47d4-869f-72b02487ba8b",
-      "type": "file",
-      "file": "2.0-IDEAS/2.3-Ideas-Completas-e-Implementadas/AUTOMATIZACION/AUTOMATIZACION-Completas.md",
-      "x": 660,
-      "y": 0,
-      "width": 260,
-      "height": 60
-    },
-    {
-      "id": "b244555c-9ed4-415c-a496-e2dc8af46317",
-      "type": "file",
-      "file": "2.0-IDEAS/2.3-Ideas-Completas-e-Implementadas/AUTOMATIZACION/AUTOMATIZACION-Completas.md",
-      "x": 880,
-      "y": 0,
-      "width": 260,
-      "height": 60
-    },
-    {
-      "id": "2a679f9d-80d8-4df1-bdbe-4f93e1f7a56e",
+      "id": "7f6cd1be-e1ff-5fd1-8caf-a26ed739b451",
       "type": "file",
       "file": "2.0-IDEAS/2.3-Ideas-Completas-e-Implementadas/CLI/CLI-Completas.md",
-      "x": 1100,
-      "y": 0,
-      "width": 260,
-      "height": 60
+      "x": 520,
+      "y": 60,
+      "width": 240,
+      "height": 50
     },
     {
-      "id": "8aeccbd4-30f7-4a3e-840a-4501f3710183",
+      "id": "fe1f0c36-2819-5b60-8dee-d620bf0c75e9",
       "type": "file",
       "file": "2.0-IDEAS/2.3-Ideas-Completas-e-Implementadas/DEVOPS/DEVOPS-Completas.md",
-      "x": 0,
-      "y": 180,
-      "width": 260,
-      "height": 60
+      "x": 520,
+      "y": 120,
+      "width": 240,
+      "height": 50
     },
     {
-      "id": "a94efa0f-d50b-4922-b59a-e2fcce569681",
-      "type": "file",
-      "file": "2.0-IDEAS/2.3-Ideas-Completas-e-Implementadas/UI/UI-Completas.md",
-      "x": 220,
-      "y": 180,
-      "width": 260,
-      "height": 60
-    },
-    {
-      "id": "fc35095d-dbe3-430c-afcc-c1f8075cbec5",
-      "type": "file",
-      "file": "2.0-IDEAS/2.3-Ideas-Completas-e-Implementadas/TUI/TUI-Completas.md",
-      "x": 440,
-      "y": 180,
-      "width": 260,
-      "height": 60
-    },
-    {
-      "id": "ed62b551-2f1d-4f40-87c6-6cc6528f8ad4",
-      "type": "file",
-      "file": "2.0-IDEAS/2.3-Ideas-Completas-e-Implementadas/UI/UI-Completas.md",
-      "x": 660,
-      "y": 180,
-      "width": 260,
-      "height": 60
-    },
-    {
-      "id": "46597a72-1515-4601-83c9-d7925a39f254",
-      "type": "file",
-      "file": "2.0-IDEAS/2.3-Ideas-Completas-e-Implementadas/TUI/TUI-Completas.md",
-      "x": 880,
-      "y": 180,
-      "width": 260,
-      "height": 60
-    },
-    {
-      "id": "7335f6c9-59ef-484c-9e29-985df28b0eb7",
+      "id": "b6222708-19d6-58d6-9862-d6f1515d37d2",
       "type": "file",
       "file": "2.0-IDEAS/2.3-Ideas-Completas-e-Implementadas/ETL/ETL-Completas.md",
-      "x": 1100,
+      "x": 520,
       "y": 180,
-      "width": 260,
-      "height": 60
+      "width": 240,
+      "height": 50
     },
     {
-      "id": "27cef252-8bcf-44f7-a8a0-b7372b21c545",
+      "id": "df1fb5a5-ee28-5404-91fa-52ff96a9427f",
+      "type": "file",
+      "file": "2.0-IDEAS/2.3-Ideas-Completas-e-Implementadas/GENERAL/GENERAL-Completas.md",
+      "x": 520,
+      "y": 240,
+      "width": 240,
+      "height": 50
+    },
+    {
+      "id": "12399099-9f2d-518e-85b2-16e3f46ba2c7",
       "type": "file",
       "file": "2.0-IDEAS/2.3-Ideas-Completas-e-Implementadas/TUI/TUI-Completas.md",
-      "x": 0,
+      "x": 520,
+      "y": 300,
+      "width": 240,
+      "height": 50
+    },
+    {
+      "id": "e1816036-41c7-5e0e-9431-47747735af62",
+      "type": "file",
+      "file": "2.0-IDEAS/2.3-Ideas-Completas-e-Implementadas/UI/UI-Completas.md",
+      "x": 520,
       "y": 360,
-      "width": 260,
-      "height": 60
+      "width": 240,
+      "height": 50
     },
     {
-      "id": "bdf626d1-db27-4935-b286-823297a612fa",
+      "id": "4864a391-4e5c-57f1-8efc-d10cf22e55c4",
       "type": "file",
-      "file": "2.0-IDEAS/2.3-Ideas-Completas-e-Implementadas/TUI/TUI-Completas.md",
-      "x": 220,
-      "y": 360,
-      "width": 260,
-      "height": 60
-    },
-    {
-      "id": "f72b71ff-6f08-4deb-b975-bdaa063963d7",
-      "type": "file",
-      "file": "2.0-IDEAS/2.3-Ideas-Completas-e-Implementadas/DEVOPS/DEVOPS-Completas.md",
-      "x": 440,
-      "y": 360,
-      "width": 260,
-      "height": 60
-    },
-    {
-      "id": "59be2d18-52eb-4c8d-b1a9-d3bf26c98787",
-      "type": "file",
-      "file": "2.0-IDEAS/2.3-Ideas-Completas-e-Implementadas/DEVOPS/DEVOPS-Completas.md",
-      "x": 660,
-      "y": 360,
-      "width": 260,
-      "height": 60
-    },
-    {
-      "id": "04f71374-5a78-48a2-81ce-00f0e7dfc618",
-      "type": "file",
-      "file": "2.0-IDEAS/2.3-Ideas-Completas-e-Implementadas/AUTOMATIZACION/AUTOMATIZACION-Completas.md",
-      "x": 880,
-      "y": 360,
-      "width": 260,
-      "height": 60
-    },
-    {
-      "id": "41ba7c0d-2d04-4b9a-be34-ed3199fd37d8",
-      "type": "file",
-      "file": "2.0-IDEAS/2.3-Ideas-Completas-e-Implementadas/DEVOPS/DEVOPS-Completas.md",
-      "x": 1100,
-      "y": 360,
-      "width": 260,
-      "height": 60
-    },
-    {
-      "id": "6d68e9dc-aa0c-449d-a4d6-a6a68d79bdb8",
-      "type": "file",
-      "file": "2.0-IDEAS/2.3-Ideas-Completas-e-Implementadas/DEVOPS/DEVOPS-Completas.md",
-      "x": 0,
-      "y": 540,
-      "width": 260,
-      "height": 60
-    },
-    {
-      "id": "1af1f74a-91ad-4f0a-a639-c753773e2c06",
-      "type": "file",
-      "file": "2.0-IDEAS/2.3-Ideas-Completas-e-Implementadas/DEVOPS/DEVOPS-Completas.md",
-      "x": 220,
-      "y": 540,
-      "width": 260,
-      "height": 60
-    },
-    {
-      "id": "ad143343-e4bc-49cc-9aa6-323d3e750e32",
-      "type": "file",
-      "file": "2.0-IDEAS/2.3-Ideas-Completas-e-Implementadas/DEVOPS/DEVOPS-Completas.md",
-      "x": 440,
-      "y": 540,
-      "width": 260,
-      "height": 60
-    },
-    {
-      "id": "8e3fa62a-a9ab-42c8-a7cb-a84c117b7565",
-      "type": "file",
-      "file": "2.0-IDEAS/2.3-Ideas-Completas-e-Implementadas/DEVOPS/DEVOPS-Completas.md",
-      "x": 660,
-      "y": 540,
-      "width": 260,
-      "height": 60
+      "file": "4.0-RIESGOS/Archivos de alta complejidad scripts_observer_analyze.py, src_ui_gui_classic.py, src_core_engine.py.md",
+      "x": 1040,
+      "y": 0,
+      "width": 240,
+      "height": 50
     }
   ],
-  "edges": []
+  "edges": [
+    {
+      "id": "c1193de1-114b-5e77-9de0-34813832eb36",
+      "fromNode": "507e3429-ff50-57b5-9688-23c04c38c683",
+      "fromSide": "right",
+      "toNode": "df1fb5a5-ee28-5404-91fa-52ff96a9427f",
+      "toSide": "left",
+      "label": ""
+    },
+    {
+      "id": "2a83d1ba-8725-5a93-8053-0ecfcfdba440",
+      "fromNode": "7f6cd1be-e1ff-5fd1-8caf-a26ed739b451",
+      "fromSide": "right",
+      "toNode": "b6222708-19d6-58d6-9862-d6f1515d37d2",
+      "toSide": "left",
+      "label": ""
+    },
+    {
+      "id": "bea0dbb9-3cef-5e49-8a91-d99f4abb4366",
+      "fromNode": "7f6cd1be-e1ff-5fd1-8caf-a26ed739b451",
+      "fromSide": "right",
+      "toNode": "12399099-9f2d-518e-85b2-16e3f46ba2c7",
+      "toSide": "left",
+      "label": ""
+    },
+    {
+      "id": "6751d47b-1f06-5d8e-a6c4-dbc50ba0c994",
+      "fromNode": "7f6cd1be-e1ff-5fd1-8caf-a26ed739b451",
+      "fromSide": "right",
+      "toNode": "e1816036-41c7-5e0e-9431-47747735af62",
+      "toSide": "left",
+      "label": ""
+    },
+    {
+      "id": "7c434f3a-63bb-5ebf-b846-989b494c2447",
+      "fromNode": "7f6cd1be-e1ff-5fd1-8caf-a26ed739b451",
+      "fromSide": "right",
+      "toNode": "4864a391-4e5c-57f1-8efc-d10cf22e55c4",
+      "toSide": "left",
+      "label": ""
+    },
+    {
+      "id": "0522141d-ab26-5a98-bc03-b9f1ba3809ad",
+      "fromNode": "fe1f0c36-2819-5b60-8dee-d620bf0c75e9",
+      "fromSide": "right",
+      "toNode": "b6222708-19d6-58d6-9862-d6f1515d37d2",
+      "toSide": "left",
+      "label": ""
+    },
+    {
+      "id": "2a622577-35aa-5021-b329-56b0b487b2de",
+      "fromNode": "fe1f0c36-2819-5b60-8dee-d620bf0c75e9",
+      "fromSide": "right",
+      "toNode": "12399099-9f2d-518e-85b2-16e3f46ba2c7",
+      "toSide": "left",
+      "label": ""
+    },
+    {
+      "id": "6d0d8cf9-766c-5896-9f9e-f614ead5a378",
+      "fromNode": "fe1f0c36-2819-5b60-8dee-d620bf0c75e9",
+      "fromSide": "right",
+      "toNode": "e1816036-41c7-5e0e-9431-47747735af62",
+      "toSide": "left",
+      "label": ""
+    },
+    {
+      "id": "cde50abd-f8ca-53bf-9f13-67e8fd2cdb7c",
+      "fromNode": "fe1f0c36-2819-5b60-8dee-d620bf0c75e9",
+      "fromSide": "right",
+      "toNode": "4864a391-4e5c-57f1-8efc-d10cf22e55c4",
+      "toSide": "left",
+      "label": ""
+    },
+    {
+      "id": "7a894b0c-5c08-5880-8f70-e6993bef1374",
+      "fromNode": "b6222708-19d6-58d6-9862-d6f1515d37d2",
+      "fromSide": "right",
+      "toNode": "4864a391-4e5c-57f1-8efc-d10cf22e55c4",
+      "toSide": "left",
+      "label": ""
+    },
+    {
+      "id": "a11d6090-5640-55ab-9bb7-60acc1de5979",
+      "fromNode": "12399099-9f2d-518e-85b2-16e3f46ba2c7",
+      "fromSide": "right",
+      "toNode": "4864a391-4e5c-57f1-8efc-d10cf22e55c4",
+      "toSide": "left",
+      "label": ""
+    },
+    {
+      "id": "d103cf85-1ca2-590e-877f-9c34c6699cb8",
+      "fromNode": "e1816036-41c7-5e0e-9431-47747735af62",
+      "fromSide": "right",
+      "toNode": "4864a391-4e5c-57f1-8efc-d10cf22e55c4",
+      "toSide": "left",
+      "label": ""
+    }
+  ]
 }

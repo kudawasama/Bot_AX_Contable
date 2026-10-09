@@ -17,6 +17,9 @@ crash_log.txt
 error.txt
 diag_output*.txt
 
+# Cache local del escaneo de ContextMap (se regenera en cada refresh)
+.context-map/.scan_cache.json
+
 # Python
 __pycache__/
 *.pyc

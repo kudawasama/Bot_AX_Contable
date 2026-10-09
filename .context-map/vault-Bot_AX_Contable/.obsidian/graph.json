@@ -43,76 +43,6 @@
   ],
   "colorGroups": [
     {
-      "query": "tag:#BASEDEDATOS",
-      "color": {
-        "a": 1,
-        "rgb": 561586
-      }
-    },
-    {
-      "query": "tag:#DEVOPS",
-      "color": {
-        "a": 1,
-        "rgb": 6514417
-      }
-    },
-    {
-      "query": "tag:#ETL",
-      "color": {
-        "a": 1,
-        "rgb": 440020
-      }
-    },
-    {
-      "query": "tag:#GENERAL",
-      "color": {
-        "a": 1,
-        "rgb": 9741240
-      }
-    },
-    {
-      "query": "tag:#REPORTES",
-      "color": {
-        "a": 1,
-        "rgb": 16347926
-      }
-    },
-    {
-      "query": "tag:#TESTING",
-      "color": {
-        "a": 1,
-        "rgb": 2278750
-      }
-    },
-    {
-      "query": "tag:#TUI",
-      "color": {
-        "a": 1,
-        "rgb": 9133302
-      }
-    },
-    {
-      "query": "tag:#UI",
-      "color": {
-        "a": 1,
-        "rgb": 15485081
-      }
-    },
-    {
-      "query": "tag:#activo",
-      "color": {
-        "a": 1,
-        "rgb": 3900150
-      }
-    },
-    {
-      "query": "tag:#backlog",
-      "color": {
-        "a": 1,
-        "rgb": 14251782
-      }
-    },
-    {
       "query": "tag:#base",
       "color": {
         "a": 1,
@@ -127,59 +57,17 @@
       }
     },
     {
-      "query": "tag:#completado",
+      "query": "tag:#documento",
       "color": {
         "a": 1,
-        "rgb": 2278750
+        "rgb": 959977
       }
     },
     {
-      "query": "tag:#context-map",
-      "color": {
-        "a": 1,
-        "rgb": 10186258
-      }
-    },
-    {
-      "query": "tag:#correccion",
-      "color": {
-        "a": 1,
-        "rgb": 16347926
-      }
-    },
-    {
-      "query": "tag:#futuro",
-      "color": {
-        "a": 1,
-        "rgb": 9133302
-      }
-    },
-    {
-      "query": "tag:#gobierno",
-      "color": {
-        "a": 1,
-        "rgb": 366185
-      }
-    },
-    {
-      "query": "tag:#historia",
-      "color": {
-        "a": 1,
-        "rgb": 16096779
-      }
-    },
-    {
-      "query": "tag:#ideas",
+      "query": "tag:#idea",
       "color": {
         "a": 1,
         "rgb": 15381256
-      }
-    },
-    {
-      "query": "tag:#indice",
-      "color": {
-        "a": 1,
-        "rgb": 6583435
       }
     },
     {
@@ -190,45 +78,10 @@
       }
     },
     {
-      "query": "tag:#mcp",
-      "color": {
-        "a": 1,
-        "rgb": 2450411
-      }
-    },
-    {
-      "query": "tag:#mejora",
-      "color": {
-        "a": 1,
-        "rgb": 1096065
-      }
-    },
-    {
-      "query": "tag:#pendiente",
-      "color": {
-        "a": 1,
-        "rgb": 15381256
-      }
-    },
-    {
-      "query": "tag:#prueba",
-      "color": {
-        "a": 1,
-        "rgb": 9741240
-      }
-    },
-    {
       "query": "tag:#riesgo",
       "color": {
         "a": 1,
         "rgb": 15680580
-      }
-    },
-    {
-      "query": "path:00-INDICE",
-      "color": {
-        "a": 1,
-        "rgb": 6583435
       }
     },
     {
@@ -243,27 +96,6 @@
       "color": {
         "a": 1,
         "rgb": 15381256
-      }
-    },
-    {
-      "query": "path:2.1-Ideas-Pendientes",
-      "color": {
-        "a": 1,
-        "rgb": 16096779
-      }
-    },
-    {
-      "query": "path:2.2-Ideas-Futuras",
-      "color": {
-        "a": 1,
-        "rgb": 3900150
-      }
-    },
-    {
-      "query": "path:2.3-Ideas-Completas-e-Implementadas",
-      "color": {
-        "a": 1,
-        "rgb": 2278750
       }
     },
     {
@@ -306,6 +138,27 @@
       "color": {
         "a": 1,
         "rgb": 1096065
+      }
+    },
+    {
+      "query": "tag:#grupo-gobierno",
+      "color": {
+        "a": 1,
+        "rgb": 16007006
+      }
+    },
+    {
+      "query": "tag:#grupo-raiz",
+      "color": {
+        "a": 1,
+        "rgb": 9133302
+      }
+    },
+    {
+      "query": "tag:#grupo-vault",
+      "color": {
+        "a": 1,
+        "rgb": 366185
       }
     }
   ],

@@ -1,0 +1,21 @@
+# Dominios temáticos del proyecto (grupos profesionales del contexto)
+# Cada nota se etiqueta automáticamente con grupo-<dominio> según las
+# palabras clave que aparecen en su título o resumen.
+
+raiz:
+  - proposito
+  - que es
+  - identidad
+  - esencia
+  - objetivo
+
+gobierno:
+  - gobierno
+  - verificar
+  - corregir
+  - regla
+
+vault:
+  - vault
+  - obsidian
+  - nota manual

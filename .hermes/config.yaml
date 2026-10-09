@@ -25,34 +25,3 @@ shields:
 triggers:
   post_commit: ".hermes/triggers/post-commit.md"
 
-
-<!-- CONTEXTMAP:BEGIN -->
-
-# Configuración del agente Hermes para Bot_AX_Contable
-# Generado automáticamente por ContextMap — adaptado al stack detectado
-
-project:
-  name: "Bot_AX_Contable"
-  description: "Proyecto gestionado con ContextMap"
-  language: "No detectado"
-  architecture: "Modular (gobernanza por ContextMap)"
-
-agent:
-  instructions: ".context-map/CONTEXT.md"
-  language_style:
-    code: "es"
-    messages: "es"
-    commit_messages: "es"
-
-workflows:
-  dev_loop: ".hermes/workflows/dev-loop.md"
-  test_loop: ".hermes/workflows/test-loop.md"
-
-shields:
-  pre_commit: ".hermes/shields/pre-commit.md"
-  quality: ".hermes/shields/quality-gate.md"
-
-triggers:
-  post_commit: ".hermes/triggers/post-commit.md"
-
-<!-- CONTEXTMAP:END -->

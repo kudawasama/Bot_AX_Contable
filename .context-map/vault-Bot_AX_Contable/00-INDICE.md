@@ -1,8 +1,8 @@
 ---
 type: moc
-created: 2026-08-12T08:45:39
+created: 2026-10-09T11:16:13
 project: "Bot_AX_Contable"
-total_nodes: 61
+total_nodes: 63
 total_edges: 0
 tags: [context-map, indice, moc]
 ---
@@ -15,9 +15,9 @@ tags: [context-map, indice, moc]
 
 ## 📊 Métricas
 
-- 📦 Nodos Totales: **61**
-- 🧱 BASE: **4**
-- 💡 IDEA: **21**
+- 📦 Nodos Totales: **63**
+- 🧱 BASE: **5**
+- 💡 IDEA: **22**
 - ⚠️ RIESGO: **1**
 - 🔄 CAMBIO/CORRECCION: **32**
 - 🔮 FUTURO: **3**
@@ -42,9 +42,10 @@ tags: [context-map, indice, moc]
 
 - [[7.0-MANUAL/Diario/2026-08-11.md|2026-08-11]]
 - [[7.0-MANUAL/Diario/2026-08-12.md|2026-08-12]]
+- [[7.0-MANUAL/Diario/2026-10-09.md|2026-10-09]]
 
 ---
 
 ## 🏷️ Tags Principales
 
-`#arquitectura` `#cambio` `#class:chore` `#class:feature` `#class:fix` `#class:other` `#class:update` `#correccion` `#documentacion` `#git` `#idea` `#proyecto` `#riesgo`
+`#antigravity` `#arquitectura` `#botaxcontable` `#cambio` `#class:chore` `#class:feature` `#class:fix` `#class:other` `#class:update` `#correccion` `#documentacion` `#git` `#idea` `#proyecto` `#riesgo`

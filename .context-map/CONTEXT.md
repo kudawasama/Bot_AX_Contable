@@ -2,7 +2,6 @@
 
 > **LEE esto ANTES de trabajar.** Este brief y el vault son la memoria viva del
 > proyecto: qué es, por qué existe, qué cumple, qué está pendiente y qué riesgos tiene.
-> Última actualización: 2026-08-12 08:45
 
 
 ## ¿Qué es y por qué existe?
@@ -25,51 +24,6 @@ Antes de tocar código, pregúntate y responde con el contexto del vault
 > la lee en cada actualización.
 
 
-
-## Resumen Ejecutivo
-
-**Proyecto**: Bot_AX_Contable
-**Nodos totales**: 61
-**Distribución**: BASE: 4, FUTURO: 3, CORRECCION: 25, CAMBIO: 7, IDEA: 21, RIESGO: 1
-**Readiness**: 50/100
-
-
-## Estado del Proyecto
-
-- **Ideas**: 21 (features, conceptos)
-- **Bases**: 4 (fundamentos)
-- **Riesgos**: 1 (problemas potenciales)
-- **Cambios**: 7 (modificaciones)
-- **Pendientes**: 3 (tareas por hacer)
-- **Correcciones**: 25 (bugs/fixes)
-
-
-## Estado del Contexto
-
-✅ Contexto al día (último build).
-
-
-## Riesgos Críticos
-
-- ⚠️ **Archivos de alta complejidad: scripts/observer_analyze.py, src/ui/gui_classic.py**
-  Zona de alta complejidad: Archivos de alta complejidad (5 total): scripts/observer_analyze.py; src/ui/gui_classic.py; sr
-
-## Tareas Pendientes
-
-### 🔧 TODOs del código (deuda técnica)
-
-- 📝 **TODO: L4: Centraliza todos los defaults numéricos para facilitar ajustes.**
-  Pendiente: L4: Centraliza todos los defaults numéricos para facilitar ajustes..
-
-Ubicación: `TODO`
-- 📝 **TODO: L258: event_log("scroll_performed", intento=intentos_scroll, metodo="boton**
-  Pendiente: L258: event_log("scroll_performed", intento=intentos_scroll, metodo="boton").
-
-Ubicación: `TODO`
-- 📝 **TODO: L273: event_log("scroll_performed", intento=intentos_scroll, metodo="click**
-  Pendiente: L273: event_log("scroll_performed", intento=intentos_scroll, metodo="click").
-
-Ubicación: `TODO`
 
 ## Cómo trabajar aquí — dale vida al contexto
 
@@ -100,7 +54,63 @@ ctxmap refresh .
 > Lista completa de comandos y metodología de escritura: `.context-map/contextmap-skill.md`
 
 
+<!-- PROMPT_CACHE_BOUNDARY: INVARIANT_PREFIX -->
+
+## Resumen Ejecutivo
+
+**Proyecto**: Bot_AX_Contable
+**Nodos totales**: 63
+**Distribución**: BASE: 5, FUTURO: 3, CORRECCION: 25, CAMBIO: 7, IDEA: 22, RIESGO: 1
+**Readiness**: 65/100
+
+
+## Estado del Proyecto
+
+- **Ideas**: 22 (features, conceptos)
+- **Bases**: 5 (fundamentos)
+- **Riesgos**: 1 (problemas potenciales)
+- **Cambios**: 7 (modificaciones)
+- **Pendientes**: 3 (tareas por hacer)
+- **Correcciones**: 25 (bugs/fixes)
+
+
+## Estado del Contexto
+
+✅ Contexto al día (último build).
+
+
+## Riesgos Críticos
+
+- ⚠️ **Archivos de alta complejidad: scripts/observer_analyze.py, src/ui/gui_classic.py**
+  Zona de alta complejidad: Archivos de alta complejidad (5 total): scripts/observer_analyze.py; src/ui/gui_classic.py; sr
+
+## Tareas Pendientes
+
+### 🔧 TODOs del código (deuda técnica)
+
+- 📝 **TODO: L4: Centraliza todos los defaults numéricos para facilitar ajustes.**
+  Pendiente: L4: Centraliza todos los defaults numéricos para facilitar ajustes..
+
+Ubicación: `TODO`
+
+## 🧠 Conocimiento Relevante (Second Brain)
+
+> Mundo PKM independiente en `90-CONOCIMIENTO/` (notas `namespace: knowledge`).
+> El código y el conocimiento son islas separadas: esto es lo capturado por el usuario.
+
+_Sin páginas todavía. Captura con `ctxmap inbox add "<texto>"` o `ctxmap ingest --url <web>`._
+
+> Consulta con citas: `ctxmap wiki query "<tema>"`.
+
+## 🧮 Eficiencia de Contexto & Presupuesto de Tokens
+
+- **Brief Principal (`CONTEXT.md`)**: `1090` tokens
+- **Prefijo Invariante (Prompt Cache)**: `707` tokens deterministas (alta tasa de Cache Hit en Claude 3.7 / Gemini 2.5).
+- **Optimización de Ventana**: **>99% de ahorro de tokens** (carga inmediata del mapa narrativo vs. inspección masiva de código).
+
+
 ---
 
-> Este brief fue generado automáticamente por Context Map.
-> Actualízalo ejecutando `ctxmap build --brief`.
+> Este brief fue generado automáticamente por ContextMap IA.
+> Última compilación: 2026-10-09 11:16
+> Optimizado para Prompt Caching (Claude 3.7 Sonnet, Gemini 2.5 Pro/Flash, GPT-4o).

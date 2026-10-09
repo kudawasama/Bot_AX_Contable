@@ -2,7 +2,7 @@
 
 > El `AGENTS.md` de la raíz dice QUÉ hacer; esta skill es el CÓMO:
 > comandos exactos, metodología para escribir notas con alma y reglas del vault.
-> Última actualización: 2026-08-12 08:45
+> Última actualización: 2026-10-09 11:16
 
 ---
 
@@ -77,6 +77,9 @@ siempre el contexto (nunca borres información real ni notas con historia):
 - **6.x**: historia legible (mensajes de commits, no plantillas de 5 preguntas).
 - **7.0-MANUAL/**: zona protegida — escribe aquí la historia conversada
   (decisiones, porqués, ideas) con `preserve: true`.
+
+### 🧠 Captura Autónoma de Ecuaciones y Reglas del Dominio (Regla de Oro)
+Al inicializar ContextMap en un nuevo repositorio, el Agente no debe limitarse a la lista estática de archivos. Debe leer los submódulos nucleares del negocio (algoritmos, ecuaciones estadísticas/matemáticas implícitas, reglas de negocio) y redactar una nota viva en `.context-map/vault-Bot_AX_Contable/7.0-MANUAL/DOMINIO.md` con las fórmulas y conceptos clave, ejecutando `ctxmap refresh .` para que el brief y el Vault contengan el alma matemática y funcional del sistema.
 
 > Regla de oro: el script propone, el AGENTE dispone — y el agente humaniza
 > TODO el vault, no solo 7.0-MANUAL. Guardar siempre el contexto: nada se

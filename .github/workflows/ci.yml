@@ -1,0 +1,68 @@
+# Integración continua — Bot AX Contable
+#
+# POR QUÉ EXISTE (riesgo R-4 del plan de implementación):
+#   La suite de pruebas estuvo rota (hallazgo C-1) durante semanas sin que nadie
+#   lo notara, porque no existía ninguna verificación automática. Este workflow
+#   ejecuta la suite en cada push y cada pull request para que una regresión
+#   nunca vuelva a pasar desapercibida.
+#
+# POR QUÉ WINDOWS:
+#   El bot automatiza el escritorio de Windows (PyAutoGUI). Las dependencias
+#   reales de producción (PyAutoGUI, PyGetWindow, MouseInfo) solo se instalan en
+#   Windows, así que el runner refleja el entorno real de operación.
+#
+# NOTA IMPORTANTE: la suite es hermética. `tests/conftest.py` inyecta dobles
+# inertes de `pyautogui` y `pytesseract` ANTES de importar el código del bot, por
+# lo que no se necesita pantalla, mouse ni el binario de Tesseract en el runner.
+
+name: CI
+
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  pruebas:
+    name: Pruebas unitarias (Python 3.12)
+    runs-on: windows-latest
+
+    steps:
+      - name: Checkout del repositorio
+        uses: actions/checkout@v4
+
+      - name: Configurar Python 3.12
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+
+      - name: Instalar dependencias de producción y desarrollo
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt -r requirements-dev.txt
+
+      - name: Ejecutar la suite de pruebas
+        run: python -m pytest -q
+
+  lint:
+    name: Lint informativo (ruff)
+    runs-on: windows-latest
+    # Adopción progresiva: todavía no bloquea el pipeline. Cuando el código esté
+    # limpio, quitar `continue-on-error` para convertirlo en puerta obligatoria.
+    continue-on-error: true
+
+    steps:
+      - name: Checkout del repositorio
+        uses: actions/checkout@v4
+
+      - name: Configurar Python 3.12
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Instalar ruff
+        run: python -m pip install ruff
+
+      - name: Analizar src/, tests/ y scripts/
+        run: python -m ruff check src/ tests/ scripts/ --output-format=concise
