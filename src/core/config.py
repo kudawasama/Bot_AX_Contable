@@ -1,5 +1,6 @@
 import os
 import json
+import shutil
 from typing import Optional, Dict, Any, List, Tuple
 
 # Directorio de este archivo: src/core/
@@ -14,11 +15,43 @@ CONFIG_FILE: str = os.path.join(BASE_DIR, "config_sectores.json")
 # Ruta del directorio de patrones visuales en la raíz
 PATRONES_DIR: str = os.path.join(BASE_DIR, "patrones")
 
-# Ruta de Tesseract OCR con fallback por defecto en el sistema
-TESSERACT_CMD: str = os.environ.get(
-    "TESSERACT_CMD",
-    r"C:\Users\jose.cespedes\AppData\Local\Programs\Tesseract-OCR\tesseract.exe"
-)
+# Ruta de Tesseract OCR: se resuelve en tiempo de importación (ver _resolver_tesseract).
+def _resolver_tesseract() -> str:
+    """Resuelve la ruta del ejecutable de Tesseract OCR de forma portable.
+
+    Orden de búsqueda (hallazgo C-5 del plan: eliminar la dependencia del
+    nombre de usuario sin cambiar el comportamiento en la máquina actual):
+
+    1. Variable de entorno ``TESSERACT_CMD`` (portabilidad total).
+    2. Ruta de instalación por defecto del usuario actual
+       (``%LOCALAPPDATA%\\Programs\\Tesseract-OCR``): es el valor histórico.
+    3. Rutas de instalación típicas en Windows (``Archivos de programa``).
+    4. ``shutil.which("tesseract")`` (PATH del sistema).
+
+    Returns:
+        str: Ruta al ejecutable de Tesseract. Si ninguna existe, devuelve el
+        valor histórico para que ``validar_tesseract()`` produzca el mensaje
+        de error actual (sin cambiar el diagnóstico que ya ve el operador).
+    """
+    ruta_historica: str = os.path.join(
+        os.environ.get("LOCALAPPDATA", r"C:\Users\Default\AppData\Local"),
+        "Programs", "Tesseract-OCR", "tesseract.exe",
+    )
+
+    candidatas: List[str] = [
+        os.environ.get("TESSERACT_CMD", ""),
+        ruta_historica,
+        r"C:\Program Files\Tesseract-OCR\tesseract.exe",
+        r"C:\Program Files (x86)\Tesseract-OCR\tesseract.exe",
+        shutil.which("tesseract") or "",
+    ]
+    for candidata in candidatas:
+        if candidata and os.path.exists(candidata):
+            return candidata
+    return ruta_historica
+
+
+TESSERACT_CMD: str = _resolver_tesseract()
 
 # Nombres de archivos de patrones visuales
 CHK_VACIO: str = os.path.join(PATRONES_DIR, "checkbox_vacio.png")
