@@ -6,6 +6,38 @@ Todos los cambios relevantes de este proyecto. El formato sigue
 
 ---
 
+## [v-00.21.01] — 2026-10-09 (Fase 2 · Lote A cierre: T1 y T3)
+
+### Añadido
+- **Alerta `SESION_TERMINADA_POR_ERROR` (T1).** El 2026-10-09 el bot murió a las 15:24
+  por el fail-safe de PyAutoGUI (mouse en una esquina) y el chequeo informaba `OK`
+  simplemente porque no había sesión abierta: una caída dependía de que alguien abriera
+  el log. Ahora `analizar_ultima_sesion()` reporta motivo, hora, la marca del fail-safe y
+  el último diario visto, distingue el cierre normal (`user_esc`, `no_more_diarios`) y
+  usa una ventana de 24 h para no dejar el chequeo en rojo para siempre.
+
+### Corregido
+- **Falso `SIN_ACTIVIDAD` durante la espera del resultado de AX (T3).** Durante esa espera
+  el bot **no emite eventos** (solo escribe en `bot_ax.log`) y puede durar 60 min, así que
+  el umbral fijo de 15 min habría alertado en falso en cualquier registro lento.
+  `umbral_sin_actividad()` aplica 65 min cuando el último evento dejó al bot esperando el
+  resultado y 15 min en cualquier otro punto del ciclo; el informe muestra el umbral usado
+  y el JSON lo expone en `umbral_actividad_min`.
+
+### Notas
+- Se ajustó la prueba `test_detecta_sin_actividad_con_sesion_abierta`: usaba un
+  `confirm_click` como "evento cualquiera", que con la regla nueva significa "esperando
+  resultado". Ahora usa `checkbox_found`, que es lo que la prueba verificaba.
+
+### Verificación
+- 8 pruebas nuevas → suite completa **46/46**.
+- Demo con los **datos reales** del repo recortados en el crash: la alerta aparece con
+  motivo `error`, hora 15:24, fail-safe 15:24:19 y último diario `00337616`, con `exit 1`
+  bajo `--estricto`.
+- En vivo, con el bot esperando resultado: `OK` con umbral 65 min (sin falso positivo).
+
+---
+
 ## [v-00.20.00] — 2026-10-09 (Fase 2 · Lote A: observabilidad)
 
 ### Añadido
