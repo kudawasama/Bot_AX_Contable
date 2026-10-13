@@ -6,7 +6,7 @@ Ejemplo: v-00.01.42
 import os
 import subprocess
 
-__version__: str = "00.31.00"
+__version__: str = "00.32.00"
 VERSION_TAG: str = f"v-{__version__}"
 
 

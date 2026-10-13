@@ -46,6 +46,8 @@ Bot_AX_Contable
       - Proyecto 'Bot_AX_Contable' — 500 archivos, 500811 líneas, sin entrypoints.
     - **BASE.016** Proyecto 'Bot_AX_Contable' — 500 archivos, 500872 líneas, sin entrypoints `[arquitectura, class:other, proyecto]` completado | v1 | src: scanner | ev: Cantidad: 500; Líneas de código: 500872
       - Proyecto 'Bot_AX_Contable' — 500 archivos, 500872 líneas, sin entrypoints.
+    - **BASE.017** Proyecto 'Bot_AX_Contable' — 499 archivos, 500888 líneas, sin entrypoints `[arquitectura, class:other, proyecto]` completado | v1 | src: scanner | ev: Cantidad: 499; Líneas de código: 500888
+      - Proyecto 'Bot_AX_Contable' — 499 archivos, 500888 líneas, sin entrypoints.
 
 - **IDEA**
 
