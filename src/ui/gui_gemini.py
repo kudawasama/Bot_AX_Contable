@@ -1,14 +1,14 @@
-import tkinter as tk
-from tkinter import scrolledtext
-import threading
-import queue
 import os
+import queue
+import threading
+import tkinter as tk
 from datetime import datetime
-from typing import Dict, Tuple, Any
+from tkinter import scrolledtext
+from typing import Any, Dict, Tuple
 
+from src.core.config import BASE_DIR
 from src.core.engine import run_bot
 from src.ui.area_selector import AreaSelector
-from src.core.config import BASE_DIR
 
 # Configuración de estética Gemini Core (Ultra-High Fidelity)
 COLORS: Dict[str, str] = {

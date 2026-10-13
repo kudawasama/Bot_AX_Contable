@@ -1,5 +1,5 @@
 import tkinter as tk
-from typing import Optional, Tuple, Any
+from typing import Any, Optional, Tuple
 
 from src.core.config import guardar_configuracion
 

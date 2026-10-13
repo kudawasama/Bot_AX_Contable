@@ -1,16 +1,17 @@
 import os
+import re
+import threading
 import time
+from datetime import datetime
+from typing import Any, Dict, Optional, Tuple, Union
+
 import pyautogui
 import pytesseract
-import re
 from PIL import Image
-from datetime import datetime
-from typing import Optional, Tuple, Dict, Union, Any
-import threading
 
 from src.core.config import TESSERACT_CMD
-from src.core.logger import get_logger
 from src.core.event_log import event_log
+from src.core.logger import get_logger
 
 logger = get_logger()
 

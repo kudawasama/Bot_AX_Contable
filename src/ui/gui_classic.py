@@ -1,18 +1,17 @@
-import tkinter as tk
-from tkinter import scrolledtext
-import threading
-import queue
-import sys
 import os
+import queue
+import threading
 import time
+import tkinter as tk
 from datetime import datetime
-from typing import Dict, Tuple, Optional, List, Any, Callable
+from tkinter import scrolledtext
+from typing import Any, Callable, Dict, List, Optional, Tuple
 
-from src.core.engine import run_bot
-from src.ui.area_selector import AreaSelector
-from src.core.logger import get_logger, QueueLogHandler
-from src.core.version import VERSION_TAG, get_git_short_sha
 from src.core.config import BASE_DIR
+from src.core.engine import run_bot
+from src.core.logger import QueueLogHandler, get_logger
+from src.core.version import VERSION_TAG, get_git_short_sha
+from src.ui.area_selector import AreaSelector
 
 logger = get_logger()
 

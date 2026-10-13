@@ -3,8 +3,8 @@
 Formato: v-{major:02d}.{minor:02d}.{patch:02d}
 Ejemplo: v-00.01.42
 """
-import subprocess
 import os
+import subprocess
 
 __version__: str = "00.25.01"
 VERSION_TAG: str = f"v-{__version__}"

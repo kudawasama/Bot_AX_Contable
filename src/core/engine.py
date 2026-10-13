@@ -1,21 +1,31 @@
-import sys
-import time
 import json
 import os
-from datetime import datetime
-from typing import Callable, Optional, Set, List, Tuple
 import threading
+import time
+from datetime import datetime
+from typing import Callable, List, Optional, Set, Tuple
+
 import pyautogui as gui
 
 from src.core.config import (
-    cargar_configuracion, CHK_VACIO, BTN_MENU, BTN_CONFIRM, CHK_MARCADO,
-    IMG_ERROR, BTN_ABAJO, IMG_FORMULARIOS, BASE_DIR
-)
-from src.services.vision import (
-    buscar_y_clickear, buscar_estado_checkbox, esperar_resultado_registro,
-    leer_id_diario, capturar_pantalla_error, normalizar_id_diario
+    BASE_DIR,
+    BTN_ABAJO,
+    BTN_CONFIRM,
+    BTN_MENU,
+    CHK_MARCADO,
+    CHK_VACIO,
+    IMG_ERROR,
+    IMG_FORMULARIOS,
+    cargar_configuracion,
 )
 from src.core.event_log import event_log
+from src.services.vision import (
+    buscar_y_clickear,
+    capturar_pantalla_error,
+    esperar_resultado_registro,
+    leer_id_diario,
+    normalizar_id_diario,
+)
 
 try:
     import keyboard
