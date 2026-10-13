@@ -1,6 +1,6 @@
 ---
 type: conexiones
-created: 2026-10-13T11:39:45
+created: 2026-10-13T12:53:06
 ---
 
 # 🔗 Todas las Conexiones
@@ -210,11 +210,28 @@ menciones cruzadas) — el mapa mental conectado.
 
 - [[2.0-IDEAS/2.3-Ideas-Completas-e-Implementadas/TESTING/TESTING-Completas.md|Ruff limpio en tests/scripts. Commit del trabajo, empezando ]] ↔ [[4.0-RIESGOS/Hoy es 13 de octubre, 1102 — y el bot acaba de caerse (110152) por el mismo fail-safe. Verifico si m.md|Hoy es **13 de octubre, 11:02** — y el bot **acaba de caerse]]
 - [[2.0-IDEAS/2.3-Ideas-Completas-e-Implementadas/TESTING/TESTING-Completas.md|Ruff limpio en tests/scripts. Commit del trabajo, empezando ]] ↔ [[4.0-RIESGOS/Atención el borrado quedó bloqueado en el diálogo de aprobación (se agotó el minuto sin respuesta). .md|Atención: el borrado quedó **bloqueado** en el diálogo de ap]]
+- [[2.0-IDEAS/2.3-Ideas-Completas-e-Implementadas/TESTING/TESTING-Completas.md|Ruff limpio en tests/scripts. Commit del trabajo, empezando ]] ↔ [[2.0-IDEAS/2.3-Ideas-Completas-e-Implementadas/REPORTES/REPORTES-Completas.md|Excelente. Verifico que la sesión nueva esté corriendo con e]]
+- [[2.0-IDEAS/2.3-Ideas-Completas-e-Implementadas/TESTING/TESTING-Completas.md|Ruff limpio en tests/scripts. Commit del trabajo, empezando ]] ↔ [[2.0-IDEAS/2.3-Ideas-Completas-e-Implementadas/DEVOPS/DEVOPS-Completas.md|Reinicio confirmado y todo cuadra. Verificación:]]
 
 ### 🔗 Atención: el borrado quedó **bloqueado** en el diálogo de ap
 
+- [[4.0-RIESGOS/Atención el borrado quedó bloqueado en el diálogo de aprobación (se agotó el minuto sin respuesta). .md|Atención: el borrado quedó **bloqueado** en el diálogo de ap]] ↔ [[2.0-IDEAS/2.3-Ideas-Completas-e-Implementadas/DEVOPS/DEVOPS-Completas.md|Reinicio confirmado y todo cuadra. Verificación:]]
 - [[4.0-RIESGOS/Atención el borrado quedó bloqueado en el diálogo de aprobación (se agotó el minuto sin respuesta). .md|Atención: el borrado quedó **bloqueado** en el diálogo de ap]] ↔ [[2.0-IDEAS/2.3-Ideas-Completas-e-Implementadas/DEVOPS/DEVOPS-Completas.md|event_log("scroll_performed", intento=intentos_scroll, metod]]
 - [[4.0-RIESGOS/Atención el borrado quedó bloqueado en el diálogo de aprobación (se agotó el minuto sin respuesta). .md|Atención: el borrado quedó **bloqueado** en el diálogo de ap]] ↔ [[2.0-IDEAS/2.3-Ideas-Completas-e-Implementadas/DEVOPS/DEVOPS-Completas.md|Detecta los 3 formatos históricos (todos con nivel [INFO]):]]
 - [[4.0-RIESGOS/Atención el borrado quedó bloqueado en el diálogo de aprobación (se agotó el minuto sin respuesta). .md|Atención: el borrado quedó **bloqueado** en el diálogo de ap]] ↔ [[2.0-IDEAS/2.3-Ideas-Completas-e-Implementadas/DEVOPS/DEVOPS-Completas.md|help="Ruta específica de registro (default: todos los regist]]
 - [[4.0-RIESGOS/Atención el borrado quedó bloqueado en el diálogo de aprobación (se agotó el minuto sin respuesta). .md|Atención: el borrado quedó **bloqueado** en el diálogo de ap]] ↔ [[2.0-IDEAS/2.3-Ideas-Completas-e-Implementadas/DEVOPS/DEVOPS-Completas.md|# Leer todos los eventos de la sesión para el resumen]]
-- [[4.0-RIESGOS/Atención el borrado quedó bloqueado en el diálogo de aprobación (se agotó el minuto sin respuesta). .md|Atención: el borrado quedó **bloqueado** en el diálogo de ap]] ↔ [[2.0-IDEAS/2.3-Ideas-Completas-e-Implementadas/DEVOPS/DEVOPS-Completas.md|todos_eventos = []]]
+
+### 🔗 Excelente. Verifico que la sesión nueva esté corriendo con e
+
+- [[2.0-IDEAS/2.3-Ideas-Completas-e-Implementadas/REPORTES/REPORTES-Completas.md|Excelente. Verifico que la sesión nueva esté corriendo con e]] ↔ [[4.0-RIESGOS/Hoy es 13 de octubre, 1102 — y el bot acaba de caerse (110152) por el mismo fail-safe. Verifico si m.md|Hoy es **13 de octubre, 11:02** — y el bot **acaba de caerse]]
+- [[2.0-IDEAS/2.3-Ideas-Completas-e-Implementadas/REPORTES/REPORTES-Completas.md|Excelente. Verifico que la sesión nueva esté corriendo con e]] ↔ [[2.0-IDEAS/2.3-Ideas-Completas-e-Implementadas/TESTING/TESTING-Completas.md|Ruff limpio en tests/scripts. Commit del trabajo, empezando ]]
+- [[2.0-IDEAS/2.3-Ideas-Completas-e-Implementadas/REPORTES/REPORTES-Completas.md|Excelente. Verifico que la sesión nueva esté corriendo con e]] ↔ [[4.0-RIESGOS/Atención el borrado quedó bloqueado en el diálogo de aprobación (se agotó el minuto sin respuesta). .md|Atención: el borrado quedó **bloqueado** en el diálogo de ap]]
+- [[2.0-IDEAS/2.3-Ideas-Completas-e-Implementadas/REPORTES/REPORTES-Completas.md|Excelente. Verifico que la sesión nueva esté corriendo con e]] ↔ [[2.0-IDEAS/2.3-Ideas-Completas-e-Implementadas/DEVOPS/DEVOPS-Completas.md|Reinicio confirmado y todo cuadra. Verificación:]]
+
+### 🔗 Reinicio confirmado y todo cuadra. Verificación:
+
+- [[2.0-IDEAS/2.3-Ideas-Completas-e-Implementadas/DEVOPS/DEVOPS-Completas.md|Reinicio confirmado y todo cuadra. Verificación:]] ↔ [[4.0-RIESGOS/Atención el borrado quedó bloqueado en el diálogo de aprobación (se agotó el minuto sin respuesta). .md|Atención: el borrado quedó **bloqueado** en el diálogo de ap]]
+- [[2.0-IDEAS/2.3-Ideas-Completas-e-Implementadas/DEVOPS/DEVOPS-Completas.md|Reinicio confirmado y todo cuadra. Verificación:]] ↔ [[2.0-IDEAS/2.3-Ideas-Completas-e-Implementadas/DEVOPS/DEVOPS-Completas.md|event_log("scroll_performed", intento=intentos_scroll, metod]]
+- [[2.0-IDEAS/2.3-Ideas-Completas-e-Implementadas/DEVOPS/DEVOPS-Completas.md|Reinicio confirmado y todo cuadra. Verificación:]] ↔ [[2.0-IDEAS/2.3-Ideas-Completas-e-Implementadas/DEVOPS/DEVOPS-Completas.md|Detecta los 3 formatos históricos (todos con nivel [INFO]):]]
+- [[2.0-IDEAS/2.3-Ideas-Completas-e-Implementadas/DEVOPS/DEVOPS-Completas.md|Reinicio confirmado y todo cuadra. Verificación:]] ↔ [[2.0-IDEAS/2.3-Ideas-Completas-e-Implementadas/DEVOPS/DEVOPS-Completas.md|help="Ruta específica de registro (default: todos los regist]]
+- [[2.0-IDEAS/2.3-Ideas-Completas-e-Implementadas/DEVOPS/DEVOPS-Completas.md|Reinicio confirmado y todo cuadra. Verificación:]] ↔ [[2.0-IDEAS/2.3-Ideas-Completas-e-Implementadas/DEVOPS/DEVOPS-Completas.md|# Leer todos los eventos de la sesión para el resumen]]

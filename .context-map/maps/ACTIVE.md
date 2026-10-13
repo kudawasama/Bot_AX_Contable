@@ -44,6 +44,8 @@ Bot_AX_Contable
       - Proyecto 'Bot_AX_Contable' — 500 archivos, 500784 líneas, sin entrypoints.
     - **BASE.015** Proyecto 'Bot_AX_Contable' — 500 archivos, 500811 líneas, sin entrypoints `[arquitectura, class:other, proyecto]` completado | v1 | src: scanner | ev: Cantidad: 500; Líneas de código: 500811
       - Proyecto 'Bot_AX_Contable' — 500 archivos, 500811 líneas, sin entrypoints.
+    - **BASE.016** Proyecto 'Bot_AX_Contable' — 500 archivos, 500872 líneas, sin entrypoints `[arquitectura, class:other, proyecto]` completado | v1 | src: scanner | ev: Cantidad: 500; Líneas de código: 500872
+      - Proyecto 'Bot_AX_Contable' — 500 archivos, 500872 líneas, sin entrypoints.
 
 - **IDEA**
 
@@ -146,6 +148,14 @@ LO QUE QUEDÓ EN ESTE PASO
       - Idea o implementación relevante. Se bloqueó el último paso (crear/borrar un directorio temporal de demostración pide tu aprobación y no llegó respuesta), así que **no ejecuté nada más**. Te dejo el estado exacto y no ava
     - **CORRECCION.017** Ruff limpio en tests/scripts. Commit del trabajo, empezando por respaldar tu recalibración del 13-oct: `[class:chore, implementacin, revisarcommitsypendientess]` completado | v1 | src: chat | ev: Cantidad: 13
       - Corrección: Ruff limpio en tests/scripts. Commit del trabajo, empezando por respaldar tu recalibración del 13-oct:.
+    - **IDEA.007** Excelente. Verifico que la sesión nueva esté corriendo con el código nuevo y cómo arrancó: `[class:feature, implementacin, revisarcommitsypendientess]` completado | v1 | src: chat | ev: —
+      - Idea o implementación relevante. Excelente. Verifico que la sesión nueva esté corriendo con el código nuevo y cómo arrancó:.
+    - **IDEA.008** Reinicio confirmado y todo cuadra. Verificación: `[class:feature, implementacin, revisarcommitsypendientess]` completado | v1 | src: chat | ev: —
+      - Idea o implementación relevante. Reinicio confirmado y todo cuadra. Verificación:
+
+SESIÓN NUEVA EN MARCHA CON EL CÓDIGO NUEVO
+  · Proceso: PID 17072, arrancado hoy 12:42:00.
+  · Evento de arranque: 12:42:52 → registró se
 
 - **FUTURO**
 
