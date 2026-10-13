@@ -1,5 +1,6 @@
 import pytesseract
 
+
 def main() -> None:
     """Verifica si el motor Tesseract está accesible y muestra su versión instalada."""
     try:

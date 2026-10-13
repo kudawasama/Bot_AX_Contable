@@ -28,13 +28,13 @@ def read_version() -> Tuple[str, str, int, int, int]:
     if not VERSION_FILE.exists():
         print(f"ERROR: No existe el archivo de versión en: {VERSION_FILE}", file=sys.stderr)
         sys.exit(1)
-        
+
     content: str = VERSION_FILE.read_text(encoding="utf-8")
     m = _PATTERN.search(content)
     if not m:
         print("ERROR: no se encontró __version__ en version.py", file=sys.stderr)
         sys.exit(1)
-        
+
     raw: str = m.group()
     major, minor, patch = int(m.group(1)), int(m.group(2)), int(m.group(3))
     return content, raw, major, minor, patch

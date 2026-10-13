@@ -1,15 +1,17 @@
-import pyautogui
 import os
 from datetime import datetime
+
+import pyautogui
+
 
 def diagnose() -> None:
     """Realiza un diagnóstico de la pantalla y la detección de patrones visuales de AX."""
     print(f"Primary screen size: {pyautogui.size()}")
-    
+
     # Intento de captura de pantalla completa para depuración
     script_dir: str = os.path.dirname(os.path.abspath(__file__))
     base_dir: str = os.path.dirname(script_dir)
-    
+
     try:
         ts: str = datetime.now().strftime("%H%M%S")
         screenshot_path: str = os.path.join(base_dir, f"diag_full_screen_{ts}.png")
@@ -20,10 +22,10 @@ def diagnose() -> None:
 
     # Verificar existencia y detección de patrones clave
     patrones = [
-        os.path.join(base_dir, "patrones", "checkbox_vacio.png"), 
+        os.path.join(base_dir, "patrones", "checkbox_vacio.png"),
         os.path.join(base_dir, "patrones", "btn_registrar_menu.png")
     ]
-    
+
     for p in patrones:
         if os.path.exists(p):
             print(f"Checking pattern: {p}")

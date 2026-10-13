@@ -14,13 +14,12 @@ Uso:
     python scripts/observer_analyze.py --log logs/bot_ax.log --registro registro_2026-06-17.txt
 """
 
-import os
-import re
-import json
 import argparse
-from pathlib import Path
-from datetime import datetime, timedelta
+import json
+import re
 from collections import Counter, defaultdict
+from datetime import datetime, timedelta
+from pathlib import Path
 
 # Raíz del proyecto (scripts/ -> raíz)
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -909,7 +908,7 @@ def imprimir_reporte(reporte: dict) -> None:
     print("=" * 70)
 
     mg = reporte["metricas_globales"]
-    print(f"\n📊 MÉTRICAS GLOBALES")
+    print("\n📊 MÉTRICAS GLOBALES")
     print(f"  Registros totales: {mg['total_registros']}")
     print(f"  Éxitos: {mg['exitos']}  |  Errores: {mg['errores']}")
     print(f"  Tasa de éxito: {mg['tasa_exito_pct']}%")
@@ -918,7 +917,7 @@ def imprimir_reporte(reporte: dict) -> None:
     print(f"  Capturas: {mg['capturas_total']}")
     print(f"  Eventos estructurados: {mg['eventos_total']}")
 
-    print(f"\n📅 SESIONES POR FECHA")
+    print("\n📅 SESIONES POR FECHA")
     for fecha, datos in reporte["sesiones_por_fecha"].items():
         total_dia = datos["exitos"] + datos["errores"]
         tasa = round(datos["exitos"] / total_dia * 100, 1) if total_dia else 0
@@ -928,7 +927,7 @@ def imprimir_reporte(reporte: dict) -> None:
 
     # Telemetría estructurada: fuente principal cuando el log de texto está atrás
     telem = p["telemetria_estructurada"]
-    print(f"\n📡 TELEMETRÍA ESTRUCTURADA (logs/events.jsonl)")
+    print("\n📡 TELEMETRÍA ESTRUCTURADA (logs/events.jsonl)")
     print(f"  Eventos: {telem['total_eventos']}  |  Éxitos: {telem['exitos']}  |  Errores: {telem['errores']}")
     print(f"  Timeouts: {telem['timeouts']}  |  Fallbacks Sector B: {telem['fallbacks_sector_b']}")
     print(f"  Última actividad registrada: {telem['ultima_fecha'] or '(sin datos)'}")
@@ -937,16 +936,16 @@ def imprimir_reporte(reporte: dict) -> None:
     if telem["sesiones"]:
         print(f"  Sesiones registradas: {telem['sesiones']}")
     if telem["log_desactualizado"]:
-        print(f"  ⚠️  El log de texto (bot_ax.log) está DESACTUALIZADO respecto de la telemetría:")
-        print(f"      los patrones que dependen de él son PARCIALES. Causa histórica conocida:")
-        print(f"      handler con descriptor abierto sobre Google Drive (corregido en v-00.13.02;")
-        print(f"      el arreglo se aplica al reiniciar el bot).")
+        print("  ⚠️  El log de texto (bot_ax.log) está DESACTUALIZADO respecto de la telemetría:")
+        print("      los patrones que dependen de él son PARCIALES. Causa histórica conocida:")
+        print("      handler con descriptor abierto sobre Google Drive (corregido en v-00.13.02;")
+        print("      el arreglo se aplica al reiniciar el bot).")
 
-    print(f"\n🔍 PATRÓN: RUIDO OCR")
+    print("\n🔍 PATRÓN: RUIDO OCR")
     r = p["ruido_ocr"]
     print(f"  IDs con lectura inestable: {r['ids_con_lectura_inestable']}")
     if r["ejemplos_inestables"]:
-        print(f"  Ejemplos:")
+        print("  Ejemplos:")
         for k, v in r["ejemplos_inestables"].items():
             print(f"    {k} → leído como: {v}")
     print(f"  Prefijos basura: {r['prefijos_basura_mas_frecuentes']}")
@@ -955,16 +954,16 @@ def imprimir_reporte(reporte: dict) -> None:
     if r["ejemplos_sin_digitos"]:
         print(f"    Ejemplos: {r['ejemplos_sin_digitos']}")
 
-    print(f"\n🔍 PATRÓN: ERRORES AGRUPADOS")
+    print("\n🔍 PATRÓN: ERRORES AGRUPADOS")
     clusters = p["errores_agrupados"]
     if clusters:
         for c in clusters:
             print(f"  {c['fecha']} {c['hora_inicio']}→{c['hora_fin']}: "
                   f"{c['cantidad']} errores seguidos — IDs: {c['ids']}")
     else:
-        print(f"  No se detectaron ráfagas de errores.")
+        print("  No se detectaron ráfagas de errores.")
 
-    print(f"\n🔍 PATRÓN: SECTOR B (FALLBACK)")
+    print("\n🔍 PATRÓN: SECTOR B (FALLBACK)")
     fb = p["fallback_sector_b"]
     print(f"  Clics de menú: {fb['total_clics_menu']}")
     print(f"  Fallbacks a pantalla completa: {fb['fallbacks_pantalla_completa']}")
@@ -973,7 +972,7 @@ def imprimir_reporte(reporte: dict) -> None:
     print(f"  Timeouts de menú: {fb['timeouts_menu']}")
     print(f"  Diagnóstico: {fb['diagnostico']}")
 
-    print(f"\n🔍 PATRÓN: COBERTURA BLACKLIST")
+    print("\n🔍 PATRÓN: COBERTURA BLACKLIST")
     bl = p["gaps_blacklist"]
     ab = p["analisis_blacklist"]
     print(f"  Lista negra actual: {ab['blacklist_total']} diarios")
@@ -989,7 +988,7 @@ def imprimir_reporte(reporte: dict) -> None:
     if bl["cobertura_blacklist_pct"]:
         print(f"  (referencia histórica sobre registros: {bl['cobertura_blacklist_pct']}%)")
 
-    print(f"\n🔍 PATRÓN: TIMEOUTS")
+    print("\n🔍 PATRÓN: TIMEOUTS")
     tos = p["timeouts"]
     if tos:
         print(f"  {len(tos)} timeout(s) detectados:")
@@ -997,15 +996,15 @@ def imprimir_reporte(reporte: dict) -> None:
         por_elemento = Counter(t["elemento"] for t in tos)
         for elem, count in por_elemento.most_common():
             print(f"    {elem}: {count}x")
-        print(f"  Detalle (primeros 10):")
+        print("  Detalle (primeros 10):")
         for t in tos[:10]:
             print(f"    {t['timestamp']} — {t['elemento']} ({t['segundos']}s)")
         if len(tos) > 10:
             print(f"    ... y {len(tos) - 10} más")
     else:
-        print(f"  Sin timeouts detectados.")
+        print("  Sin timeouts detectados.")
 
-    print(f"\n🔍 PATRÓN: ERRORES DE REGISTRO AX")
+    print("\n🔍 PATRÓN: ERRORES DE REGISTRO AX")
     errs_ax = p["errores_ax"]
     if errs_ax:
         print(f"  {len(errs_ax)} error(es) de registro AX detectados:")
@@ -1013,24 +1012,24 @@ def imprimir_reporte(reporte: dict) -> None:
         por_fecha = Counter(e["timestamp"][:10] for e in errs_ax)
         for fecha, count in sorted(por_fecha.items()):
             print(f"    {fecha}: {count}x")
-        print(f"  Detalle (primeros 10):")
+        print("  Detalle (primeros 10):")
         for e in errs_ax[:10]:
             print(f"    {e['timestamp']} [{e['nivel']}] {e['mensaje']}")
         if len(errs_ax) > 10:
             print(f"    ... y {len(errs_ax) - 10} más")
     else:
-        print(f"  Sin errores de registro AX detectados.")
+        print("  Sin errores de registro AX detectados.")
 
-    print(f"\n🔍 PATRÓN: CRASHES FAIL-SAFE [ERROR]")
+    print("\n🔍 PATRÓN: CRASHES FAIL-SAFE [ERROR]")
     errs_fs = p["errores_failsafe"]
     if errs_fs:
         print(f"  {len(errs_fs)} crash(es) de fail-safe detectados:")
         for e in errs_fs:
             print(f"    {e['timestamp']} — {e['mensaje']}")
     else:
-        print(f"  Sin crashes de fail-safe detectados.")
+        print("  Sin crashes de fail-safe detectados.")
 
-    print(f"\n🔍 PATRÓN: ÉXITOS DETECTADOS EN LOG")
+    print("\n🔍 PATRÓN: ÉXITOS DETECTADOS EN LOG")
     exits = p["exitos_log"]
     if exits:
         print(f"  {len(exits)} éxito(s) detectados en log:")
@@ -1040,20 +1039,20 @@ def imprimir_reporte(reporte: dict) -> None:
             print(f"    {fecha}: {count}x")
         # Agrupar por tipo
         por_tipo = Counter(e["tipo"] for e in exits)
-        print(f"  Por tipo de confirmación:")
+        print("  Por tipo de confirmación:")
         for tipo, count in por_tipo.most_common():
             print(f"    {tipo}: {count}x")
     else:
-        print(f"  Sin éxitos detectados en log.")
+        print("  Sin éxitos detectados en log.")
 
-    print(f"\n🔍 PATRÓN: CAPTURAS HUÉRFANAS")
+    print("\n🔍 PATRÓN: CAPTURAS HUÉRFANAS")
     huerfanas = p["capturas_huerfanas"]
     if huerfanas:
         print(f"  {len(huerfanas)} captura(s) sin match en registros:")
         for h in huerfanas:
             print(f"    {h}")
     else:
-        print(f"  Todas las capturas tienen correspondencia en registros.")
+        print("  Todas las capturas tienen correspondencia en registros.")
 
     print("\n" + "=" * 70)
     print("  Fin del análisis")

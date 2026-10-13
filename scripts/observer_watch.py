@@ -12,10 +12,9 @@ Si el bot no está corriendo o todo va bien → silencio total (stdout vacío).
 Mantiene estado en logs/.watchdog_state.json para no re-reportar eventos.
 """
 
-import os
 import json
+from datetime import datetime
 from pathlib import Path
-from datetime import datetime, timedelta
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 EVENTS_FILE = BASE_DIR / "logs" / "events.jsonl"
@@ -104,7 +103,6 @@ def main():
 
     alertas = []
     resumen = None
-    bot_start_detectado = False
     bot_stop_detectado = False
 
     for ev in eventos:
@@ -112,7 +110,7 @@ def main():
         ts = ev.get("ts", "")
 
         if event_type == "bot_start":
-            bot_start_detectado = True
+            # El arranque ya se reporta en `alertas`; no se necesita bandera extra.
             estado["bot_activo"] = True
             estado["eventos_reportados"] = []
             bl_count = ev.get("blacklist_count", 0)
@@ -148,7 +146,7 @@ def main():
                     alertas.append(f"🚨 TIMEOUT extremo — Diario {eid} tras {segs}s. Bot se detiene.")
 
                 elif event_type == "failsafe_triggered":
-                    alertas.append(f"🚨 CRASH FAIL-SAFE — PyAutoGUI se crasheó. Mouse en esquina.")
+                    alertas.append("🚨 CRASH FAIL-SAFE — PyAutoGUI se crasheó. Mouse en esquina.")
 
                 elif event_type == "timeout_menu":
                     segs = ev.get("segundos", 0)
@@ -159,7 +157,7 @@ def main():
                     alertas.append(f"⚠️ TIMEOUT confirmar — No se encontró Confirmar tras {segs}s.")
 
                 elif event_type == "formulario_abierto_detectado":
-                    alertas.append(f"⚠️ SEGURIDAD — Formularios abiertos detectados. Bot se detiene.")
+                    alertas.append("⚠️ SEGURIDAD — Formularios abiertos detectados. Bot se detiene.")
 
     # Si el bot terminó, generar resumen de la sesión
     if bot_stop_detectado:
@@ -194,7 +192,7 @@ def main():
         )
         if errores > 0 or crashes > 0:
             resumen += f"\n⚠️ Hay {errores + crashes} problema(s) que requieren atención.\n"
-            resumen += f"Corre: python scripts/observer_analyze.py para diagnóstico completo.\n"
+            resumen += "Corre: python scripts/observer_analyze.py para diagnóstico completo.\n"
 
     guardar_estado(estado)
 

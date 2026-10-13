@@ -64,7 +64,7 @@ class TestAlertasDeSalud:
     def test_sesion_sana_no_genera_alertas(self, tmp_path: Path):
         """Sesión activa, log al día y tasa de error baja ⇒ ok=True."""
         raiz = _preparar_raiz(tmp_path)
-        _escribir_log(raiz, [f"[2026-10-09 14:59:30] [INFO] Click: Menu @ (1284,104)"])
+        _escribir_log(raiz, ["[2026-10-09 14:59:30] [INFO] Click: Menu @ (1284,104)"])
         _escribir_eventos(raiz, [
             {"ts": "2026-10-09T14:59:40", "event": "bot_start"},
             {"ts": "2026-10-09T14:59:50", "event": "confirm_click"},
