@@ -312,8 +312,8 @@ lo que aún no es bloqueante.
 ## 6. LOTE C — Higiene del repositorio (riesgo nulo)
 
 > **Estado 2026-10-13: CERRADO** — C1 ✅ (etiqueta `legacy/estructura-profesional-plana`
-> publicada, ramas documentadas y rama legado **autorizada para eliminar**, con verificación
-> previa de que la etiqueta conserva el mismo commit: desbloquea C-4), C2 ✅
+> publicada, ramas documentadas y rama legado **eliminada** (local y remoto) con verificación
+> previa de que la etiqueta conserva el mismo commit, y **C-4 ejecutado**), C2 ✅
 > (`pyproject.toml` solo herramientas), C3 ✅ (236
 > avisos de ruff → 0 y el lint del CI ya es puerta obligatoria), C4 parcial: Makefile
 > **descartado** con motivo (no hay `make` en el entorno) y LICENSE **pendiente de decisión

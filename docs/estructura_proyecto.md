@@ -14,10 +14,10 @@ Este documento describe la estructura modular del proyecto tras la reestructurac
   **`legacy/estructura-profesional-plana`** (último commit del 2026-06-12, 15 commits que
   no están en `main`). La etiqueta está publicada en GitHub, así que esa historia no se
   pierde aunque se elimine la rama.
-- La rama `refactor/estructura-profesional` apunta a ese mismo contenido legado: su
-  eliminación fue **autorizada por el operador el 2026-10-13** (comprobado que su commit
-  final 408a02b es exactamente el que conserva la etiqueta, así que no se pierde historia).
-  El borrado de la rama remota queda pendiente de la confirmación explícita que exige Git.
+- La rama `refactor/estructura-profesional` apuntaba a ese mismo contenido legado y fue
+  **eliminada el 2026-10-13** (local y remoto) tras comprobar que su commit final (408a02b) es
+  exactamente el que conserva la etiqueta publicada: no queda ninguna rama que parezca una
+  línea de desarrollo activa.
 
 ---
 

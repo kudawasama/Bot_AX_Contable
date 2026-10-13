@@ -6,16 +6,29 @@ Todos los cambios relevantes de este proyecto. El formato sigue
 
 ---
 
+## [v-00.31.00] — 2026-10-13 (C-4: eliminar el código muerto `src/bot_ax/`)
+
+### Eliminado
+- **`src/bot_ax/`** (C-4, desbloqueado al archivar la rama legado): contenía un solo archivo
+  versionado, `config/defaults.py`, que **ningún módulo importa** (verificado: 0 referencias a
+  `src.bot_ax` en `src/`, `tests/` y `scripts/`; los lanzadores invocan `src.ui.gui_classic` y
+  `src.ui.gui_gemini`), más 35 `.pyc` sueltos de compilaciones antiguas.
+- Referencias al módulo actualizadas: el árbol del `README.md` y el `norecursedirs` de
+  `pyproject.toml`.
+
+### Verificación
+- Suite **53/53** · los 8 módulos de `src/` importan sin error.
+
+---
+
 ## [v-00.28.00] — 2026-10-13 (archivo de la rama legado)
 
 ### Cambiado
-- **Rama legado autorizada para eliminar** (`refactor/estructura-profesional`): el operador
-  dio el visto bueno tras publicar y verificar la etiqueta anotada
-  `legacy/estructura-profesional-plana`. Comprobado **antes** de borrar:
-  `git merge-base --is-ancestor` confirma que la rama está contenida en la etiqueta y
-  `git ls-remote` que la etiqueta está publicada en GitHub → la historia no se pierde.
-  El borrado de la rama remota queda pendiente de la confirmación explícita que exige Git.
-  Esto desbloquea el pendiente C-4 (eliminar `src/bot_ax/`, que se solapa con esa rama).
+- **Rama legado eliminada** (`refactor/estructura-profesional`, local y remota, 2026-10-13)
+  tras publicar y verificar la etiqueta anotada `legacy/estructura-profesional-plana`.
+  Comprobado **antes** de borrar: `git merge-base --is-ancestor` confirma que la rama está
+  contenida en la etiqueta y `git ls-remote` que la etiqueta está publicada en GitHub → la
+  historia no se pierde. Eso desbloqueó C-4, ejecutado en el mismo cierre.
 - `docs/estructura_proyecto.md`: la nota de ramas ya refleja que no queda ninguna rama que
   parezca una línea de desarrollo activa.
 
