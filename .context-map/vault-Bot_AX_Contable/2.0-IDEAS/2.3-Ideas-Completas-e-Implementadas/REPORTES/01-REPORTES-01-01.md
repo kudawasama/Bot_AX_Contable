@@ -1,7 +1,7 @@
 ---
 type: ideas-completadas
 concept: REPORTES
-created: 2026-10-13T13:16:51
+created: 2026-10-13T14:54:45
 project: "Bot_AX_Contable"
 tags: ["context-map", "ideas", "completadas", "reportes"]
 ---
