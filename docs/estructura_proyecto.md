@@ -4,6 +4,20 @@ Este documento describe la estructura modular del proyecto tras la reestructurac
 
 ---
 
+## ⚠️ Historia vs producción: qué rama usar
+
+- **Producción:** `main`, con la estructura modular bajo `src/`. Es lo que ejecutan los
+  lanzadores (`Lanzar_Bot.bat`, `Lanzar_Bot_Registro.bat`).
+- **Legado (NO usar para desarrollo):** el árbol plano anterior al refactor modular
+  (`app_gui.py`, `bot_main.py`, `vision.py`, `config.py`, `logger.py`, `_version.py` y
+  `src/bot_ax/ui/` en la raíz) quedó preservado en la etiqueta anotada
+  **`legacy/estructura-profesional-plana`** (último commit del 2026-06-12, 15 commits que
+  no están en `main`). La etiqueta está publicada en GitHub, así que esa historia no se
+  pierde aunque se elimine la rama.
+- La rama `refactor/estructura-profesional` apunta a ese mismo contenido legado.
+
+---
+
 ## Vista General de la Estructura
 
 El proyecto se divide en módulos lógicos bajo el directorio `src/`, y utilitarios auxiliares de depuración y versionado bajo el directorio `scripts/`. La raíz se mantiene limpia y libre de archivos temporales.

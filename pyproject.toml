@@ -1,0 +1,31 @@
+# Configuración de herramientas de desarrollo — Bot AX Contable
+#
+# IMPORTANTE: este archivo NO declara empaquetado ([project] / [build-system]) a
+# propósito. El bot se ejecuta desde el repositorio (`python -m src.ui.gui_classic`)
+# y no debe instalarse como paquete: agregar metadatos de proyecto cambiaría el modelo
+# de ejecución de un bot que está en producción. Aquí solo se centraliza la
+# configuración de las herramientas de calidad.
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "-q"
+norecursedirs = ["logs", "patrones", "docs", ".context-map", ".git", "src/bot_ax"]
+
+[tool.ruff]
+target-version = "py312"
+line-length = 120
+
+[tool.ruff.lint]
+# Ruleset CONSERVADOR y explícito. Se excluyen a propósito las reglas que chocan con
+# los estándares del proyecto:
+#   UP006/UP035/UP045/UP007 → prohibirían List/Dict/Optional, que AGENTS.md exige
+#                             como "tipado fuerte" explícito
+#   BLE001/S110             → prohibirían el `except` ciego deliberado del bot
+#                             (filosofía fail-safe: nunca romper la ejecución)
+#   DTZ005/DTZ007           → exigirían timezone en una app de escritorio local
+select = ["E", "F", "I", "W"]
+ignore = ["E501"]  # longitud de línea: la controla line-length, no un tope de 79
+
+[tool.coverage.run]
+source = ["src"]
+omit = ["src/ui/*", "src/bot_ax/*"]
