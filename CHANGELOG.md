@@ -6,6 +6,28 @@ Todos los cambios relevantes de este proyecto. El formato sigue
 
 ---
 
+## [v-00.28.00] — 2026-10-13 (archivo de la rama legado)
+
+### Cambiado
+- **Rama legado autorizada para eliminar** (`refactor/estructura-profesional`): el operador
+  dio el visto bueno tras publicar y verificar la etiqueta anotada
+  `legacy/estructura-profesional-plana`. Comprobado **antes** de borrar:
+  `git merge-base --is-ancestor` confirma que la rama está contenida en la etiqueta y
+  `git ls-remote` que la etiqueta está publicada en GitHub → la historia no se pierde.
+  El borrado de la rama remota queda pendiente de la confirmación explícita que exige Git.
+  Esto desbloquea el pendiente C-4 (eliminar `src/bot_ax/`, que se solapa con esa rama).
+- `docs/estructura_proyecto.md`: la nota de ramas ya refleja que no queda ninguna rama que
+  parezca una línea de desarrollo activa.
+
+### Notas
+- **LICENSE**: se documenta por qué sigue pendiente. Un `LICENSE` es el texto que dice qué
+  puede hacer legalmente un tercero con el código. Si no existe, el repositorio queda por
+  defecto como "todos los derechos reservados": nadie puede reutilizarlo sin permiso, que es
+  lo deseable para una herramienta interna. Es una decisión del operador, no un requisito
+  técnico: no afecta en nada la ejecución del bot.
+
+---
+
 ## [v-00.26.00] — 2026-10-13 (Fase 2 · Lote C: higiene del repositorio)
 
 ### Añadido
