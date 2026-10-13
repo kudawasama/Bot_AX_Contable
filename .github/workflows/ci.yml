@@ -52,7 +52,7 @@ jobs:
         run: python scripts/chequeo_salud.py --json
 
   lint:
-    name: Lint informativo (ruff)
+    name: Lint (ruff)
     runs-on: windows-latest
 
     steps:
@@ -68,9 +68,9 @@ jobs:
         run: python -m pip install ruff
 
       - name: Analizar src/, tests/ y scripts/
-        # Adopción progresiva: el proyecto arrastra deuda de lint (~200 avisos con
-        # las reglas por defecto de ruff). `--exit-zero` publica el informe en el
-        # log sin bloquear el pipeline. Cuando el código esté limpio, quitar
-        # `--exit-zero` para convertirlo en puerta obligatoria.
-        continue-on-error: true
-        run: python -m ruff check src/ tests/ scripts/ --output-format=concise --exit-zero
+        # Puerta OBLIGATORIA (lote C, C3): el proyecto quedó limpio (0 avisos) con el
+        # ruleset fijado en pyproject.toml, así que ya no lleva `--exit-zero` ni
+        # continue-on-error. El ruleset es explícito (E, F, I, W), así que una versión
+        # nueva de ruff no puede introducir reglas sorpresivas: si este paso se pone
+        # rojo, es porque un cambio introdujo un aviso real.
+        run: python -m ruff check src/ tests/ scripts/ --output-format=concise

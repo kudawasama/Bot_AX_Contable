@@ -6,6 +6,48 @@ Todos los cambios relevantes de este proyecto. El formato sigue
 
 ---
 
+## [v-00.26.00] — 2026-10-13 (Fase 2 · Lote C: higiene del repositorio)
+
+### Añadido
+- **`pyproject.toml`** con la configuración de las herramientas (pytest, ruff, coverage) y
+  **sin** `[project]`/`[build-system]` a propósito: el bot se ejecuta desde el repositorio y
+  agregar metadatos de paquete cambiaría su modelo de ejecución en producción.
+  El ruleset de ruff es explícito (E, F, I, W) y excluye a conciencia las reglas que chocan
+  con los estándares del proyecto: `UP006/UP035/UP045` (prohibirían `List`/`Dict`/`Optional`,
+  que AGENTS.md exige), `BLE001/S110` (prohibirían el `except` ciego deliberado del fail-safe)
+  y `DTZ` (exigirían timezone en una app de escritorio local).
+
+### Cambiado
+- **El lint del CI pasó de informe a puerta obligatoria**: se quitó `--exit-zero` y
+  `continue-on-error`. Si un cambio introduce un aviso, el pipeline se pone rojo.
+- **Documentación de ramas** en `docs/estructura_proyecto.md`: `main` es producción; el árbol
+  plano anterior al refactor quedó preservado en la etiqueta anotada publicada
+  `legacy/estructura-profesional-plana` (2026-06-12, 15 commits fuera de `main`).
+
+### Limpiado
+- **236 avisos de ruff → 0**, en tres etapas verificadas por separado:
+  1. `tests/` y `scripts/`: 57 avisos (espacios, orden de imports, imports sin uso, f-strings).
+  2. `src/` solo espacios (W291/W293): 132 avisos, con la prueba de que `git diff -w` queda
+     **vacío** — es decir, cero cambios de lógica.
+  3. `src/` orden de imports e imports sin uso: 10 avisos.
+- **Hallazgo (código muerto):** `buscar_estado_checkbox` está definida en
+  `src/services/vision.py:167` y **no la llama nadie**; `engine.py` la importaba sin usarla.
+  Se quitó el import; la función queda a decisión del operador (no se borra por iniciativa).
+- **Respaldo de la recalibración de sectores del 13-oct** (ajustada por el operador en la GUI):
+  estaba sin commitear; se versionó tal cual, sin modificar sus valores.
+
+### Notas
+- **Makefile descartado:** no hay `make` en el entorno (Windows/git-bash) y no se entrega un
+  artefacto que no se pueda probar. Los comandos canónicos ya están en el README, `AGENTS.md`
+  y `Chequear_Salud_Bot.bat`.
+- **LICENSE pendiente:** es una decisión del usuario; no se inventó una licencia.
+
+### Verificación
+- Suite **53/53** tras cada etapa · `ruff: All checks passed!` · los 8 módulos de `src/`
+  importan sin error · `compileall` limpio · CI en verde.
+
+---
+
 ## [v-00.23.00] — 2026-10-09 (Fase 2 · Lote A cierre: T2, T4 y T5)
 
 ### Corregido

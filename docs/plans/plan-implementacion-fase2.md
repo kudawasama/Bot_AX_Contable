@@ -311,6 +311,12 @@ lo que aún no es bloqueante.
 
 ## 6. LOTE C — Higiene del repositorio (riesgo nulo)
 
+> **Estado 2026-10-13: CERRADO** — C1 ✅ (etiqueta `legacy/estructura-profesional-plana`
+> publicada + ramas documentadas), C2 ✅ (`pyproject.toml` solo herramientas), C3 ✅ (236
+> avisos de ruff → 0 y el lint del CI ya es puerta obligatoria), C4 parcial: Makefile
+> **descartado** con motivo (no hay `make` en el entorno) y LICENSE **pendiente de decisión
+> del usuario**. Suite 53/53 · ruff 0 · CI en verde. Rama `feat/fase2-c-higiene`.
+
 ### Tarea C1: resolver la rama legado `refactor/estructura-profesional`
 
 **Objetivo:** que nadie más confunda el árbol viejo con producción, sin borrar historia.
