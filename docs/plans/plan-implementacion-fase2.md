@@ -439,6 +439,25 @@ faltante; el readiness reportado sube respecto de la línea base.
 > la validación final es una sesión real de registro observada (mínimo 3 diarios: 1 éxito,
 > 1 error esperado y el scroll). Ninguna tarea del lote B se integra a `main` sin esa sesión.
 
+### Tarea B4 (hallazgo del 2026-10-13): las líneas de arranque no llegan al log de texto
+
+**Problema:** al reiniciar el bot (13-oct 12:42) `logs/bot_ax.log` empezó a escribir recién en
+el primer ciclo: su primera línea de la sesión nueva es `[12:42:58] [WARNING] Menu fuera de
+sector B`, o sea que se perdieron las líneas de arranque ("Sector A original … -> Ajustado con
+padding", "Lista negra cargada…", "El bot se está ejecutando").
+
+**Por qué importa:** el log de texto es una de las dos fuentes del chequeo de salud (A3) y del
+analizador (A1). Si su arranque se pierde, un fallo temprano —antes del primer ciclo— no deja
+rastro en texto. Mitigante: el detalle de la configuración **sí** queda en el evento `bot_start`
+de `events.jsonl` (verificado: el sector registrado coincide con la calibración + padding del
+motor), así que el diagnóstico no queda ciego.
+
+**Archivos:** `src/core/engine.py` (emisión inicial), `src/core/logger.py` y el enganche del
+handler en las GUI.
+
+**Criterio de aceptación:** tras reiniciar, las líneas de arranque aparecen en `logs/bot_ax.log`
+con su marca de tiempo.
+
 ### Tarea B1: validar el ID leído por OCR antes de usarlo
 
 **Problema:** 17 IDs históricos se leen de forma inestable (`W00330819Diai` vs `Diar`).
