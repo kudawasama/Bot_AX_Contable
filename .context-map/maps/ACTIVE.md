@@ -40,6 +40,8 @@ Bot_AX_Contable
       - Proyecto 'Bot_AX_Contable' — 489 archivos, 490341 líneas, sin entrypoints.
     - **BASE.013** Proyecto 'Bot_AX_Contable' — 490 archivos, 490634 líneas, sin entrypoints `[arquitectura, class:other, proyecto]` completado | v1 | src: scanner | ev: Cantidad: 490; Líneas de código: 490634
       - Proyecto 'Bot_AX_Contable' — 490 archivos, 490634 líneas, sin entrypoints.
+    - **BASE.014** Proyecto 'Bot_AX_Contable' — 500 archivos, 500784 líneas, sin entrypoints `[arquitectura, class:other, proyecto]` completado | v1 | src: scanner | ev: Cantidad: 500; Líneas de código: 500784
+      - Proyecto 'Bot_AX_Contable' — 500 archivos, 500784 líneas, sin entrypoints.
 
 - **IDEA**
 
@@ -140,6 +142,8 @@ LO QUE QUEDÓ EN ESTE PASO
       - Idea o implementación relevante. Un test previo choca con la regla nueva (usaba `confirm_click`, que ahora significa "esperando resultado"). Lo ajusto para que siga probando su intención original:.
     - **IDEA.005** Se bloqueó el último paso (crear/borrar un directorio temporal de demostración pide tu aprobación y no llegó respuesta), así que **no ejecuté nada más**. Te dejo el estado exacto y no avanzo sin tu OK `[class:feature, implementacin, revisarcommitsypendientess]` completado | v1 | src: chat | ev: —
       - Idea o implementación relevante. Se bloqueó el último paso (crear/borrar un directorio temporal de demostración pide tu aprobación y no llegó respuesta), así que **no ejecuté nada más**. Te dejo el estado exacto y no ava
+    - **CORRECCION.017** Ruff limpio en tests/scripts. Commit del trabajo, empezando por respaldar tu recalibración del 13-oct: `[class:chore, implementacin, revisarcommitsypendientess]` completado | v1 | src: chat | ev: Cantidad: 13
+      - Corrección: Ruff limpio en tests/scripts. Commit del trabajo, empezando por respaldar tu recalibración del 13-oct:.
 
 - **FUTURO**
 
@@ -277,6 +281,8 @@ LO QUE ENCONTRÉ (y arreglé)
   logs/bot_ax.log dejó de es.
     - **RIESGO.006** Implemento T1 y T3. Leo el archivo actual para reescribirlo de una vez y sin riesgo de parches parciales: `[anlisis, class:chore, revisarcommitsypendientess]` activo | v1 | src: chat | ev: Cantidad: 1
       - Riesgo: Implemento T1 y T3. Leo el archivo actual para reescribirlo de una vez y sin riesgo de parches parciales:.
+    - **IDEA.006** Hoy es **13 de octubre, 11:02** — y el bot **acaba de caerse (11:01:52)** por el mismo fail-safe. Verifico si mi alerta nueva lo detecta en producción: `[class:feature, implementacin, revisarcommitsypendientess]` activo | v1 | src: chat | ev: Cantidad: 13
+      - Idea o implementación relevante. Hoy es **13 de octubre, 11:02** — y el bot **acaba de caerse (11:01:52)** por el mismo fail-safe. Verifico si mi alerta nueva lo detecta en producción:.
 
 ## Conexiones
 
@@ -298,6 +304,7 @@ _(sin conexiones)_
 - RIESGO.003: Encontré un problema real y lo voy a arreglar con su prueba de regresión. Primero el diagnóstico exacto:
 - RIESGO.004: Entendido y aplicado: solo Bot_AX_Contable. Y me quedo con el hallazgo más importante de la sesión, que resultó ser un problema real del bot.
 - RIESGO.006: Implemento T1 y T3. Leo el archivo actual para reescribirlo de una vez y sin riesgo de parches parciales:
+- IDEA.006: Hoy es **13 de octubre, 11:02** — y el bot **acaba de caerse (11:01:52)** por el mismo fail-safe. Verifico si mi alerta nueva lo detecta en producción:
 
 ## Instrucciones para agentes
 

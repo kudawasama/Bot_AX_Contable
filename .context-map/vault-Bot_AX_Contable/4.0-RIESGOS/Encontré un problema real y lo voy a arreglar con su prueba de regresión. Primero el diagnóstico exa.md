@@ -1,7 +1,7 @@
 ---
 type: riesgo
 status: activo
-created: 2026-10-09T16:47:15
+created: 2026-10-13T11:26:22
 project: "Bot_AX_Contable"
 tags: ["riesgo", "anlisis", "class:fix", "revisarcommitsypendientess"]
 source: "chat"

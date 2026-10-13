@@ -46,11 +46,20 @@
       "height": 50
     },
     {
+      "id": "bb977552-46c8-50a2-a604-b9e9efc15723",
+      "type": "file",
+      "file": "2.0-IDEAS/2.3-Ideas-Completas-e-Implementadas/TESTING/TESTING-Completas.md",
+      "x": 520,
+      "y": 300,
+      "width": 240,
+      "height": 50
+    },
+    {
       "id": "12399099-9f2d-518e-85b2-16e3f46ba2c7",
       "type": "file",
       "file": "2.0-IDEAS/2.3-Ideas-Completas-e-Implementadas/TUI/TUI-Completas.md",
       "x": 520,
-      "y": 300,
+      "y": 360,
       "width": 240,
       "height": 50
     },
@@ -59,7 +68,7 @@
       "type": "file",
       "file": "2.0-IDEAS/2.3-Ideas-Completas-e-Implementadas/UI/UI-Completas.md",
       "x": 520,
-      "y": 360,
+      "y": 420,
       "width": 240,
       "height": 50
     },
@@ -91,11 +100,20 @@
       "height": 50
     },
     {
+      "id": "1972e146-8862-551f-a70c-ce86e678c82e",
+      "type": "file",
+      "file": "4.0-RIESGOS/Hoy es 13 de octubre, 1102 — y el bot acaba de caerse (110152) por el mismo fail-safe. Verifico si m.md",
+      "x": 1040,
+      "y": 180,
+      "width": 240,
+      "height": 50
+    },
+    {
       "id": "d1baa5bd-39ea-5553-8d51-b55f3a7cd33e",
       "type": "file",
       "file": "4.0-RIESGOS/Implemento T1 y T3. Leo el archivo actual para reescribirlo de una vez y sin riesgo de parches parci.md",
       "x": 1040,
-      "y": 180,
+      "y": 240,
       "width": 240,
       "height": 50
     }
@@ -122,6 +140,14 @@
       "fromNode": "507e3429-ff50-57b5-9688-23c04c38c683",
       "fromSide": "right",
       "toNode": "bceb5ea6-1ba1-5260-83d9-71ef8a42b778",
+      "toSide": "left",
+      "label": ""
+    },
+    {
+      "id": "955b9306-7f36-568e-ae41-ee8c828c88f7",
+      "fromNode": "507e3429-ff50-57b5-9688-23c04c38c683",
+      "fromSide": "right",
+      "toNode": "1972e146-8862-551f-a70c-ce86e678c82e",
       "toSide": "left",
       "label": ""
     },
@@ -198,6 +224,14 @@
       "label": ""
     },
     {
+      "id": "341acac4-77ee-5a4e-93b2-dcd7d142bf9a",
+      "fromNode": "bb977552-46c8-50a2-a604-b9e9efc15723",
+      "fromSide": "right",
+      "toNode": "1972e146-8862-551f-a70c-ce86e678c82e",
+      "toSide": "left",
+      "label": ""
+    },
+    {
       "id": "9521245b-135b-50f9-8a90-398150fd99e6",
       "fromNode": "e1816036-41c7-5e0e-9431-47747735af62",
       "fromSide": "right",
@@ -238,10 +272,26 @@
       "label": ""
     },
     {
+      "id": "f029e007-c2f2-524d-a08e-70c65cd7ba85",
+      "fromNode": "51ab7fbb-e480-561c-834c-777c47994dc4",
+      "fromSide": "right",
+      "toNode": "1972e146-8862-551f-a70c-ce86e678c82e",
+      "toSide": "left",
+      "label": ""
+    },
+    {
       "id": "6b7023d0-5031-50ce-866e-f424326600e8",
       "fromNode": "51ab7fbb-e480-561c-834c-777c47994dc4",
       "fromSide": "right",
       "toNode": "d1baa5bd-39ea-5553-8d51-b55f3a7cd33e",
+      "toSide": "left",
+      "label": ""
+    },
+    {
+      "id": "db0132a2-b2cb-572c-a788-37e238fcf403",
+      "fromNode": "bceb5ea6-1ba1-5260-83d9-71ef8a42b778",
+      "fromSide": "right",
+      "toNode": "1972e146-8862-551f-a70c-ce86e678c82e",
       "toSide": "left",
       "label": ""
     }

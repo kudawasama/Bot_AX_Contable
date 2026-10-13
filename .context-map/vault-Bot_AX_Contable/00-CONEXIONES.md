@@ -1,6 +1,6 @@
 ---
 type: conexiones
-created: 2026-10-09T16:47:16
+created: 2026-10-13T11:26:26
 ---
 
 # 🔗 Todas las Conexiones
@@ -197,3 +197,15 @@ menciones cruzadas) — el mapa mental conectado.
 - [[2.0-IDEAS/2.3-Ideas-Completas-e-Implementadas/DEVOPS/DEVOPS-Completas.md|Se bloqueó el último paso (crear/borrar un directorio tempor]] ↔ [[2.0-IDEAS/2.3-Ideas-Completas-e-Implementadas/DEVOPS/DEVOPS-Completas.md|Ahora el bloque principal (funciones nuevas + chequeo):]]
 - [[2.0-IDEAS/2.3-Ideas-Completas-e-Implementadas/DEVOPS/DEVOPS-Completas.md|Se bloqueó el último paso (crear/borrar un directorio tempor]] ↔ [[2.0-IDEAS/2.3-Ideas-Completas-e-Implementadas/DEVOPS/DEVOPS-Completas.md|event_log("scroll_performed", intento=intentos_scroll, metod]]
 - [[2.0-IDEAS/2.3-Ideas-Completas-e-Implementadas/DEVOPS/DEVOPS-Completas.md|Se bloqueó el último paso (crear/borrar un directorio tempor]] ↔ [[2.0-IDEAS/2.3-Ideas-Completas-e-Implementadas/DEVOPS/DEVOPS-Completas.md|Detecta los 3 formatos históricos (todos con nivel [INFO]):]]
+
+### 🔗 Hoy es **13 de octubre, 11:02** — y el bot **acaba de caerse
+
+- [[4.0-RIESGOS/Hoy es 13 de octubre, 1102 — y el bot acaba de caerse (110152) por el mismo fail-safe. Verifico si m.md|Hoy es **13 de octubre, 11:02** — y el bot **acaba de caerse]] ↔ [[2.0-IDEAS/2.3-Ideas-Completas-e-Implementadas/AUTOMATIZACION/AUTOMATIZACION-Completas.md|[898600f] feat: observer watchdog — vigilancia en vivo del b]]
+- [[4.0-RIESGOS/Hoy es 13 de octubre, 1102 — y el bot acaba de caerse (110152) por el mismo fail-safe. Verifico si m.md|Hoy es **13 de octubre, 11:02** — y el bot **acaba de caerse]] ↔ [[2.0-IDEAS/2.3-Ideas-Completas-e-Implementadas/AUTOMATIZACION/AUTOMATIZACION-Completas.md|Centraliza todos los defaults numéricos para facilitar ajust]]
+- [[4.0-RIESGOS/Hoy es 13 de octubre, 1102 — y el bot acaba de caerse (110152) por el mismo fail-safe. Verifico si m.md|Hoy es **13 de octubre, 11:02** — y el bot **acaba de caerse]] ↔ [[2.0-IDEAS/2.3-Ideas-Completas-e-Implementadas/AUTOMATIZACION/AUTOMATIZACION-Completas.md|event_log("scroll_performed", intento=intentos_scroll, metod]]
+- [[4.0-RIESGOS/Hoy es 13 de octubre, 1102 — y el bot acaba de caerse (110152) por el mismo fail-safe. Verifico si m.md|Hoy es **13 de octubre, 11:02** — y el bot **acaba de caerse]] ↔ [[2.0-IDEAS/2.3-Ideas-Completas-e-Implementadas/AUTOMATIZACION/AUTOMATIZACION-Completas.md|Si el bot no está corriendo o todo va bien → silencio total ]]
+- [[4.0-RIESGOS/Hoy es 13 de octubre, 1102 — y el bot acaba de caerse (110152) por el mismo fail-safe. Verifico si m.md|Hoy es **13 de octubre, 11:02** — y el bot **acaba de caerse]] ↔ [[2.0-IDEAS/2.3-Ideas-Completas-e-Implementadas/AUTOMATIZACION/AUTOMATIZACION-Completas.md|Conversación en Antigravity IDE: Bot_AX_Contable (1 mensajes]]
+
+### 🔗 Ruff limpio en tests/scripts. Commit del trabajo, empezando 
+
+- [[2.0-IDEAS/2.3-Ideas-Completas-e-Implementadas/TESTING/TESTING-Completas.md|Ruff limpio en tests/scripts. Commit del trabajo, empezando ]] ↔ [[4.0-RIESGOS/Hoy es 13 de octubre, 1102 — y el bot acaba de caerse (110152) por el mismo fail-safe. Verifico si m.md|Hoy es **13 de octubre, 11:02** — y el bot **acaba de caerse]]
