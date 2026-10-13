@@ -45,16 +45,16 @@ def nombre_corto(ruta: str) -> str:
 pytesseract.pytesseract.tesseract_cmd = TESSERACT_CMD
 
 # Configurar el retardo por comando nativo de PyAutoGUI
-pyautogui.PAUSE = 0.1 
+pyautogui.PAUSE = 0.1
 
 
 def buscar_y_clickear(
-    ruta_imagen: str, 
-    sector_region: Optional[Tuple[int, int, int, int]] = None, 
-    confidencialidad: float = 0.8, 
-    timeout: int = 10, 
-    mover_hacia_abajo: bool = False, 
-    wait_only: bool = False, 
+    ruta_imagen: str,
+    sector_region: Optional[Tuple[int, int, int, int]] = None,
+    confidencialidad: float = 0.8,
+    timeout: int = 10,
+    mover_hacia_abajo: bool = False,
+    wait_only: bool = False,
     stop_event: Optional[threading.Event] = None
 ) -> Union[Tuple[int, int], bool]:
     """Busca una plantilla de imagen en pantalla y realiza un clic.
@@ -79,11 +79,11 @@ def buscar_y_clickear(
         return False
 
     inicio: float = time.time()
-    
+
     while time.time() - inicio < timeout:
         if stop_event and stop_event.is_set():
             return False
-            
+
         try:
             ubicacion: Any = None
             if sector_region:
@@ -99,8 +99,8 @@ def buscar_y_clickear(
                     else:
                         try:
                             ubicacion = pyautogui.locateCenterOnScreen(
-                                ruta_imagen, 
-                                region=sector_region, 
+                                ruta_imagen,
+                                region=sector_region,
                                 confidence=confidencialidad,
                                 grayscale=True
                             )
@@ -110,14 +110,14 @@ def buscar_y_clickear(
                     # Fallback robusto ante error de lectura
                     try:
                         ubicacion = pyautogui.locateCenterOnScreen(
-                            ruta_imagen, 
-                            region=sector_region, 
+                            ruta_imagen,
+                            region=sector_region,
                             confidence=confidencialidad,
                             grayscale=True
                         )
                     except pyautogui.ImageNotFoundException:
                         pass
-            
+
             # Si no se encontró en la región o no se especificó, buscar en pantalla completa
             if not ubicacion:
                 try:
@@ -137,38 +137,38 @@ def buscar_y_clickear(
                 if wait_only:
                     logger.info(f"Detectado: {nombre_corto(ruta_imagen)}")
                     return coords
-                
+
                 logger.info(f"Click: {nombre_corto(ruta_imagen)} @ ({coords[0]},{coords[1]})")
-                
+
                 # Desplazar mouse y clickear de manera inmediata
                 pyautogui.moveTo(coords[0], coords[1])
                 pyautogui.click()
-                
+
                 if mover_hacia_abajo:
                     logger.info("Presionando FLECHA ABAJO para pasar al siguiente registro.")
                     time.sleep(0.3)
                     pyautogui.press('down')
-                    
+
                 return coords
-                
+
         except pyautogui.ImageNotFoundException:
             pass
         except Exception as e:
             logger.error(f"Error durante la búsqueda de imagen: {e}")
             if "fail-safe" in str(e).lower():
                 event_log("failsafe_triggered", detalle_error=str(e))
-            
-        time.sleep(0.5) 
-        
+
+        time.sleep(0.5)
+
     logger.warning(f"Timeout: {nombre_corto(ruta_imagen)} no encontrado ({timeout}s).")
     return False
 
 
 def buscar_estado_checkbox(
-    ruta_obj_inicial: str, 
-    ruta_obj_final: str, 
-    sector_region: Tuple[int, int, int, int], 
-    timeout: int = 30, 
+    ruta_obj_inicial: str,
+    ruta_obj_final: str,
+    sector_region: Tuple[int, int, int, int],
+    timeout: int = 30,
     stop_event: Optional[threading.Event] = None
 ) -> bool:
     """Espera a que un checkbox cambie visualmente a un estado final (marcado).
@@ -185,15 +185,15 @@ def buscar_estado_checkbox(
     """
     inicio: float = time.time()
     logger.info(f"Esperando a que aparezca {nombre_corto(ruta_obj_final)}...")
-    
+
     while time.time() - inicio < timeout:
         if stop_event and stop_event.is_set():
             return False
-            
+
         try:
              ubicacion = pyautogui.locateCenterOnScreen(
-                ruta_obj_final, 
-                region=sector_region, 
+                ruta_obj_final,
+                region=sector_region,
                 confidence=0.8,
                 grayscale=True
              )
@@ -202,18 +202,18 @@ def buscar_estado_checkbox(
                  return True
         except pyautogui.ImageNotFoundException:
              pass
-             
+
         time.sleep(0.5)
-        
+
     logger.warning("Timeout esperando cambio de estado en el checkbox.")
     return False
 
 
 def esperar_resultado_registro(
-    ruta_obj_exito: str, 
-    ruta_obj_error: str, 
-    sector_region: Tuple[int, int, int, int], 
-    timeout: int = 300, 
+    ruta_obj_exito: str,
+    ruta_obj_error: str,
+    sector_region: Tuple[int, int, int, int],
+    timeout: int = 300,
     stop_event: Optional[threading.Event] = None
 ) -> Optional[str]:
     """Monitorea la pantalla hasta detectar éxito o un pop-up de error de registro en AX.
@@ -230,13 +230,13 @@ def esperar_resultado_registro(
     """
     inicio: float = time.time()
     logger.info(f"Esperando resultado (timeout: {timeout/60:.0f}min)...")
-    
+
     ultimo_mensaje: float = inicio
     ultimo_jiggle: float = inicio
     while time.time() - inicio < timeout:
         if stop_event and stop_event.is_set():
             return 'cancelado'
-            
+
         ahora = time.time()
         # Desplazar mouse sutilmente cada 12s para prevenir bloqueo o suspensión
         if ahora - ultimo_jiggle > 12:
@@ -251,7 +251,7 @@ def esperar_resultado_registro(
         if ahora - ultimo_mensaje > 30:
             logger.info(f"...esperando ({int(ahora - inicio)}s)")
             ultimo_mensaje = ahora
-            
+
         # 1. Buscar ventana modal de éxito en toda la pantalla
         try:
              from src.core.config import MSG_EXITO_ASIENTO
@@ -270,11 +270,11 @@ def esperar_resultado_registro(
                  return 'exito'
         except pyautogui.ImageNotFoundException:
              pass
-        
+
         # 2. Buscar ventana de error en pantalla completa
         try:
              ubi_error = pyautogui.locateCenterOnScreen(
-                ruta_obj_error, 
+                ruta_obj_error,
                 confidence=0.9,
                 grayscale=True
              )
@@ -284,9 +284,9 @@ def esperar_resultado_registro(
                  return 'error'
         except pyautogui.ImageNotFoundException:
              pass
-             
+
         time.sleep(1)
-        
+
     return None
 
 
@@ -303,17 +303,17 @@ def leer_id_diario(coord_checkbox: Tuple[int, int]) -> str:
     from src.core.config import obtener_offset_ocr
     ox, oy, ow, oh = obtener_offset_ocr()
     region_texto: Tuple[int, int, int, int] = (int(cx) + ox, int(cy) + oy, ow, oh)
-    
+
     try:
         # Captura de pantalla en la sección derecha del checkbox
         screenshot = pyautogui.screenshot(region=region_texto)
         screenshot = screenshot.convert('L')  # Convertir a escala de grises
-        
+
         # Modo 7 de Tesseract: tratar la imagen como una línea de texto
         texto: str = pytesseract.image_to_string(screenshot, config='--psm 7').strip()
         # Filtrar caracteres de texto alfanuméricos y guiones
         texto = "".join(c for c in texto if c.isalnum() or c == '-')
-        
+
         return texto if texto else "DESCONOCIDO"
     except Exception as e:
         logger.error(f"Error en OCR: {e}")
@@ -334,12 +334,12 @@ def capturar_pantalla_error(id_diario: str = "global") -> Optional[str]:
         from src.core.config import BASE_DIR
         carpeta_capturas: str = os.path.join(BASE_DIR, "logs", "capturas")
         os.makedirs(carpeta_capturas, exist_ok=True)
-            
+
         ahora: datetime = datetime.now()
         timestamp: str = ahora.strftime("%Y-%m-%d_%H%M%S")
         nombre_archivo: str = f"error_{id_diario}_{timestamp}.png"
         ruta_completa: str = os.path.join(carpeta_capturas, nombre_archivo)
-        
+
         screenshot = pyautogui.screenshot()
         screenshot.save(ruta_completa)
         logger.info(f"Captura de pantalla guardada en: {ruta_completa}")

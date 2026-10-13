@@ -126,18 +126,18 @@ def get_logger(name: str = "bot_ax") -> logging.Logger:
     global _logger
     if _logger is not None:
         return _logger
-    
+
     os.makedirs(LOG_DIR, exist_ok=True)
-    
+
     _logger = logging.getLogger(name)
     _logger.setLevel(logging.DEBUG)
-    
+
     # Evitar handlers duplicados si se invoca múltiples veces
     if _logger.handlers:
         return _logger
-    
+
     formatter: logging.Formatter = logging.Formatter(LOG_FORMAT, datefmt=LOG_DATE_FORMAT)
-    
+
     # Manejador de archivo rotativo para persistir trazas
     file_handler: ArchivoRotativoRobusto = ArchivoRotativoRobusto(
         LOG_FILE, max_bytes=LOG_MAX_BYTES, backup_count=LOG_BACKUP_COUNT
@@ -145,7 +145,7 @@ def get_logger(name: str = "bot_ax") -> logging.Logger:
     file_handler.setLevel(logging.DEBUG)
     file_handler.setFormatter(formatter)
     _logger.addHandler(file_handler)
-    
+
     return _logger
 
 
@@ -155,7 +155,7 @@ class QueueLogHandler(logging.Handler):
     Diseñado para interceptar los mensajes del bot y renderizarlos en tiempo real
     en la consola integrada de la interfaz gráfica de usuario.
     """
-    
+
     def __init__(self, log_queue: queue.Queue) -> None:
         """Inicializa el handler vinculando la cola de eventos.
 
@@ -165,7 +165,7 @@ class QueueLogHandler(logging.Handler):
         super().__init__()
         self.log_queue: queue.Queue = log_queue
         self.setFormatter(logging.Formatter(LOG_FORMAT, datefmt=LOG_DATE_FORMAT))
-    
+
     def emit(self, record: logging.LogRecord) -> None:
         """Formatea el registro y lo coloca en la cola.
 

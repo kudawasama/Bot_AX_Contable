@@ -73,14 +73,14 @@ def cargar_configuracion() -> Optional[Dict[str, Any]]:
     """
     if not os.path.exists(CONFIG_FILE):
         return None
-    
+
     try:
         with open(CONFIG_FILE, "r", encoding="utf-8") as f:
             config: Dict[str, Any] = json.load(f)
     except json.JSONDecodeError as e:
         print(f"ERROR: {CONFIG_FILE} no es un JSON válido: {e}")
         return None
-    
+
     # Validar que existen los sectores requeridos
     for key in ["sector_a", "sector_b"]:
         if key not in config:
@@ -93,7 +93,7 @@ def cargar_configuracion() -> Optional[Dict[str, Any]]:
         if not all(isinstance(n, (int, float)) for n in val):
             print(f"ERROR: '{key}' contiene valores no numéricos")
             return None
-    
+
     return config
 
 
@@ -110,7 +110,7 @@ def guardar_configuracion(sector_a: List[int], sector_b: List[int], sector_scrol
     ocr_offset: Optional[List[int]] = None
     if config_actual and "ocr_region_offset" in config_actual:
         ocr_offset = config_actual["ocr_region_offset"]
-    
+
     config: Dict[str, Any] = {
         "sector_a": sector_a,
         "sector_b": sector_b,
@@ -118,7 +118,7 @@ def guardar_configuracion(sector_a: List[int], sector_b: List[int], sector_scrol
     }
     if ocr_offset:
         config["ocr_region_offset"] = ocr_offset
-    
+
     try:
         with open(CONFIG_FILE, "w", encoding="utf-8") as f:
             json.dump(config, f, indent=4)

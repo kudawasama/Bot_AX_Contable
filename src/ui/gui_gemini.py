@@ -42,16 +42,16 @@ class BotAXRegistroGui:
         self.root.title("GEMINI ENGINE - BOT AX REGISTRO")
         self.root.geometry("1100x850")
         self.root.configure(bg=COLORS["bg"])
-        
+
         # Eliminar bordes nativos del sistema para ventana completamente personalizada
         self.root.overrideredirect(True)
-        
+
         # Variables de control de estado
         self.stop_event: threading.Event = threading.Event()
         self.log_queue: queue.Queue = queue.Queue()
         self.exitos: int = 0
         self.errores: int = 0
-        
+
         # Fuentes tipográficas
         self.font_main: Tuple[str, int] = ("Consolas", 10)
         self.font_bold: Tuple[str, int, str] = ("Consolas", 11, "bold")
@@ -77,11 +77,11 @@ class BotAXRegistroGui:
         # 1. BARRA SUPERIOR (HEADER)
         header = tk.Frame(self.main_frame, bg=COLORS["bg"], height=60)
         header.pack(fill="x", side="top", padx=20, pady=10)
-        
+
         # Icono unicode del Engine y textos descriptivos
         logo_label = tk.Label(header, text="󰄶", font=("Segoe UI Symbol", 24), bg=COLORS["bg"], fg=COLORS["accent"])
         logo_label.pack(side="left", padx=(10, 15))
-        
+
         title_f = tk.Frame(header, bg=COLORS["bg"])
         title_f.pack(side="left")
         tk.Label(title_f, text="GEMINI ENGINE", font=self.font_bold, bg=COLORS["bg"], fg=COLORS["accent"]).pack(anchor="w")
@@ -115,14 +115,14 @@ class BotAXRegistroGui:
         # Monitores del sistema (Valores representativos fijos)
         mon_title = tk.Label(sidebar, text="SYSTEM MONITORS", font=self.font_small, bg=COLORS["sidebar"], fg=COLORS["subtext"])
         mon_title.pack(anchor="w", padx=20, pady=(10, 5))
-        
+
         self.add_monitor(sidebar, "CPU_USAGE", 0.35)
         self.add_monitor(sidebar, "MEM_USAGE", 0.52)
         self.add_monitor(sidebar, "NET_TRAFFIC", 0.08)
 
         # Métricas de la Sesión actual
         tk.Label(sidebar, text="SESSION METRICS", font=self.font_small, bg=COLORS["sidebar"], fg=COLORS["subtext"]).pack(anchor="w", padx=20, pady=(30, 5))
-        
+
         self.lbl_exitos: tk.Label = tk.Label(sidebar, text="SUCCESS: 0", font=self.font_main, bg=COLORS["sidebar"], fg=COLORS["success"])
         self.lbl_exitos.pack(anchor="w", padx=30, pady=5)
         self.lbl_errores: tk.Label = tk.Label(sidebar, text="ERRORS:  0", font=self.font_main, bg=COLORS["sidebar"], fg=COLORS["error"])
@@ -135,17 +135,17 @@ class BotAXRegistroGui:
         # Controles principales
         ctrl_frame = tk.Frame(content, bg=COLORS["surface"], highlightbackground=COLORS["grid"], highlightthickness=1)
         ctrl_frame.pack(fill="x", pady=(0, 20))
-        
+
         self.btn_start: tk.Button = tk.Button(
-            ctrl_frame, text="[ START ENGINE ]", font=self.font_bold, bg=COLORS["surface"], fg=COLORS["success"], 
-            activebackground=COLORS["grid"], activeforeground=COLORS["success"], bd=0, cursor="hand2", 
+            ctrl_frame, text="[ START ENGINE ]", font=self.font_bold, bg=COLORS["surface"], fg=COLORS["success"],
+            activebackground=COLORS["grid"], activeforeground=COLORS["success"], bd=0, cursor="hand2",
             padx=20, pady=15, command=self.start_bot
         )
         self.btn_start.pack(side="left", expand=True, fill="x")
-        
+
         self.btn_stop: tk.Button = tk.Button(
-            ctrl_frame, text="[ KILL PROCESS ]", font=self.font_bold, bg=COLORS["surface"], fg=COLORS["error"], 
-            activebackground=COLORS["grid"], activeforeground=COLORS["error"], bd=0, cursor="hand2", 
+            ctrl_frame, text="[ KILL PROCESS ]", font=self.font_bold, bg=COLORS["surface"], fg=COLORS["error"],
+            activebackground=COLORS["grid"], activeforeground=COLORS["error"], bd=0, cursor="hand2",
             padx=20, pady=15, command=self.stop_bot, state="disabled"
         )
         self.btn_stop.pack(side="left", expand=True, fill="x")
@@ -153,19 +153,19 @@ class BotAXRegistroGui:
         # Accesos directos a configuraciones
         cfg_frame = tk.Frame(content, bg=COLORS["bg"])
         cfg_frame.pack(fill="x", pady=10)
-        
+
         self.create_link(cfg_frame, "Adjust Regions", self.run_setup)
         self.create_link(cfg_frame, "View Snapshots", self.open_screenshots)
         self.create_link(cfg_frame, "Export Logs", self.open_logs)
 
         # Consola del Flujo de Eventos
         tk.Label(content, text="󰞷 LIVE NEURAL STREAM", font=self.font_small, bg=COLORS["bg"], fg=COLORS["warning"]).pack(anchor="w", pady=(10, 5))
-        
+
         term_f = tk.Frame(content, bg=COLORS["sidebar"], highlightbackground=COLORS["grid"], highlightthickness=1)
         term_f.pack(fill="both", expand=True)
-        
+
         self.terminal: scrolledtext.ScrolledText = scrolledtext.ScrolledText(
-            term_f, bg=COLORS["sidebar"], fg=COLORS["text"], font=("Consolas", 10), 
+            term_f, bg=COLORS["sidebar"], fg=COLORS["text"], font=("Consolas", 10),
             borderwidth=0, highlightthickness=0, padx=10, pady=10, insertbackground=COLORS["text"]
         )
         self.terminal.pack(fill="both", expand=True)
@@ -189,7 +189,7 @@ class BotAXRegistroGui:
         f.pack(fill="x")
         tk.Label(f, text=name, font=self.font_small, bg=COLORS["sidebar"], fg=COLORS["text"]).pack(side="left")
         tk.Label(f, text=f"{int(value*100)}%", font=self.font_small, bg=COLORS["sidebar"], fg=COLORS["accent"]).pack(side="right")
-        
+
         bar_bg = tk.Frame(parent, bg=COLORS["grid"], height=4)
         bar_bg.pack(fill="x", padx=20, pady=(0, 10))
         tk.Frame(bar_bg, bg=COLORS["accent"], width=int(200 * value), height=4).place(x=0, y=0)
@@ -203,14 +203,14 @@ class BotAXRegistroGui:
             cmd (Any): Función a llamar tras clickear.
         """
         btn = tk.Button(
-            parent, text=f"󱔖 {text}", font=self.font_small, bg=COLORS["bg"], fg=COLORS["accent"], 
+            parent, text=f"󱔖 {text}", font=self.font_small, bg=COLORS["bg"], fg=COLORS["accent"],
             activebackground=COLORS["bg"], activeforeground=COLORS["text"], bd=0, cursor="hand2", command=cmd
         )
         btn.pack(side="left", padx=10)
 
     def setup_dragging(self) -> None:
         """Enlaza los eventos para arrastrar la ventana sin bordes mediante el header."""
-        def start_move(e: tk.Event) -> None: 
+        def start_move(e: tk.Event) -> None:
             self.x = e.x
             self.y = e.y
         def on_motion(e: tk.Event) -> None:
@@ -219,7 +219,7 @@ class BotAXRegistroGui:
             new_x: int = self.root.winfo_x() + deltax
             new_y: int = self.root.winfo_y() + deltay
             self.root.geometry(f"+{new_x}+{new_y}")
-            
+
         self.main_frame.bind("<Button-1>", start_move)
         self.main_frame.bind("<B1-Motion>", on_motion)
 
@@ -227,13 +227,13 @@ class BotAXRegistroGui:
         """Chequea recurrentemente los nuevos registros del bot y el reloj digital."""
         now: str = datetime.now().strftime("%H:%M:%S")
         self.uptime_label.config(text=f"UPTIME: {now}\nSTATION_ADMIN_01")
-        
+
         try:
             while True:
                 msg: str = self.log_queue.get_nowait()
                 self.terminal.config(state="normal")
                 self.terminal.insert(tk.END, f"[{datetime.now().strftime('%H:%M:%S')}] > {msg}\n")
-                
+
                 # Incrementar métricas de sesión basándose en el contenido de las trazas
                 if "error" in msg.lower() or "falló" in msg.lower():
                     self.errores += 1
@@ -241,12 +241,12 @@ class BotAXRegistroGui:
                 elif "exitoso" in msg.lower() or "completado" in msg.lower():
                     self.exitos += 1
                     self.lbl_exitos.config(text=f"SUCCESS: {self.exitos}")
-                
+
                 self.terminal.see(tk.END)
                 self.terminal.config(state="disabled")
-        except queue.Empty: 
+        except queue.Empty:
             pass
-        
+
         self.root.after(100, self.update_loop)
 
     def start_bot(self) -> None:
@@ -278,7 +278,7 @@ class BotAXRegistroGui:
         AreaSelector().run()
         self.root.deiconify()
 
-    def open_screenshots(self) -> None: 
+    def open_screenshots(self) -> None:
         """Abre el directorio físico de snapshots de error en la raíz."""
         p: str = os.path.join(BASE_DIR, "logs", "capturas")
         os.makedirs(p, exist_ok=True)
@@ -287,7 +287,7 @@ class BotAXRegistroGui:
     def open_logs(self) -> None:
         """Abre en el editor nativo el registro diario persistido en la raíz."""
         f: str = os.path.join(BASE_DIR, f"registro_{datetime.now().strftime('%Y-%m-%d')}.txt")
-        if os.path.exists(f): 
+        if os.path.exists(f):
             os.startfile(f)
 
 

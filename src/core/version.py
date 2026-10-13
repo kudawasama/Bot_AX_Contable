@@ -24,7 +24,7 @@ def get_git_short_sha() -> str:
         core_dir: str = os.path.dirname(os.path.abspath(__file__))
         # Raíz del repositorio (dos niveles arriba: src/core/ -> src/ -> raíz)
         repo_root: str = os.path.dirname(os.path.dirname(core_dir))
-        
+
         # Ejecutar comandos de Git
         sha_proc: subprocess.CompletedProcess = subprocess.run(
             ["git", "rev-parse", "--short", "HEAD"],
@@ -37,10 +37,10 @@ def get_git_short_sha() -> str:
             capture_output=True, text=True, cwd=repo_root, timeout=2
         )
         dirty: str = dirty_proc.stdout.strip()
-        
+
         if dirty:
             sha += " ◇"
-            
+
         return sha if sha else "??????"
     except Exception:
         return "??????"

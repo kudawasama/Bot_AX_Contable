@@ -33,8 +33,8 @@ class AreaSelector:
         self.current_sector: str = "A"
 
         self.instruction_text: Any = self.canvas.create_text(
-            self.root.winfo_screenwidth() // 2, 50, 
-            text="1. Selecciona el SECTOR A (Cuadrado de Checkboxes)", 
+            self.root.winfo_screenwidth() // 2, 50,
+            text="1. Selecciona el SECTOR A (Cuadrado de Checkboxes)",
             fill="white", font=("Arial", 24, "bold")
         )
 
@@ -53,7 +53,7 @@ class AreaSelector:
         self.start_y = event.y
         if self.rect:
             self.canvas.delete(self.rect)
-        
+
         # Colores distintivos por sector
         color: str = "red" if self.current_sector == "A" else ("blue" if self.current_sector == "B" else "yellow")
         self.rect = self.canvas.create_rectangle(self.start_x, self.start_y, 1, 1, outline=color, width=3)
@@ -77,10 +77,10 @@ class AreaSelector:
         """
         if self.start_x is None or self.start_y is None:
             return
-            
+
         end_x: int = event.x
         end_y: int = event.y
-        
+
         left: int = min(self.start_x, end_x)
         top: int = min(self.start_y, end_y)
         width: int = abs(self.start_x - end_x)

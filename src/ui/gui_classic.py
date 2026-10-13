@@ -513,7 +513,7 @@ class BotAXGui:
         self._update_bar(self.bar_ok, self.bar_ok_rect, 0, 0)
         self._update_bar(self.bar_err, self.bar_err_rect, 0, 0)
         self._update_bar(self.bar_cy, self.bar_cy_rect, 0, 0)
-        
+
         bl: str = os.path.join(BASE_DIR, "blacklist.json")
         if os.path.exists(bl):
             try:
@@ -536,7 +536,7 @@ class BotAXGui:
         self._update_bar(self.bar_ok, self.bar_ok_rect, 0, 0)
         self._update_bar(self.bar_err, self.bar_err_rect, 0, 0)
         self._update_bar(self.bar_cy, self.bar_cy_rect, 0, 0)
-        
+
         bl: str = os.path.join(BASE_DIR, "blacklist.json")
         if os.path.exists(bl):
             try:

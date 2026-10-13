@@ -8,7 +8,7 @@ import threading
 import pyautogui as gui
 
 from src.core.config import (
-    cargar_configuracion, CHK_VACIO, BTN_MENU, BTN_CONFIRM, CHK_MARCADO, 
+    cargar_configuracion, CHK_VACIO, BTN_MENU, BTN_CONFIRM, CHK_MARCADO,
     IMG_ERROR, BTN_ABAJO, IMG_FORMULARIOS, BASE_DIR
 )
 from src.services.vision import (
@@ -46,8 +46,8 @@ def registrar_log(id_diario: str, resultado: str) -> None:
 
 
 def run_bot(
-    log_callback: Callable[[str], None] = print, 
-    stop_event: Optional[threading.Event] = None, 
+    log_callback: Callable[[str], None] = print,
+    stop_event: Optional[threading.Event] = None,
     pause_event: Optional[threading.Event] = None
 ) -> bool:
     """Ejecuta el ciclo principal del Bot AX Contable de manera síncrona.
@@ -66,9 +66,9 @@ def run_bot(
     """
     def log(msg: str) -> None:
         log_callback(msg)
-        
+
     log("Iniciando Bot AX Contable...")
-    
+
     # 0. Validar disponibilidad de Tesseract OCR antes de proceder
     from src.core.config import validar_tesseract
     try:
@@ -77,7 +77,7 @@ def run_bot(
     except FileNotFoundError as e:
         log(f"ERROR CRÍTICO: {e}")
         return False
-    
+
     # 0.5. Cargar lista negra persistente de diarios con error de la raíz
     blacklist_file: str = os.path.join(BASE_DIR, "blacklist.json")
     diarios_con_error: List[str] = []
@@ -91,13 +91,13 @@ def run_bot(
                 log(f"Lista negra cargada: {len(diarios_con_error)} diario(s) con error previo.")
         except Exception:
             diarios_con_error = []
-    
+
     # 1. Cargar la configuración de los sectores
     sectores = cargar_configuracion()
     if not sectores:
         log("ERROR: Sectores no definidos. Ejecuta el calibrador de áreas.")
         return False
-        
+
     sector_a_raw = sectores.get("sector_a")
     if sector_a_raw:
         # Aplicar margen de seguridad (padding) dinámico para evitar recortes de checkboxes en el borde
@@ -109,13 +109,13 @@ def run_bot(
     else:
         log("ERROR: Sector A no definido en la configuración.")
         return False
-        
+
     sector_b = sectores.get("sector_b")
     sector_scroll = sectores.get("sector_scroll")
 
     if not sector_scroll:
         log("ADVERTENCIA: Sector Scroll (Sector C) no definido.")
- 
+
     # Evento estructurado: inicio del bot con parametros de configuracion
     event_log(
         "bot_start",
@@ -127,12 +127,12 @@ def run_bot(
     log("\n[Instrucción] El bot se está ejecutando.")
     if stop_event is None:
         log("[Instrucción] MANTÉN PRESIONADA LA TECLA 'ESC' PARA DETENER.\n")
-    
-    time.sleep(1) 
+
+    time.sleep(1)
 
     ciclo: int = 1
     log("\n--- CONFIGURACIÓN OCR ACTIVA ---")
-    
+
     try:
         posiciones_procesadas: Set[Tuple[int, int]] = set()  # Cache de coordenadas ya procesadas
         while True:
@@ -168,7 +168,7 @@ def run_bot(
 
             log(f"\n--- Iniciando Ciclo {ciclo} ---")
             event_log("ciclo_start", ciclo_num=ciclo)
-            
+
             # Paso A: Buscar casillas vacías y elegir la mejor
             intentos_scroll: int = 0
             casilla_objetivo: Optional[Tuple[int, int]] = None
@@ -216,22 +216,22 @@ def run_bot(
                         continue
                     # Redondear coordenadas para absorber pequeñas fluctuaciones
                     coord_redondeada = (coord[0] // 5 * 5, coord[1] // 5 * 5)
-                    
+
                     # Saltar si ya procesamos esta posición
                     if coord_redondeada in posiciones_procesadas:
                         continue
-                    
+
                     posiciones_procesadas.add(coord_redondeada)
-                    
+
                     identificador = leer_id_diario(coord)
                     id_normalizado = normalizar_id_diario(identificador)
-                    
+
                     if id_normalizado in diarios_con_error:
                         if intentos_scroll == 0:
                             log(f"  -> Ignorando {identificador} (lista negra, normalizado: {id_normalizado}).")
                         event_log("checkbox_skip_blacklist", id_normalizado=id_normalizado)
                         continue
-                    
+
                     event_log(
                         "checkbox_found",
                         id_bruto=identificador,
@@ -244,7 +244,7 @@ def run_bot(
 
                 if casilla_objetivo:
                     break
-                
+
                 # Realizar scroll si no se encontraron casillas
                 intentos_scroll += 1
                 log(f"No hay casillas nuevas. Buscando botón de scroll ({intentos_scroll}/3)...")
@@ -294,14 +294,14 @@ def run_bot(
 
             # Paso B: Menú Registrar
             encontrado_menu = buscar_y_clickear(
-                ruta_imagen=BTN_MENU, 
+                ruta_imagen=BTN_MENU,
                 sector_region=sector_b,
                 timeout=30,
                 stop_event=stop_event
             )
 
             if not encontrado_menu:
-                if stop_event and stop_event.is_set(): 
+                if stop_event and stop_event.is_set():
                     break
                 log(f"Error: No se encontró el botón de registrar para {id_actual}.")
                 _captura_menu = capturar_pantalla_error(id_actual)
@@ -322,18 +322,18 @@ def run_bot(
                     coords=list(_menu_coords) if _menu_coords else [],
                     in_sector=_in_sector_b,
                 )
-            
+
             # Paso C: Confirmación
-            time.sleep(0.5) 
+            time.sleep(0.5)
             encontrado_confirm = buscar_y_clickear(
-                ruta_imagen=BTN_CONFIRM, 
+                ruta_imagen=BTN_CONFIRM,
                 timeout=20,
                 confidencialidad=0.8,
                 stop_event=stop_event
             )
-            
+
             if not encontrado_confirm:
-                 if stop_event and stop_event.is_set(): 
+                 if stop_event and stop_event.is_set():
                      break
                  log(f"Error: No se encontró la confirmación para {id_actual}.")
                  _captura_confirm = capturar_pantalla_error(id_actual)
@@ -354,7 +354,7 @@ def run_bot(
                     coords=list(_confirm_coords) if _confirm_coords else [],
                     in_sector=_in_sector_b,
                 )
-            
+
             # Paso D: Esperar resultado
             px, py = punto_click_a
             # Pequeña espera activa: mueve el mouse 3px cada 1s para evitar suspensión
@@ -365,7 +365,7 @@ def run_bot(
                 except Exception:
                     pass
                 time.sleep(1)
-            
+
             _ts_inicio_resultado = time.time()
             resultado = esperar_resultado_registro(
                 ruta_obj_exito=CHK_MARCADO,
@@ -375,7 +375,7 @@ def run_bot(
                 stop_event=stop_event
             )
             _tiempo_total = round(time.time() - _ts_inicio_resultado, 2)
-            
+
             if resultado == 'exito':
                 log(f"[RESULT:OK] -> Registro de {normalizar_id_diario(id_actual)} completado.")
                 event_log(
@@ -433,10 +433,10 @@ def run_bot(
                  )
                  event_log("bot_stop", reason="timeout_extremo")
                  break
-                 
+
             ciclo += 1
             time.sleep(0.1)
-            
+
     except KeyboardInterrupt:
         log("\nBot detenido manualmente.")
         event_log("bot_stop", reason="user_esc")
@@ -447,7 +447,7 @@ def run_bot(
     except Exception as e:
         log(f"\nError inesperado: {e}")
         event_log("bot_stop", reason="error")
-        
+
     log("\nEjecución finalizada.")
     return True
 
