@@ -6,6 +6,20 @@ Todos los cambios relevantes de este proyecto. El formato sigue
 
 ---
 
+## [v-00.33.00] — 2026-10-13 (C-3: definir el LICENSE)
+
+### Añadido
+- **`LICENSE`**: aviso de titularidad y uso interno ("todos los derechos reservados"). No es una
+  licencia de código abierto ni concede permisos de reutilización: deja **por escrito** lo que ya
+  regía por defecto y responde al pedido de `ctxmap`. Se descartaron MIT/Apache a propósito: es
+  una herramienta interna, no un proyecto para compartir.
+
+### Notas
+- El aviso jurídico no cambia nada más que el propio archivo `LICENSE`: no afecta la ejecución
+  del bot ni el contenido del repositorio.
+
+---
+
 ## [v-00.31.00] — 2026-10-13 (C-4: eliminar el código muerto `src/bot_ax/`)
 
 ### Eliminado

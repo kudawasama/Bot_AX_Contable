@@ -316,8 +316,8 @@ lo que aún no es bloqueante.
 > previa de que la etiqueta conserva el mismo commit, y **C-4 ejecutado**), C2 ✅
 > (`pyproject.toml` solo herramientas), C3 ✅ (236
 > avisos de ruff → 0 y el lint del CI ya es puerta obligatoria), C4 parcial: Makefile
-> **descartado** con motivo (no hay `make` en el entorno) y LICENSE **pendiente de decisión
-> del usuario**. Suite 53/53 · ruff 0 · CI en verde. Rama `feat/fase2-c-higiene`.
+> **descartado** con motivo (no hay `make` en el entorno) y LICENSE **resuelto**: aviso de uso
+> interno / todos los derechos reservados (v-00.33.00). Suite 53/53 · ruff 0 · CI en verde.
 
 ### Tarea C1: resolver la rama legado `refactor/estructura-profesional`
 
