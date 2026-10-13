@@ -42,6 +42,8 @@ Bot_AX_Contable
       - Proyecto 'Bot_AX_Contable' — 490 archivos, 490634 líneas, sin entrypoints.
     - **BASE.014** Proyecto 'Bot_AX_Contable' — 500 archivos, 500784 líneas, sin entrypoints `[arquitectura, class:other, proyecto]` completado | v1 | src: scanner | ev: Cantidad: 500; Líneas de código: 500784
       - Proyecto 'Bot_AX_Contable' — 500 archivos, 500784 líneas, sin entrypoints.
+    - **BASE.015** Proyecto 'Bot_AX_Contable' — 500 archivos, 500811 líneas, sin entrypoints `[arquitectura, class:other, proyecto]` completado | v1 | src: scanner | ev: Cantidad: 500; Líneas de código: 500811
+      - Proyecto 'Bot_AX_Contable' — 500 archivos, 500811 líneas, sin entrypoints.
 
 - **IDEA**
 
@@ -283,6 +285,8 @@ LO QUE ENCONTRÉ (y arreglé)
       - Riesgo: Implemento T1 y T3. Leo el archivo actual para reescribirlo de una vez y sin riesgo de parches parciales:.
     - **IDEA.006** Hoy es **13 de octubre, 11:02** — y el bot **acaba de caerse (11:01:52)** por el mismo fail-safe. Verifico si mi alerta nueva lo detecta en producción: `[class:feature, implementacin, revisarcommitsypendientess]` activo | v1 | src: chat | ev: Cantidad: 13
       - Idea o implementación relevante. Hoy es **13 de octubre, 11:02** — y el bot **acaba de caerse (11:01:52)** por el mismo fail-safe. Verifico si mi alerta nueva lo detecta en producción:.
+    - **RIESGO.008** Atención: el borrado quedó **bloqueado** en el diálogo de aprobación (se agotó el minuto sin respuesta). No lo reintento sin tu OK explícito. Corrijo la redacción para que los documentos digan la verd `[anlisis, class:chore, revisarcommitsypendientess]` activo | v1 | src: chat | ev: —
+      - Riesgo: Atención: el borrado quedó **bloqueado** en el diálogo de aprobación (se agotó el minuto sin respuesta). No lo reintento sin tu OK explícito. Corrijo la redacción para que los documentos digan la verd.
 
 ## Conexiones
 
@@ -305,6 +309,7 @@ _(sin conexiones)_
 - RIESGO.004: Entendido y aplicado: solo Bot_AX_Contable. Y me quedo con el hallazgo más importante de la sesión, que resultó ser un problema real del bot.
 - RIESGO.006: Implemento T1 y T3. Leo el archivo actual para reescribirlo de una vez y sin riesgo de parches parciales:
 - IDEA.006: Hoy es **13 de octubre, 11:02** — y el bot **acaba de caerse (11:01:52)** por el mismo fail-safe. Verifico si mi alerta nueva lo detecta en producción:
+- RIESGO.008: Atención: el borrado quedó **bloqueado** en el diálogo de aprobación (se agotó el minuto sin respuesta). No lo reintento sin tu OK explícito. Corrijo la redacción para que los documentos digan la verd
 
 ## Instrucciones para agentes
 
