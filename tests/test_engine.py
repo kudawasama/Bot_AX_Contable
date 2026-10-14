@@ -6,6 +6,7 @@ resultados y capturas quedan monkeypatcheados).
 """
 
 import threading
+import time
 
 from src.core import engine
 
@@ -57,3 +58,35 @@ class TestIdIlegibleNoSeProcesa:
         assert "id_ilegible" in tipos, "debe dejar constancia del ID ilegible"
         assert "checkbox_found" not in tipos, "no debe dar por encontrado un diario ilegible"
         assert registros == [], "no debe registrar ningún diario"
+
+
+class TestHeartbeat:
+    """B2: el latido permite distinguir «trabajando» de «colgado» sin mirar la pantalla."""
+
+    def test_emite_latidos_periodicos_y_se_detiene(self, monkeypatch):
+        latidos = []
+        monkeypatch.setattr(
+            engine, "event_log", lambda tipo, **datos: latidos.append({"event": tipo, **datos})
+        )
+
+        detener = threading.Event()
+        hilo = engine.iniciar_heartbeat(detener, intervalo=0.05)
+
+        time.sleep(0.2)
+        detener.set()
+        hilo.join(timeout=1)
+
+        assert len(latidos) >= 2, "debe latir varias veces mientras la sesión vive"
+        assert all(latido["event"] == "bot_heartbeat" for latido in latidos)
+        assert not hilo.is_alive(), "tras bot_stop el latido no debe quedar huérfano"
+
+    def test_el_latido_es_un_hilo_daemon(self, monkeypatch):
+        """Un hilo no-daemon impediría cerrar la aplicación si el cierre falla."""
+        monkeypatch.setattr(engine, "event_log", lambda *_args, **_kwargs: None)
+        detener = threading.Event()
+        hilo = engine.iniciar_heartbeat(detener, intervalo=10)
+        detener.set()
+        try:
+            assert hilo.daemon is True
+        finally:
+            hilo.join(timeout=1)
