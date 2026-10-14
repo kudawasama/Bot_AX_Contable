@@ -1,8 +1,8 @@
 ---
 type: moc
-created: 2026-10-13T14:54:45
+created: 2026-10-14T16:41:33
 project: "Bot_AX_Contable"
-total_nodes: 88
+total_nodes: 90
 total_edges: 0
 tags: [context-map, indice, moc]
 ---
@@ -15,11 +15,11 @@ tags: [context-map, indice, moc]
 
 ## 📊 Métricas
 
-- 📦 Nodos Totales: **88**
-- 🧱 BASE: **16**
-- 💡 IDEA: **31**
+- 📦 Nodos Totales: **90**
+- 🧱 BASE: **17**
+- 💡 IDEA: **27**
 - ⚠️ RIESGO: **6**
-- 🔄 CAMBIO/CORRECCION: **32**
+- 🔄 CAMBIO/CORRECCION: **36**
 - 🔮 FUTURO: **3**
 - 🎯 HITO: **0**
 - 🔗 Conexiones: **0**
@@ -44,9 +44,10 @@ tags: [context-map, indice, moc]
 - [[7.0-MANUAL/Diario/2026-08-12.md|2026-08-12]]
 - [[7.0-MANUAL/Diario/2026-10-09.md|2026-10-09]]
 - [[7.0-MANUAL/Diario/2026-10-13.md|2026-10-13]]
+- [[7.0-MANUAL/Diario/2026-10-14.md|2026-10-14]]
 
 ---
 
 ## 🏷️ Tags Principales
 
-`#anlisis` `#antigravity` `#arquitectura` `#botaxcontable` `#cambio` `#class:chore` `#class:feature` `#class:fix` `#class:other` `#class:update` `#correccion` `#documentacion` `#git` `#idea` `#implementacin` `#proyecto` `#revisarcommitsypendientess` `#riesgo`
+`#anlisis` `#antigravity` `#arquitectura` `#botaxcontable` `#cambio` `#class:chore` `#class:docs` `#class:feature` `#class:fix` `#class:other` `#class:perf` `#class:update` `#correccion` `#documentacion` `#git` `#idea` `#implementacin` `#proyecto` `#revisarcommitsypendientess` `#riesgo`

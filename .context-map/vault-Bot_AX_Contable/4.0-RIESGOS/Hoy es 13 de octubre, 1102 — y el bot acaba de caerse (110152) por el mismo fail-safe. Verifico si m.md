@@ -1,15 +1,15 @@
 ---
 type: riesgo
 status: activo
-created: 2026-10-13T14:54:45
+created: 2026-10-14T16:41:33
 project: "Bot_AX_Contable"
-tags: ["riesgo", "class:feature", "implementacin", "revisarcommitsypendientess"]
+tags: ["riesgo", "class:chore", "implementacin", "revisarcommitsypendientess"]
 source: "chat"
 ---
 
 # ⚠️ Hoy es **13 de octubre, 11:02** — y el bot **acaba de caerse (11:01:52)** por el mismo fail-safe. Verifico si mi alerta nueva lo detecta en producción:
 
-> #riesgo #activo #AUTOMATIZACION
+> #riesgo #activo #DEVOPS
 
 Idea o implementación relevante. Hoy es **13 de octubre, 11:02** — y el bot **acaba de caerse (11:01:52)** por el mismo fail-safe. Verifico si mi alerta nueva lo detecta en producción:.
 

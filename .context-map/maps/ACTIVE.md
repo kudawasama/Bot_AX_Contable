@@ -50,6 +50,8 @@ Bot_AX_Contable
       - Proyecto 'Bot_AX_Contable' — 499 archivos, 500888 líneas, sin entrypoints.
     - **BASE.018** Proyecto 'Bot_AX_Contable' — 502 archivos, 503124 líneas, sin entrypoints `[arquitectura, class:other, proyecto]` completado | v1 | src: scanner | ev: Cantidad: 502; Líneas de código: 503124
       - Proyecto 'Bot_AX_Contable' — 502 archivos, 503124 líneas, sin entrypoints.
+    - **BASE.019** Proyecto 'Bot_AX_Contable' — 508 archivos, 507522 líneas, sin entrypoints `[arquitectura, class:other, proyecto]` completado | v1 | src: scanner | ev: Cantidad: 508; Líneas de código: 507522
+      - Proyecto 'Bot_AX_Contable' — 508 archivos, 507522 líneas, sin entrypoints.
 
 - **IDEA**
 
@@ -63,15 +65,15 @@ Bot_AX_Contable
       - Pendiente: Centraliza todos los defaults numéricos para facilitar ajustes..
 
 Ubicación: `src/bot_ax/config/defaults.py:L4`
-    - **FUTURO.027** TODO (src/core/engine.py:L258): event_log("scroll_performed", intento=intentos_scroll, metodo="boton") `[class:chore]` completado | v1 | src: scanner | ev: Archivo: src/core/engine.py; Cantidad: 258
+    - **FUTURO.027** TODO (src/core/engine.py:L258): event_log("scroll_performed", intento=intentos_scroll, metodo="boton") `[class:perf]` completado | v1 | src: scanner | ev: Archivo: src/core/engine.py; Cantidad: 258
       - Pendiente: event_log("scroll_performed", intento=intentos_scroll, metodo="boton").
 
 Ubicación: `src/core/engine.py:L258`
-    - **FUTURO.028** TODO (src/core/engine.py:L273): event_log("scroll_performed", intento=intentos_scroll, metodo="click") `[class:chore]` completado | v1 | src: scanner | ev: Archivo: src/core/engine.py; Cantidad: 273
+    - **FUTURO.028** TODO (src/core/engine.py:L273): event_log("scroll_performed", intento=intentos_scroll, metodo="click") `[class:perf]` completado | v1 | src: scanner | ev: Archivo: src/core/engine.py; Cantidad: 273
       - Pendiente: event_log("scroll_performed", intento=intentos_scroll, metodo="click").
 
 Ubicación: `src/core/engine.py:L273`
-    - **FUTURO.029** TODO (src/core/engine.py:L276): event_log("scroll_performed", intento=intentos_scroll, metodo="pgdn") `[class:chore]` completado | v1 | src: scanner | ev: Archivo: src/core/engine.py; Cantidad: 276
+    - **FUTURO.029** TODO (src/core/engine.py:L276): event_log("scroll_performed", intento=intentos_scroll, metodo="pgdn") `[class:perf]` completado | v1 | src: scanner | ev: Archivo: src/core/engine.py; Cantidad: 276
       - Pendiente: event_log("scroll_performed", intento=intentos_scroll, metodo="pgdn").
 
 Ubicación: `src/core/engine.py:L276`
@@ -137,31 +139,27 @@ Ubicación: `scripts/observer_watch.py:L179`
 Ubicación: `scripts/observer_watch.py:L180`
     - **BASE.001** Conversación en Antigravity IDE: Bot_AX_Contable (1 mensajes) `[antigravity, botaxcontable, class:chore]` completado | v1 | src: antigravity-ide | ev: Cantidad: 1
       - Conversación en Antigravity IDE: Bot_AX_Contable (1 mensajes).
-    - **CORRECCION.015** Hecho. Revert aplicado, respaldado y verificado. `[class:chore, implementacin, revisarcommitsypendientess]` completado | v1 | src: chat | ev: —
-      - Corrección: Hecho. Revert aplicado, respaldado y verificado.
-
-LO QUE QUEDÓ EN ESTE PASO
-  Los lanzadores volvieron byte por byte a su forma original: hashes idénticos al commit 3ef8880 y diff vacío contra el orig.
-    - **CORRECCION.016** El arreglo del logger quedó verificado en producción: el log ya tiene las trazas reales del bot (16:11–16:13). Corro el chequeo de salud contra el escenario sano real: `[class:chore, implementacin, revisarcommitsypendientess]` completado | v1 | src: chat | ev: Cantidad: 16
-      - Corrección: El arreglo del logger quedó verificado en producción: el log ya tiene las trazas reales del bot (16:11–16:13). Corro el chequeo de salud contra el escenario sano real:.
-    - **IDEA.003** Ahora el bloque principal (funciones nuevas + chequeo): `[class:feature, implementacin, revisarcommitsypendientess]` completado | v1 | src: chat | ev: —
+    - **IDEA.003** Ahora el bloque principal (funciones nuevas + chequeo): `[class:chore, implementacin, revisarcommitsypendientess]` completado | v1 | src: chat | ev: —
       - Idea o implementación relevante. Ahora el bloque principal (funciones nuevas + chequeo):.
-    - **IDEA.004** Un test previo choca con la regla nueva (usaba `confirm_click`, que ahora significa "esperando resultado"). Lo ajusto para que siga probando su intención original: `[class:feature, implementacin, revisarcommitsypendientess]` completado | v1 | src: chat | ev: —
-      - Idea o implementación relevante. Un test previo choca con la regla nueva (usaba `confirm_click`, que ahora significa "esperando resultado"). Lo ajusto para que siga probando su intención original:.
-    - **IDEA.005** Se bloqueó el último paso (crear/borrar un directorio temporal de demostración pide tu aprobación y no llegó respuesta), así que **no ejecuté nada más**. Te dejo el estado exacto y no avanzo sin tu OK `[class:feature, implementacin, revisarcommitsypendientess]` completado | v1 | src: chat | ev: —
+    - **IDEA.005** Se bloqueó el último paso (crear/borrar un directorio temporal de demostración pide tu aprobación y no llegó respuesta), así que **no ejecuté nada más**. Te dejo el estado exacto y no avanzo sin tu OK `[class:chore, implementacin, revisarcommitsypendientess]` completado | v1 | src: chat | ev: —
       - Idea o implementación relevante. Se bloqueó el último paso (crear/borrar un directorio temporal de demostración pide tu aprobación y no llegó respuesta), así que **no ejecuté nada más**. Te dejo el estado exacto y no ava
-    - **CORRECCION.017** Ruff limpio en tests/scripts. Commit del trabajo, empezando por respaldar tu recalibración del 13-oct: `[class:chore, implementacin, revisarcommitsypendientess]` completado | v1 | src: chat | ev: Cantidad: 13
-      - Corrección: Ruff limpio en tests/scripts. Commit del trabajo, empezando por respaldar tu recalibración del 13-oct:.
     - **IDEA.007** Excelente. Verifico que la sesión nueva esté corriendo con el código nuevo y cómo arrancó: `[class:feature, implementacin, revisarcommitsypendientess]` completado | v1 | src: chat | ev: —
       - Idea o implementación relevante. Excelente. Verifico que la sesión nueva esté corriendo con el código nuevo y cómo arrancó:.
-    - **IDEA.008** Reinicio confirmado y todo cuadra. Verificación: `[class:feature, implementacin, revisarcommitsypendientess]` completado | v1 | src: chat | ev: —
+    - **IDEA.008** Reinicio confirmado y todo cuadra. Verificación: `[class:chore, implementacin, revisarcommitsypendientess]` completado | v1 | src: chat | ev: —
       - Idea o implementación relevante. Reinicio confirmado y todo cuadra. Verificación:
 
 SESIÓN NUEVA EN MARCHA CON EL CÓDIGO NUEVO
   · Proceso: PID 17072, arrancado hoy 12:42:00.
   · Evento de arranque: 12:42:52 → registró se
-    - **CORRECCION.018** El commit de C-4 sí entró (1389545, v-00.31.00). Faltaron el commit del contexto y los push — los cierro: `[class:chore, implementacin, revisarcommitsypendientess]` completado | v1 | src: chat | ev: Archivo: 00.31.00; Cantidad: 4
-      - Corrección: El commit de C-4 sí entró (1389545, v-00.31.00). Faltaron el commit del contexto y los push — los cierro:.
+    - **IDEA.009** B5 en verde (71/71, 3 pruebas nuevas, ruff limpio). Ahora documento el lote y respaldo: `[class:feature, implementacin, revisarcommitsypendientess]` completado | v1 | src: chat | ev: Cantidad: 5
+      - Idea o implementación relevante. B5 en verde (71/71, 3 pruebas nuevas, ruff limpio). Ahora documento el lote y respaldo:.
+
+- **PRUEBA**
+
+  - **ID**, título/tags, estado, source, versión
+
+    - **IDEA.004** Un test previo choca con la regla nueva (usaba `confirm_click`, que ahora significa "esperando resultado"). Lo ajusto para que siga probando su intención original: `[class:chore, implementacin, revisarcommitsypendientess]` completado | v1 | src: chat | ev: —
+      - Idea o implementación relevante. Un test previo choca con la regla nueva (usaba `confirm_click`, que ahora significa "esperando resultado"). Lo ajusto para que siga probando su intención original:.
 
 - **FUTURO**
 
@@ -171,11 +169,11 @@ SESIÓN NUEVA EN MARCHA CON EL CÓDIGO NUEVO
       - Pendiente: L4: Centraliza todos los defaults numéricos para facilitar ajustes..
 
 Ubicación: `TODO`
-    - **FUTURO.001** TODO: L258: event_log("scroll_performed", intento=intentos_scroll, metodo="boton") `[class:chore]` pendiente | v1 | src: scanner | ev: Cantidad: 258
+    - **FUTURO.001** TODO: L258: event_log("scroll_performed", intento=intentos_scroll, metodo="boton") `[class:perf]` pendiente | v1 | src: scanner | ev: Cantidad: 258
       - Pendiente: L258: event_log("scroll_performed", intento=intentos_scroll, metodo="boton").
 
 Ubicación: `TODO`
-    - **FUTURO.002** TODO: L273: event_log("scroll_performed", intento=intentos_scroll, metodo="click") `[class:chore]` pendiente | v1 | src: scanner | ev: Cantidad: 273
+    - **FUTURO.002** TODO: L273: event_log("scroll_performed", intento=intentos_scroll, metodo="click") `[class:perf]` pendiente | v1 | src: scanner | ev: Cantidad: 273
       - Pendiente: L273: event_log("scroll_performed", intento=intentos_scroll, metodo="click").
 
 Ubicación: `TODO`
@@ -194,17 +192,17 @@ Ubicación: `TODO`
 Ubicación: `TODO`
     - **CORRECCION.014** [3ef8880] fix: jiggle de mouse cada 12s / 1s para evitar suspension del notebook durante espera de registro `[class:fix, correccion, git]` completado | v1 | src: git | ev: Cantidad: 3
       - Corrección: fix: jiggle de mouse cada 12s / 1s para evitar suspension del notebook durante espera de registro
-    - **CORRECCION.010** [3e5617d] fix: restaurar CHK_VACIO a 0.9 (unico cambio entre commit que funciona y ahora) `[class:fix, correccion, git]` completado | v1 | src: git | ev: Archivo: 0.9; Cantidad: 3
+    - **CORRECCION.010** [3e5617d] fix: restaurar CHK_VACIO a 0.9 (unico cambio entre commit que funciona y ahora) `[class:chore, correccion, git]` completado | v1 | src: git | ev: Archivo: 0.9; Cantidad: 3
       - Corrección: fix: restaurar CHK_VACIO a 0.9 (unico cambio entre commit que funciona y ahora)
-    - **CORRECCION.011** [6612fac] Revert "fix: restaurar deteccion check vacio - confianza 0.9 + filtro posicional + sector A 55px" `[class:fix, correccion, git]` completado | v1 | src: git | ev: Archivo: 0.9; Cantidad: 6612
+    - **CORRECCION.011** [6612fac] Revert "fix: restaurar deteccion check vacio - confianza 0.9 + filtro posicional + sector A 55px" `[class:chore, correccion, git]` completado | v1 | src: git | ev: Archivo: 0.9; Cantidad: 6612
       - Corrección: Revert "fix: restaurar deteccion check vacio - confianza 0.9 + filtro posicional + sector A 55px"
-    - **CORRECCION.012** [738559f] fix: restaurar deteccion check vacio - confianza 0.9 + filtro posicional + sector A 55px `[class:fix, correccion, git]` completado | v1 | src: git | ev: Archivo: 0.9; Cantidad: 738559
+    - **CORRECCION.012** [738559f] fix: restaurar deteccion check vacio - confianza 0.9 + filtro posicional + sector A 55px `[class:chore, correccion, git]` completado | v1 | src: git | ev: Archivo: 0.9; Cantidad: 738559
       - Corrección: fix: restaurar deteccion check vacio - confianza 0.9 + filtro posicional + sector A 55px
-    - **CORRECCION.013** [8596fb1] fix: bajar confianza CHK_VACIO de 0.9 a 0.8 por anti-aliasing `[class:fix, correccion, git]` completado | v1 | src: git | ev: Archivo: 0.9; Archivo: 0.8; Cantidad: 8596
+    - **CORRECCION.013** [8596fb1] fix: bajar confianza CHK_VACIO de 0.9 a 0.8 por anti-aliasing `[class:chore, correccion, git]` completado | v1 | src: git | ev: Archivo: 0.9; Archivo: 0.8; Cantidad: 8596
       - Corrección: fix: bajar confianza CHK_VACIO de 0.9 a 0.8 por anti-aliasing
-    - **CORRECCION.006** [ab65367] fix: bajar a 0.7 deteccion check marcado para encontrar el ultimo `[class:fix, correccion, git]` completado | v1 | src: git | ev: Archivo: 0.7; Cantidad: 65367
+    - **CORRECCION.006** [ab65367] fix: bajar a 0.7 deteccion check marcado para encontrar el ultimo `[class:chore, correccion, git]` completado | v1 | src: git | ev: Archivo: 0.7; Cantidad: 65367
       - Corrección: fix: bajar a 0.7 deteccion check marcado para encontrar el ultimo
-    - **CORRECCION.007** [b074875] fix: continuar desde el ultimo checkbox marcado hacia abajo `[class:fix, correccion, git]` completado | v1 | src: git | ev: Cantidad: 074875
+    - **CORRECCION.007** [b074875] fix: continuar desde el ultimo checkbox marcado hacia abajo `[class:chore, correccion, git]` completado | v1 | src: git | ev: Cantidad: 074875
       - Corrección: fix: continuar desde el ultimo checkbox marcado hacia abajo
     - **CORRECCION.004** [8b077e4] fix: ajustar sector A solo a columna checkboxes (x=300, w=55) `[class:fix, correccion, git]` completado | v1 | src: git | ev: Cantidad: 8
       - Corrección: fix: ajustar sector A solo a columna checkboxes (x=300, w=55)
@@ -256,10 +254,21 @@ Ubicación: `scripts/debug_ocr.py:L50`
       - Pendiente: debug_captura_ocr().
 
 Ubicación: `scripts/debug_ocr.py:L56`
-    - **FUTURO.014** TODO (scripts/observer_analyze.py:L326): Bug corregido (ratio_fallback_pct > 100%): `[class:fix]` completado | v1 | src: scanner | ev: Archivo: scripts/observer_analyze.py; Cantidad: 326
+    - **FUTURO.014** TODO (scripts/observer_analyze.py:L326): Bug corregido (ratio_fallback_pct > 100%): `[class:chore]` completado | v1 | src: scanner | ev: Archivo: scripts/observer_analyze.py; Cantidad: 326
       - Pendiente: Bug corregido (ratio_fallback_pct > 100%):.
 
 Ubicación: `scripts/observer_analyze.py:L326`
+    - **CORRECCION.015** Hecho. Revert aplicado, respaldado y verificado. `[class:chore, implementacin, revisarcommitsypendientess]` completado | v1 | src: chat | ev: —
+      - Corrección: Hecho. Revert aplicado, respaldado y verificado.
+
+LO QUE QUEDÓ EN ESTE PASO
+  Los lanzadores volvieron byte por byte a su forma original: hashes idénticos al commit 3ef8880 y diff vacío contra el orig.
+    - **CORRECCION.016** El arreglo del logger quedó verificado en producción: el log ya tiene las trazas reales del bot (16:11–16:13). Corro el chequeo de salud contra el escenario sano real: `[class:chore, implementacin, revisarcommitsypendientess]` completado | v1 | src: chat | ev: Cantidad: 16
+      - Corrección: El arreglo del logger quedó verificado en producción: el log ya tiene las trazas reales del bot (16:11–16:13). Corro el chequeo de salud contra el escenario sano real:.
+    - **CORRECCION.017** Ruff limpio en tests/scripts. Commit del trabajo, empezando por respaldar tu recalibración del 13-oct: `[class:chore, implementacin, revisarcommitsypendientess]` completado | v1 | src: chat | ev: Cantidad: 13
+      - Corrección: Ruff limpio en tests/scripts. Commit del trabajo, empezando por respaldar tu recalibración del 13-oct:.
+    - **CORRECCION.018** El commit de C-4 sí entró (1389545, v-00.31.00). Faltaron el commit del contexto y los push — los cierro: `[class:chore, implementacin, revisarcommitsypendientess]` completado | v1 | src: chat | ev: Archivo: 00.31.00; Cantidad: 4
+      - Corrección: El commit de C-4 sí entró (1389545, v-00.31.00). Faltaron el commit del contexto y los push — los cierro:.
 
 - **CAMBIO**
 
@@ -267,11 +276,11 @@ Ubicación: `scripts/observer_analyze.py:L326`
 
     - **BASE.004** Repositorio git con 100 commits totales, branch: main `[class:other, git]` completado | v1 | src: git | ev: Cantidad: 100
       - Repositorio: Repositorio git con 100 commits totales, branch: main.
-    - **CAMBIO.004** [c91f5d7] docs: documentar especificacion del proceso del bot contable y agregar manual operativo inmutable `[cambio, class:feature, git]` completado | v1 | src: git | ev: Cantidad: 91
+    - **CAMBIO.004** [c91f5d7] docs: documentar especificacion del proceso del bot contable y agregar manual operativo inmutable `[cambio, class:docs, git]` completado | v1 | src: git | ev: Cantidad: 91
       - Cambio: docs: documentar especificacion del proceso del bot contable y agregar manual operativo inmutable
-    - **CORRECCION.009** [2aad23d] refactor: Reestructuracion modular del proyecto bajo src/, ordenamiento de scripts auxiliares y correccion de foco no destructivo en Dynamics AX `[class:update, correccion, git]` completado | v1 | src: git | ev: Cantidad: 2
+    - **CORRECCION.009** [2aad23d] refactor: Reestructuracion modular del proyecto bajo src/, ordenamiento de scripts auxiliares y correccion de foco no destructivo en Dynamics AX `[class:chore, correccion, git]` completado | v1 | src: git | ev: Cantidad: 2
       - Corrección: refactor: Reestructuracion modular del proyecto bajo src/, ordenamiento de scripts auxiliares y correccion de foco no destructivo en Dynamics AX
-    - **CAMBIO.003** [5cd53f0] docs: crear flujo del ciclo exacto del bot (según descripción) `[cambio, class:feature, git]` completado | v1 | src: git | ev: Cantidad: 5
+    - **CAMBIO.003** [5cd53f0] docs: crear flujo del ciclo exacto del bot (según descripción) `[cambio, class:chore, git]` completado | v1 | src: git | ev: Cantidad: 5
       - Cambio: docs: crear flujo del ciclo exacto del bot (según descripción)
     - **CORRECCION.008** [a835dfa] merge: unificar fix/lint (GUI moderna + app_gui_qt + launchers) con main (estructura profesional) `[class:fix, correccion, git]` completado | v1 | src: git | ev: Cantidad: 835
       - Corrección: merge: unificar fix/lint (GUI moderna + app_gui_qt + launchers) con main (estructura profesional)
@@ -299,7 +308,7 @@ LO QUE ENCONTRÉ (y arreglé)
   logs/bot_ax.log dejó de es.
     - **RIESGO.006** Implemento T1 y T3. Leo el archivo actual para reescribirlo de una vez y sin riesgo de parches parciales: `[anlisis, class:chore, revisarcommitsypendientess]` activo | v1 | src: chat | ev: Cantidad: 1
       - Riesgo: Implemento T1 y T3. Leo el archivo actual para reescribirlo de una vez y sin riesgo de parches parciales:.
-    - **IDEA.006** Hoy es **13 de octubre, 11:02** — y el bot **acaba de caerse (11:01:52)** por el mismo fail-safe. Verifico si mi alerta nueva lo detecta en producción: `[class:feature, implementacin, revisarcommitsypendientess]` activo | v1 | src: chat | ev: Cantidad: 13
+    - **IDEA.006** Hoy es **13 de octubre, 11:02** — y el bot **acaba de caerse (11:01:52)** por el mismo fail-safe. Verifico si mi alerta nueva lo detecta en producción: `[class:chore, implementacin, revisarcommitsypendientess]` activo | v1 | src: chat | ev: Cantidad: 13
       - Idea o implementación relevante. Hoy es **13 de octubre, 11:02** — y el bot **acaba de caerse (11:01:52)** por el mismo fail-safe. Verifico si mi alerta nueva lo detecta en producción:.
     - **RIESGO.008** Atención: el borrado quedó **bloqueado** en el diálogo de aprobación (se agotó el minuto sin respuesta). No lo reintento sin tu OK explícito. Corrijo la redacción para que los documentos digan la verd `[anlisis, class:chore, revisarcommitsypendientess]` activo | v1 | src: chat | ev: —
       - Riesgo: Atención: el borrado quedó **bloqueado** en el diálogo de aprobación (se agotó el minuto sin respuesta). No lo reintento sin tu OK explícito. Corrijo la redacción para que los documentos digan la verd.

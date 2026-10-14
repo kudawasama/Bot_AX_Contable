@@ -1,7 +1,7 @@
 ---
 type: seccion
 subtype: ideas-completado-reportes
-created: 2026-10-13T14:54:45
+created: 2026-10-14T16:41:33
 project: "Bot_AX_Contable"
 tags: [context-map, ideas, completado, reportes]
 ---
