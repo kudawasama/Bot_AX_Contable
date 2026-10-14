@@ -413,8 +413,16 @@ class BotAXGui:
         canvas.coords(rect, 0, 0, int(w * pct), 3)
 
     def log(self, message: str) -> None:
-        """Coloca un mensaje de traza de manera asíncrona en la cola."""
-        self.log_queue.put(message)
+        """Publica una traza del motor en la consola **y** en el archivo de log.
+
+        B5: antes el mensaje se encolaba directamente para la consola, así que el módulo
+        ``logging`` nunca lo veía y las trazas del motor (arranque, configuración cargada,
+        cada ciclo, resultado) no llegaban a ``logs/bot_ax.log``: un fallo temprano de la
+        sesión no dejaba rastro en texto. Ahora se emite por el logger: su
+        ``QueueLogHandler`` alimenta la cola de la consola (una sola vez, sin duplicar) y su
+        handler de archivo lo persiste.
+        """
+        logger.info(message)
 
     def check_queue(self) -> None:
         """Escucha constantemente la cola de logs y actualiza la consola e indicadores."""

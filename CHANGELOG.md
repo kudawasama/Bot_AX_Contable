@@ -6,6 +6,39 @@ Todos los cambios relevantes de este proyecto. El formato sigue
 
 ---
 
+## [v-00.37.00] — 2026-10-13 (Fase 2 · Lote B: robustez en runtime — EN RAMA, sin integrar)
+
+> **No integrado a `main`:** la regla del lote exige una sesión real de validación (mínimo 3
+> diarios: 1 éxito, 1 error esperado y el scroll) antes de fusionar. Todo vive en la rama
+> `feat/fase2-b-runtime`.
+
+### Corregido
+- **B1 + B1b — el ID de AX se valida antes de usarlo.** `leer_id_diario` devolvía texto arbitrario
+  del OCR y el motor procesaba el diario con ese identificador: **un dígito mal leído hacía
+  registrar y listar como error un diario distinto del real**. Ahora exige UN único número de 8
+  dígitos (con límites para no cortar una lectura corrida de 9) y devuelve `ERROR_LECTURA` en
+  cualquier otro caso; el motor entonces **salta la casilla** (no la clickea), guarda captura y
+  registra `id_ilegible` en la telemetría.
+- **B5 — las trazas del motor ya llegan a `logs/bot_ax.log`.** Causa raíz: el motor entrega sus
+  mensajes por `log_callback` y la GUI clásica los encolaba **directamente** para su consola, sin
+  pasar por `logging`; al archivo solo llegaban las líneas que `vision.py` escribe con
+  `logger.info/warning`. Resultado: un fallo temprano de la sesión no dejaba rastro en texto.
+  Arreglado en las DOS GUI (la alternativa además ni importaba el logger).
+
+### Añadido
+- **B2 — latido (`bot_heartbeat`) cada 60 s** en la telemetría: permite distinguir «el bot está
+  esperando el resultado de AX» de «el bot se colgó» sin mirar la pantalla. Hilo daemon cortado en
+  un `finally`, así que ninguna salida deja hilos huérfanos. Una línea por minuto como máximo.
+- **B3 — retención de capturas (máx 50, FIFO).** `logs/capturas/` tenía 363 archivos (~0,5 MB cada
+  uno) dentro de Google Drive; ahora se conservan las 50 más recientes.
+
+### Verificación
+- Suite **71/71** (18 pruebas nuevas: 8 de B1/B1b, 5 de B3, 2 de B2, 3 de B5) · `ruff: All checks
+  passed!` · los dobles inertes de `tests/conftest.py` garantizan que ninguna prueba mueva el
+  mouse ni capture la pantalla.
+
+---
+
 ## [v-00.33.00] — 2026-10-13 (C-3: definir el LICENSE)
 
 ### Añadido

@@ -435,11 +435,20 @@ faltante; el readiness reportado sube respecto de la línea base.
 
 ## 7. LOTE B — Robustez en tiempo de ejecución (SÍ toca al bot)
 
+> **Estado 2026-10-13: implementado en la rama `feat/fase2-b-runtime`, PENDIENTE de la sesión
+> real de validación.** B1 ✅ (validación de 8 dígitos + B1b: la casilla ilegible se salta y se
+> registra en la telemetría), B2 ✅ (latido cada 60 s; usarlo como alerta de corto plazo en el
+> chequeo de salud queda como **T-B2b**), B3 ✅ (retención de capturas, máx 50 FIFO) y B5 ✅ (las
+> trazas del motor ya llegan al archivo, en las DOS GUI). La B4 original (diagnóstico de
+> reapertura del log) sigue **opcional**. Suite 71/71 · ruff 0 avisos.
+> **No se integra a `main` hasta la sesión real** (mínimo 3 diarios: 1 éxito, 1 error esperado y
+> el scroll), como manda la regla del lote.
+
 > **Regla del lote:** cada tarea se implementa y prueba en rama, con el bot **detenido**;
 > la validación final es una sesión real de registro observada (mínimo 3 diarios: 1 éxito,
 > 1 error esperado y el scroll). Ninguna tarea del lote B se integra a `main` sin esa sesión.
 
-### Tarea B4 (hallazgo del 2026-10-13): las líneas de arranque no llegan al log de texto
+### Tarea B5 (hallazgo del 2026-10-13): las líneas de arranque no llegan al log de texto
 
 **Problema:** al reiniciar el bot (13-oct 12:42) `logs/bot_ax.log` empezó a escribir recién en
 el primer ciclo: su primera línea de la sesión nueva es `[12:42:58] [WARNING] Menu fuera de
@@ -452,11 +461,21 @@ rastro en texto. Mitigante: el detalle de la configuración **sí** queda en el 
 de `events.jsonl` (verificado: el sector registrado coincide con la calibración + padding del
 motor), así que el diagnóstico no queda ciego.
 
-**Archivos:** `src/core/engine.py` (emisión inicial), `src/core/logger.py` y el enganche del
-handler en las GUI.
+**Causa raíz (encontrada al implementar, 2026-10-13):** no era el arranque del log ni el handler
+de archivo. El motor entrega sus trazas por ``log_callback`` y la GUI clásica las **encolaba
+directamente** para su consola sin pasar por el módulo ``logging``; por eso al archivo solo
+llegaban las líneas que ``vision.py`` escribe con ``logger.info/warning``. La GUI alternativa
+además ni siquiera importaba el logger.
 
-**Criterio de aceptación:** tras reiniciar, las líneas de arranque aparecen en `logs/bot_ax.log`
-con su marca de tiempo.
+**Solución:** `BotAXGui.log()` emite por el logger (su ``QueueLogHandler`` alimenta la consola y
+el handler de archivo lo persiste, sin duplicar líneas); `BotAXRegistroGui._log()` hace las dos
+cosas, porque esa GUI no monta ``QueueLogHandler``. Pruebas en `tests/test_gui_log.py`.
+
+**Archivos:** `src/ui/gui_classic.py`, `src/ui/gui_gemini.py` · prueba `tests/test_gui_log.py`.
+
+**Criterio de aceptación:** tras reiniciar, las líneas de arranque ("Iniciando Bot AX Contable…",
+"Tesseract OCR verificado.", "Sector A original … -> Ajustado con padding", "Lista negra cargada")
+aparecen en `logs/bot_ax.log` con su marca de tiempo.
 
 ### Tarea B1: validar el ID leído por OCR antes de usarlo
 

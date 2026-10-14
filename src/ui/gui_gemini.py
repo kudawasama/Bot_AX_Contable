@@ -8,7 +8,10 @@ from typing import Any, Dict, Tuple
 
 from src.core.config import BASE_DIR
 from src.core.engine import run_bot
+from src.core.logger import get_logger
 from src.ui.area_selector import AreaSelector
+
+logger = get_logger()
 
 # Configuración de estética Gemini Core (Ultra-High Fidelity)
 COLORS: Dict[str, str] = {
@@ -254,20 +257,31 @@ class BotAXRegistroGui:
         self.stop_event.clear()
         self.btn_start.config(state="disabled")
         self.btn_stop.config(state="normal")
-        self.log_queue.put("Initializing Neural Interface...")
+        self._log("Initializing Neural Interface...")
         threading.Thread(target=self.worker, daemon=True).start()
 
     def stop_bot(self) -> None:
         """Detiene el bot emitiendo señalizadores de parada."""
         self.stop_event.set()
-        self.log_queue.put("Shutting down engine...")
+        self._log("Shutting down engine...")
+
+    def _log(self, mensaje: str) -> None:
+        """Muestra una traza en la consola de la GUI **y** la persiste en logs/bot_ax.log.
+
+        B5: esta GUI no monta ``QueueLogHandler``, así que hay que hacer las dos cosas:
+        encolar (para su consola) y pasar por el logger (para el archivo). Antes el motor
+        entregaba sus mensajes solo a la cola, y el archivo quedaba ciego a las trazas de
+        arranque y de cada ciclo.
+        """
+        logger.info(mensaje)
+        self.log_queue.put(mensaje)
 
     def worker(self) -> None:
         """Función trabajadora que invoca el motor del bot."""
         try:
-            run_bot(log_callback=lambda m: self.log_queue.put(m), stop_event=self.stop_event)
+            run_bot(log_callback=self._log, stop_event=self.stop_event)
         except Exception as e:
-            self.log_queue.put(f"CRITICAL ERROR: {str(e)}")
+            self._log(f"CRITICAL ERROR: {str(e)}")
         finally:
             self.btn_start.config(state="normal")
             self.btn_stop.config(state="disabled")
