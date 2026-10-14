@@ -3,6 +3,7 @@ import re
 import threading
 import time
 from datetime import datetime
+from pathlib import Path
 from typing import Any, Dict, List, Optional, Tuple, Union
 
 import pyautogui
@@ -338,6 +339,37 @@ def leer_id_diario(coord_checkbox: Tuple[int, int]) -> str:
         return "ERROR_LECTURA"
 
 
+MAX_CAPTURAS_ERROR: int = 50
+
+
+def _rotar_capturas(directorio: Path, max_archivos: int = MAX_CAPTURAS_ERROR) -> None:
+    """Elimina las capturas de error más antiguas cuando se supera el máximo.
+
+    POR QUÉ (tarea B3 del plan): cada error guarda una captura de pantalla completa
+    (≈0,5 MB) bajo ``logs/capturas/`` en Google Drive. Tras meses de operación se acumulan
+    cientos de archivos y el disco no es infinito. Se conservan las ``max_archivos`` más
+    recientes (FIFO por fecha de modificación) y se borra el resto.
+
+    Nunca levanta excepción: la captura es evidencia de diagnóstico y su limpieza no debe
+    interrumpir al bot.
+
+    Args:
+        directorio (Path): Carpeta de capturas.
+        max_archivos (int): Cuántas capturas conservar (50 por defecto).
+    """
+    try:
+        archivos: List[Path] = sorted(
+            directorio.glob("error_*.png"), key=lambda archivo: archivo.stat().st_mtime
+        )
+        sobrantes: int = max(0, len(archivos) - max_archivos)
+        for archivo in archivos[:sobrantes]:
+            archivo.unlink(missing_ok=True)
+        if sobrantes:
+            logger.info(f"Retención de capturas: {sobrantes} archivo(s) antiguo(s) eliminado(s).")
+    except Exception as e:
+        logger.warning(f"No se pudieron rotar las capturas de error: {e}")
+
+
 def capturar_pantalla_error(id_diario: str = "global") -> Optional[str]:
     """Captura una snapshot de la pantalla completa ante fallas críticas y la guarda.
 
@@ -361,6 +393,7 @@ def capturar_pantalla_error(id_diario: str = "global") -> Optional[str]:
         screenshot = pyautogui.screenshot()
         screenshot.save(ruta_completa)
         logger.info(f"Captura de pantalla guardada en: {ruta_completa}")
+        _rotar_capturas(Path(carpeta_capturas))
         return ruta_completa
     except Exception as e:
         logger.error(f"No se pudo realizar la captura de pantalla: {e}")
