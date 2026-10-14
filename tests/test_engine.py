@@ -8,13 +8,21 @@ resultados y capturas quedan monkeypatcheados).
 import threading
 import time
 
-from src.core import engine
+from src.core import config, engine
 
 
 def _preparar_ciclo(monkeypatch, mock_pyautogui):
-    """Deja ``run_bot`` ejecutable sin efectos reales y devuelve lo observado."""
+    """Deja ``run_bot`` ejecutable sin efectos reales y devuelve lo observado.
+
+    ``validar_tesseract`` se neutraliza a propósito: el runner de CI no tiene Tesseract
+    instalado y, sin este doble, ``run_bot`` saldría por el camino de error crítico antes de
+    emitir un solo evento (la suite debe ser hermética, como documenta ``tests/conftest.py``).
+    Detectado por el CI: en local pasaba porque la máquina del operador sí tiene Tesseract.
+    """
     eventos = []
     registros = []
+
+    monkeypatch.setattr(config, "validar_tesseract", lambda: None)
 
     monkeypatch.setattr(engine, "event_log", lambda tipo, **datos: eventos.append({"event": tipo, **datos}))
     monkeypatch.setattr(engine, "registrar_log", lambda identificador, resultado: registros.append((identificador, resultado)))
