@@ -236,6 +236,19 @@ def run_bot(
                     identificador = leer_id_diario(coord)
                     id_normalizado = normalizar_id_diario(identificador)
 
+                    # B1b: con una lectura dudosa NO se clickea la casilla. Procesar un
+                    # identificador ilegible registraría —y listaría como error— un diario
+                    # equivocado; se salta la casilla y queda constancia en la telemetría.
+                    if identificador == "ERROR_LECTURA":
+                        log(f"  -> ID ilegible en {coord}: se salta la casilla sin procesarla.")
+                        _captura_id = capturar_pantalla_error("id_ilegible")
+                        event_log(
+                            "id_ilegible",
+                            coords=[coord[0], coord[1]],
+                            captura_path=_captura_id,
+                        )
+                        continue
+
                     if id_normalizado in diarios_con_error:
                         if intentos_scroll == 0:
                             log(f"  -> Ignorando {identificador} (lista negra, normalizado: {id_normalizado}).")

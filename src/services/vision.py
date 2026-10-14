@@ -3,7 +3,7 @@ import re
 import threading
 import time
 from datetime import datetime
-from typing import Any, Dict, Optional, Tuple, Union
+from typing import Any, Dict, List, Optional, Tuple, Union
 
 import pyautogui
 import pytesseract
@@ -27,6 +27,10 @@ NOMBRES_IMAGENES: Dict[str, str] = {
     "msg_exito_asiento_1.png": "Exito-Ventana",
     "btn_cerrar_info.png": "Cerrar",
 }
+
+# B1: el ID de diario de AX tiene EXACTAMENTE 8 dígitos. Los límites (?<!\d) / (?!\d)
+# evitan que una lectura corrida (9 dígitos) entregue por error los primeros 8.
+PATRON_ID_AX: re.Pattern = re.compile(r"(?<!\d)\d{8}(?!\d)")
 
 
 def nombre_corto(ruta: str) -> str:
@@ -298,7 +302,9 @@ def leer_id_diario(coord_checkbox: Tuple[int, int]) -> str:
         coord_checkbox (Tuple[int, int]): Centro (x, y) de la casilla de origen.
 
     Returns:
-        str: Texto del identificador decodificado u indicador de error.
+        str: Los 8 dígitos del ID de AX, o ``"ERROR_LECTURA"`` si la lectura es dudosa
+        (no hay un único número de 8 dígitos). Ya no devuelve texto arbitrario del OCR:
+        procesar un identificador dudoso registraría un diario equivocado.
     """
     cx, cy = coord_checkbox
     from src.core.config import obtener_offset_ocr
@@ -315,7 +321,18 @@ def leer_id_diario(coord_checkbox: Tuple[int, int]) -> str:
         # Filtrar caracteres de texto alfanuméricos y guiones
         texto = "".join(c for c in texto if c.isalnum() or c == '-')
 
-        return texto if texto else "DESCONOCIDO"
+        # B1: validar ANTES de usar. Si el OCR devuelve basura, un ID de 7 dígitos, una
+        # lectura corrida o dos números distintos, se devuelve "ERROR_LECTURA" y el motor
+        # (B1b) salta la casilla: no se registra ni se lista un diario equivocado.
+        coincidencias: List[str] = PATRON_ID_AX.findall(texto)
+        if len(set(coincidencias)) == 1:
+            return coincidencias[0]
+
+        logger.warning(
+            f"OCR dudoso en {coord_checkbox}: {texto!r}. El ID de AX tiene 8 dígitos; "
+            "no se procesa el diario para no registrar un identificador equivocado."
+        )
+        return "ERROR_LECTURA"
     except Exception as e:
         logger.error(f"Error en OCR: {e}")
         return "ERROR_LECTURA"
