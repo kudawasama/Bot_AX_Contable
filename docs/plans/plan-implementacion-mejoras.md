@@ -34,7 +34,7 @@ desarrollo diario.
 | C-2 — import duplicado en `vision.py` | ✅ Resuelto |
 | C-3 — hack de mockeo (`BOT_AX_TEST_MODE` + `types.ModuleType`) | ✅ Resuelto — dobles inertes en `conftest.py` |
 | C-4 — directorio fantasma `src/bot_ax/` | ⏸ Pendiente (decidir junto con la rama legado) |
-| C-5 — ruta de Tesseract hardcodeada | ✅ Resuelto — `_resolver_tesseract()` en `src/core/config.py` |
+| C-5 — ruta de Tesseract hardcodeada | ✅ Resuelto — `_resolver_tesseract()` en `src/core/config.py` (v-00.20.00) y `scripts/test_ocr.py` alineado en v-00.34.00 |
 | C-6 — `.bat` con rutas fijas | ⚠️ Implementado y **revertido a propósito** en v-00.14.01 (no se toca el punto de entrada diario mientras el bot está en producción) |
 | C-7 — `config_sectores.json` modificado sin commitear | ✅ Resuelto — versionado (decisión documentada) |
 | C-8 — hook de pre-commit frágil / bump no determinista | ⏸ Pendiente (hoy se mitiga fijando la versión a mano) |
@@ -106,6 +106,14 @@ desarrollo diario.
   en `.env.example` (ver T-0.3).
 - **Archivos:** `src/core/config.py`, `.env.example` (nuevo)
 - **Aceptación:** en otra máquina solo se configura `.env` (o env var), sin editar código.
+- **Cierre parcial (2026-11-16, v-00.34.00):** `src/core/config.py` ya resolvía la ruta
+  (`pytesseract.tesseract_cmd` se fija en `src/services/vision.py`), pero
+  `scripts/test_ocr.py` **no**: llamaba a pytesseract sin fijar `tesseract_cmd`, dependía
+  del `PATH` y reportaba `FAILED: Tesseract engine not found` con el motor instalado
+  (verificado: 5.4.0 en la ruta de `config`); además salía con código 0 tras fallar, así
+  que no servía como puerta de verificación. Corregido: resuelve `TESSERACT_CMD` con
+  fallback a `shutil.which`, imprime la ruta usada y devuelve código 1 si el motor falta
+  o no responde.
 
 ### C-6. Lanzadores `.bat` con rutas fijas `H:\...` y `Python312\pythonw.exe`
 

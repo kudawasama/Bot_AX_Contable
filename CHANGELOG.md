@@ -6,6 +6,28 @@ Todos los cambios relevantes de este proyecto. El formato sigue
 
 ---
 
+## [v-00.34.00] — 2026-11-16 (C-5: `test_ocr.py` resuelve Tesseract igual que el bot)
+
+### Corregido
+- **`scripts/test_ocr.py`**: llamaba a `pytesseract` sin fijar `tesseract_cmd`, por lo que
+  dependía del `PATH` y reportaba `FAILED: Tesseract engine not found` aunque el motor
+  estuviera instalado (verificado: 5.4.0 en la ruta que ya usa `src.core.config`).
+  Además terminaba con código 0 tras fallar, así que no servía como comprobación.
+  Ahora resuelve `TESSERACT_CMD` con fallback a `shutil.which`, informa la ruta usada y
+  devuelve código 1 si el motor falta o no responde.
+
+### Añadido
+- `.gitignore`: `.pytest_cache/` y `.ruff_cache/`, que se generan en cada corrida de
+  verificación y no son artefactos del bot. No se modifica la nota que documenta que
+  `config_sectores.json` **sí** se versiona (C-7/R-6) ni el seguimiento de `.context-map/`.
+
+### Notas
+- No se toca la versión declarada en `src/core/version.py` (ya estaba en `00.34.00`):
+  esta entrada documenta ese salto, que había quedado sin CHANGELOG (C-8 sigue pendiente).
+- No se tocan los lanzadores `.bat`: C-6 sigue revertido a propósito.
+
+---
+
 ## [v-00.33.00] — 2026-10-13 (C-3: definir el LICENSE)
 
 ### Añadido
