@@ -79,15 +79,20 @@ de 5 minutos, y que el repositorio esté limpio de configuración ambigua.
 
 Orden recomendado: **A → C → B**. Empezar por lo que reduce el riesgo futuro sin tocar al bot.
 
-> **Estado (2026-10-09):**
+> **Estado (2026-11-16):**
 > - **A1** ✅ hecho y verificado (el analizador lee `events.jsonl`; 8 pruebas).
 > - **A3** ✅ hecho y verificado (`scripts/chequeo_salud.py`; 7 pruebas + demo con datos reales).
 > - **A2** y **A4** pendientes → se detallan en
 >   [`plan-implementacion-fase2-loteA-cierre.md`](plan-implementacion-fase2-loteA-cierre.md),
 >   junto con los dos extras descubiertos en vivo (alerta de sesión caída y opción
 >   `--registro` ignorada) y el falso positivo de `SIN_ACTIVIDAD` en esperas largas.
-> - Lotes **B**, **C** y **D** sin iniciar.
-> - Suite: 38/38 · CI en verde · versión v-00.20.01
+> - **Lote C** ✅ cerrado (rama legado archivada, `pyproject.toml`, `LICENSE`, lint en verde).
+> - **Lote B** ✅ implementado en la rama `feat/fase2-b-runtime` (B1/B1b validación de ID,
+>   B2 heartbeat en telemetría, B3 retención de capturas FIFO, B5 trazas del motor a archivo).
+> - **Lote D** sigue fuera de alcance (refactor mayor, Docker, portabilidad `.bat`).
+> - Suite: 53/53 · CI en verde · versión v-00.34.00
+>
+> _(Estado anterior, 2026-10-09: lotes B, C y D sin iniciar · suite 38/38 · v-00.20.01)_
 
 ---
 

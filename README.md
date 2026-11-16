@@ -6,26 +6,34 @@ Bot de automatización para **Microsoft Dynamics AX** que registra diarios conta
 
 ## 🚀 Requisitos
 
-- **Python 3.12** (o 3.11+)
-- **Tesseract OCR** — [Descargar desde UB-Mannheim](https://github.com/UB-Mannheim/tesseract/wiki)
+- **Python 3.12** (o 3.11+) — [python.org](https://www.python.org/downloads/), marcando
+  *"Add python.exe to PATH"* en el instalador.
+- **Tesseract OCR** — [Descargar desde UB-Mannheim](https://github.com/UB-Mannheim/tesseract/wiki).
+  Es un programa **externo**, no se instala con `pip`; sin él el bot no lee los IDs.
 - Dependencias Python: `pip install -r requirements.txt` (PyAutoGUI, pytesseract, Pillow, keyboard)
 
-## 📦 Instalación
+## 📦 Instalación (PC nuevo, desde cero)
 
 ```bash
-# 1. Clonar o copiar el proyecto
-cd ruta/al/proyecto
+# 1. Clonar el proyecto
+git clone https://github.com/kudawasama/Bot_AX_Contable.git
+cd Bot_AX_Contable
 
 # 2. Instalar dependencias
 pip install -r requirements.txt
 
-# 3. Verificar Tesseract OCR
+# 3. Verificar Tesseract OCR (instalado aparte)
 python scripts/test_ocr.py
 
-# 4. Ejecutar la suite de pruebas (18 pruebas)
+# 4. Ejecutar la suite de pruebas (53 pruebas, no tocan la pantalla)
 python -m pytest
 
-# 5. (Opcional) Verificar que los patrones de imagen se detectan en pantalla
+# 5. Verificar que todo esté en su sitio (config, patrones, rutas, pantalla)
+python scripts/chequeo_salud.py
+#    o, en Windows, doble clic en Chequear_Salud_Bot.bat
+
+# 6. (Opcional) Verificar que los patrones de imagen se detectan en pantalla
+#    Requiere Microsoft Dynamics AX abierto y maximizado
 python scripts/diagnose_vision.py
 ```
 
@@ -37,6 +45,13 @@ Si Tesseract no está en la ruta por defecto, configurar la variable de entorno:
 ```bash
 set TESSERACT_CMD=C:\Ruta\a\tesseract.exe
 ```
+
+> 📄 `config_sectores.json` **sí** se versiona (decisión C-7/R-6): un clon nuevo trae la
+> última calibración conocida. Si la pantalla del PC nuevo tiene otra resolución, hay que
+> recalibrar con `python -m src.ui.area_selector`.
+>
+> 🚫 `blacklist.json`, `logs/` y `registro_*.txt` **no** se versionan: son estado local de
+> cada máquina. Un clon nuevo arranca con la blacklist vacía.
 
 ## 🎯 Configuración inicial
 
