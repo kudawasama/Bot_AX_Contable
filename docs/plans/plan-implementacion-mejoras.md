@@ -35,7 +35,7 @@ desarrollo diario.
 | C-3 — hack de mockeo (`BOT_AX_TEST_MODE` + `types.ModuleType`) | ✅ Resuelto — dobles inertes en `conftest.py` |
 | C-4 — directorio fantasma `src/bot_ax/` | ⏸ Pendiente (decidir junto con la rama legado) |
 | C-5 — ruta de Tesseract hardcodeada | ✅ Resuelto — `_resolver_tesseract()` en `src/core/config.py` (v-00.20.00) y `scripts/test_ocr.py` alineado en v-00.34.00 |
-| C-6 — `.bat` con rutas fijas | ⚠️ Implementado y **revertido a propósito** en v-00.14.01 (no se toca el punto de entrada diario mientras el bot está en producción) |
+| C-6 — `.bat` con rutas fijas | ✅ Resuelto — portables (`%~dp0` + resolución de `pythonw`) en v-00.39.00, con el bot detenido y el PC a punto de formatearse |
 | C-7 — `config_sectores.json` modificado sin commitear | ✅ Resuelto — versionado (decisión documentada) |
 | C-8 — hook de pre-commit frágil / bump no determinista | ⏸ Pendiente (hoy se mitiga fijando la versión a mano) |
 | C-9 — README desactualizado | ✅ Resuelto |
@@ -124,6 +124,14 @@ desarrollo diario.
 - **Archivos:** `Lanzar_Bot.bat`, `Lanzar_Bot_Registro.bat`
 - **Aceptación:** los `.bat` funcionan montados en cualquier unidad y con cualquier
   Python 3.11+ en `PATH`.
+- **Reversión (v-00.14.01):** se aplicó y se revirtió a propósito, porque era el punto de
+  entrada diario del operador y el bot estaba en producción sobre `H:`.
+- **Cierre (2026-11-16, v-00.39.00):** se retoma en la ventana de mantenimiento correcta
+  —el PC se va a formatear y el repositorio se clonará en otra ruta—, así que un `.bat`
+  atado a `H:\Mi unidad\...` dejaría de arrancar. Ahora la raíz es `%~dp0` y el
+  intérprete se resuelve buscando `pythonw.exe` en `Python313/312/311` y, si no, en el
+  `PATH` descartando el stub de `WindowsApps`. Se validó sin abrir la GUI: raíz, ruta de
+  `pythonw` e import del módulo.
 
 ### C-7. `config_sectores.json` modificado sin commitear
 

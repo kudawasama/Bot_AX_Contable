@@ -6,6 +6,35 @@ Todos los cambios relevantes de este proyecto. El formato sigue
 
 ---
 
+## [v-00.39.00] — 2026-11-16 (C-6: lanzadores `.bat` portables + calibración versionada)
+
+### Corregido
+- **C-6 — `Lanzar_Bot.bat` y `Lanzar_Bot_Registro.bat` ya no dependen de `H:`.** Fijaban la
+  unidad de Google Drive y la ruta `Python312\pythonw.exe`. Ahora la raíz es la carpeta del
+  propio `.bat` (`%~dp0`) y el intérprete se resuelve en `Python313/312/311` y, si no, en el
+  `PATH` descartando el stub de `WindowsApps` (que abre la Store en vez de Python).
+  Se aplicó ahora —y no en v-00.14.01, donde se revirtió a propósito— porque el PC se
+  formatea y el clon deja de estar en `H:`.
+- **`config_sectores.json` con la calibración real.** Hasta ahora la que usaba producción
+  vivía **sin commitear** en la copia de `H:` (y se habría perdido al formatear): `sector_a`
+  61,242,255,444 · `sector_b` 1108,99,236,36 · `sector_scroll` 335,671,35,24.
+- **`sector_b` pasa de 28 a 36 px de alto.** `btn_registrar_menu.png` mide 148x32: una región
+  más baja que el patrón hace que el bot la ignore y busque en toda la pantalla. La telemetría
+  acumula **799 `sector_b_fallback`**, que es exactamente ese camino.
+
+### Verificación
+- 71/71 pruebas · `ruff: All checks passed!` · `test_ocr.py` OK (Tesseract 5.4.0) · imports de
+  las dos GUI OK · los tres sectores dentro de 1366x768 y todos los patrones caben en su región
+  (checkbox 21x17 en 255x444, botón 148x32 en 236x36, scroll 16x15 en 35x24).
+- Los lanzadores se probaron **sin abrir la GUI** (sonda que imprime raíz, `pythonw` resuelto e
+  import del módulo): raíz correcta, `pythonw.exe` de Python 3.12 e `IMPORT=OK` en los dos.
+
+### Notas
+- Los `.bat` conservan CRLF (requisito de `cmd.exe`) y no se probaron en una sesión real de
+  registro; conviene un arranque de prueba antes de la jornada.
+
+---
+
 ## [v-00.38.01] — 2026-11-16 (Fase 2 · Lote B integrado en `main`)
 
 ### Añadido

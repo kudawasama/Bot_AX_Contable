@@ -175,7 +175,7 @@ ejecución ni la pantalla, así que se puede usar en cualquier momento.
 | No encuentra checkboxes | Confianza muy alta o sector mal definido | Redefinir Sector A con `python -m src.ui.area_selector` |
 | Mismos diarios reintentados | OCR variante (`IS` vs `iS` vs `1S`) | El bot normaliza IDs por núcleo numérico |
 | Timeout excesivo (1h) | Pop-up no detectado | Verificar `msg_exito_asiento_1.png` en `patrones/` |
-| Bot no arranca | El `.bat` no encuentra la unidad `H:` o Python 3.12 | Verificar la conexión a Google Drive y que exista `%LOCALAPPDATA%\Programs\Python\Python312\pythonw.exe` |
+| Bot no arranca | El `.bat` no encuentra `pythonw.exe` | El lanzador usa la carpeta donde está el `.bat`, así que sirve en cualquier unidad. Instalar Python 3.11+ o añadirlo al `PATH` |
 | Error `Errno 22` en registro | Ruta relativa o archivo bloqueado | El bot ya usa ruta absoluta + try/except |
 
 ## 📁 Estructura del proyecto

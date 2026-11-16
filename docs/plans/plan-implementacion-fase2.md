@@ -601,7 +601,7 @@ recrear el archivo (el archivo ya no está en disco entre dos escrituras). Sirve
 | Refactor a `Orchestrator` + `ScrollManager` + `DiarioProcessor` + `BlacklistManager` (Fase 2, T-2.2…T-2.6) | **Pospuesto** | `engine.py` funciona y es el archivo de mayor riesgo; no hay pruebas de integración que respalden el refactor. Se retoma cuando existan las de B1/B2/B3 y una sesión de prueba reproducible. |
 | `Dockerfile` + `docker-compose` (Fase 1, T-1.1/1.2) | **Descartado** | El bot necesita el escritorio real de Windows (PyAutoGUI, foco, mouse, Tesseract y Dynamics AX). Contenerizarlo no aporta y rompe el supuesto básico. |
 | Validación con Pydantic (Fase 5, T-5.1) | **Pospuesto** | `cargar_configuracion()` valida lo esencial; añadir dependencia y reescribir la carga toca la ruta crítica de arranque sin urgencia. |
-| Portabilidad de los `.bat` (C-6, T-1.4) | **Pospuesto a propósito** (v-00.14.01) | Es el punto de entrada diario del operador; se cambia solo en una ventana de mantenimiento con el bot detenido. |
+| Portabilidad de los `.bat` (C-6, T-1.4) | **Hecho en v-00.39.00** (2026-11-16) | Se pospuso en v-00.14.01 por ser el punto de entrada diario; se aplicó al formatear el PC, cuando la ruta del clon deja de ser `H:\`. |
 | Eliminar `src/bot_ax/` (C-4) | **Depende de C1** | Su contenido se solapa con la rama legado: no tocar hasta archivar esa rama. |
 | Reemplazar el hook de pre-commit por `pre-commit` moderno (C-8) | **Pospuesto** | Solo afecta a git, no al bot; el bump ya se puede hacer determinista fijando la versión a mano. |
 

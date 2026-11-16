@@ -1,26 +1,30 @@
 @echo off
 title Bot AX Registro - Lanzador Gemini Engine
-:: Verificar que la unidad H: existe
-if not exist "H:\" (
-    echo ERROR: La unidad H: no esta disponible. Conecta Google Drive.
-    pause
-    exit /b 1
-)
-:: Entrar a la carpeta del proyecto
-cd /d "H:\Mi unidad\Desarrollo y Proyectos\GitHub\Bot_AX_Contable"
-if errorlevel 1 (
-    echo ERROR: No se pudo acceder a la carpeta del proyecto.
-    echo Ruta: H:\Mi unidad\Desarrollo y Proyectos\GitHub\Bot_AX_Contable
-    pause
-    exit /b 1
-)
-:: Verificar que el script existe
+:: Lanza la GUI alternativa (Gemini Engine) para registrar diarios.
+:: La raiz del proyecto es la carpeta de este .bat, asi que funciona en cualquier
+:: unidad (H:, C:, ...) sin depender de que Google Drive este montado.
+cd /d "%~dp0"
 if not exist "src\ui\gui_gemini.py" (
-    echo ERROR: No se encontro src\ui\gui_gemini.py en la carpeta actual.
+    echo ERROR: no se encontro src\ui\gui_gemini.py en %~dp0
     pause
     exit /b 1
 )
-:: Ejecutar la interfaz grafica
-set PYTHONPATH=.
-start "" "%LOCALAPPDATA%\Programs\Python\Python312\pythonw.exe" -m src.ui.gui_gemini
+:: Resolver pythonw.exe (sin consola visible): instalacion local primero, luego PATH
+:: descartando el stub de WindowsApps, que abre la Microsoft Store en vez de Python.
+set "PYW="
+for %%v in (313 312 311) do (
+    if not defined PYW if exist "%LOCALAPPDATA%\Programs\Python\Python%%v\pythonw.exe" set "PYW=%LOCALAPPDATA%\Programs\Python\Python%%v\pythonw.exe"
+)
+if not defined PYW for /f "delims=" %%i in ('where pythonw 2^>nul') do (
+    if not defined PYW (
+        echo %%i | findstr /i /c:"WindowsApps" >nul || set "PYW=%%i"
+    )
+)
+if not defined PYW (
+    echo ERROR: no se encontro pythonw.exe. Instala Python 3.11+ o agregalo al PATH.
+    pause
+    exit /b 1
+)
+set PYTHONPATH=%cd%
+start "" "%PYW%" -m src.ui.gui_gemini
 exit
