@@ -3,7 +3,8 @@ import re
 import threading
 import time
 from datetime import datetime
-from typing import Any, Dict, Optional, Tuple, Union
+from pathlib import Path
+from typing import Any, Dict, List, Optional, Tuple, Union
 
 import pyautogui
 import pytesseract
@@ -27,6 +28,10 @@ NOMBRES_IMAGENES: Dict[str, str] = {
     "msg_exito_asiento_1.png": "Exito-Ventana",
     "btn_cerrar_info.png": "Cerrar",
 }
+
+# B1: el ID de diario de AX tiene EXACTAMENTE 8 dígitos. Los límites (?<!\d) / (?!\d)
+# evitan que una lectura corrida (9 dígitos) entregue por error los primeros 8.
+PATRON_ID_AX: re.Pattern = re.compile(r"(?<!\d)\d{8}(?!\d)")
 
 
 def nombre_corto(ruta: str) -> str:
@@ -298,7 +303,9 @@ def leer_id_diario(coord_checkbox: Tuple[int, int]) -> str:
         coord_checkbox (Tuple[int, int]): Centro (x, y) de la casilla de origen.
 
     Returns:
-        str: Texto del identificador decodificado u indicador de error.
+        str: Los 8 dígitos del ID de AX, o ``"ERROR_LECTURA"`` si la lectura es dudosa
+        (no hay un único número de 8 dígitos). Ya no devuelve texto arbitrario del OCR:
+        procesar un identificador dudoso registraría un diario equivocado.
     """
     cx, cy = coord_checkbox
     from src.core.config import obtener_offset_ocr
@@ -315,10 +322,52 @@ def leer_id_diario(coord_checkbox: Tuple[int, int]) -> str:
         # Filtrar caracteres de texto alfanuméricos y guiones
         texto = "".join(c for c in texto if c.isalnum() or c == '-')
 
-        return texto if texto else "DESCONOCIDO"
+        # B1: validar ANTES de usar. Si el OCR devuelve basura, un ID de 7 dígitos, una
+        # lectura corrida o dos números distintos, se devuelve "ERROR_LECTURA" y el motor
+        # (B1b) salta la casilla: no se registra ni se lista un diario equivocado.
+        coincidencias: List[str] = PATRON_ID_AX.findall(texto)
+        if len(set(coincidencias)) == 1:
+            return coincidencias[0]
+
+        logger.warning(
+            f"OCR dudoso en {coord_checkbox}: {texto!r}. El ID de AX tiene 8 dígitos; "
+            "no se procesa el diario para no registrar un identificador equivocado."
+        )
+        return "ERROR_LECTURA"
     except Exception as e:
         logger.error(f"Error en OCR: {e}")
         return "ERROR_LECTURA"
+
+
+MAX_CAPTURAS_ERROR: int = 50
+
+
+def _rotar_capturas(directorio: Path, max_archivos: int = MAX_CAPTURAS_ERROR) -> None:
+    """Elimina las capturas de error más antiguas cuando se supera el máximo.
+
+    POR QUÉ (tarea B3 del plan): cada error guarda una captura de pantalla completa
+    (≈0,5 MB) bajo ``logs/capturas/`` en Google Drive. Tras meses de operación se acumulan
+    cientos de archivos y el disco no es infinito. Se conservan las ``max_archivos`` más
+    recientes (FIFO por fecha de modificación) y se borra el resto.
+
+    Nunca levanta excepción: la captura es evidencia de diagnóstico y su limpieza no debe
+    interrumpir al bot.
+
+    Args:
+        directorio (Path): Carpeta de capturas.
+        max_archivos (int): Cuántas capturas conservar (50 por defecto).
+    """
+    try:
+        archivos: List[Path] = sorted(
+            directorio.glob("error_*.png"), key=lambda archivo: archivo.stat().st_mtime
+        )
+        sobrantes: int = max(0, len(archivos) - max_archivos)
+        for archivo in archivos[:sobrantes]:
+            archivo.unlink(missing_ok=True)
+        if sobrantes:
+            logger.info(f"Retención de capturas: {sobrantes} archivo(s) antiguo(s) eliminado(s).")
+    except Exception as e:
+        logger.warning(f"No se pudieron rotar las capturas de error: {e}")
 
 
 def capturar_pantalla_error(id_diario: str = "global") -> Optional[str]:
@@ -344,6 +393,7 @@ def capturar_pantalla_error(id_diario: str = "global") -> Optional[str]:
         screenshot = pyautogui.screenshot()
         screenshot.save(ruta_completa)
         logger.info(f"Captura de pantalla guardada en: {ruta_completa}")
+        _rotar_capturas(Path(carpeta_capturas))
         return ruta_completa
     except Exception as e:
         logger.error(f"No se pudo realizar la captura de pantalla: {e}")

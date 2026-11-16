@@ -6,6 +6,60 @@ Todos los cambios relevantes de este proyecto. El formato sigue
 
 ---
 
+## [v-00.38.01] — 2026-11-16 (Fase 2 · Lote B integrado en `main`)
+
+### Añadido
+- El lote B pasa de la rama `feat/fase2-b-runtime` a `main`: **B1/B1b** (validación del ID de
+  AX de 8 dígitos antes de usarlo), **B2** (heartbeat cada 60 s en la telemetría), **B3**
+  (retención de capturas de error, máx. 50 FIFO), **B5** (las trazas del motor llegan a
+  `logs/bot_ax.log` en las dos GUI) y las 18 pruebas nuevas que los cubren.
+  Con esto, un clon de `main` en un PC nuevo ya trae el bot completo y al día.
+
+### Verificación de la condición de integración
+- El lote B exigía una sesión real (1 éxito, 1 error esperado y el scroll) antes de fusionar.
+  La evidencia está en producción (`logs/events.jsonl` de la copia de `H:`): entre el
+  **2026-10-19** y el **2026-11-16** conviven 384 `bot_heartbeat` (B2) con 1.703
+  `result_exito`, 175 `result_error_ax`, 1.211 `scroll_performed` y 1 `id_ilegible`
+  (B1 rechazando una lectura defectuosa en lugar de registrar el diario equivocado).
+
+### Notas
+- Conflicto del CHANGELOG resuelto conservando íntegras las entradas v-00.34.00 y v-00.37.00.
+- Los saltos 00.38.00/00.38.01 de la rama no tenían entrada propia (C-8 sigue pendiente).
+
+---
+
+## [v-00.37.00] — 2026-10-13 (Fase 2 · Lote B: robustez en runtime — integrado el 2026-11-16)
+
+> **Integrado a `main` el 2026-11-16 (v-00.38.01).** La regla del lote exigía una sesión real
+> de validación (mínimo 3 diarios: 1 éxito, 1 error esperado y el scroll) antes de fusionar;
+> se cumplió con creces en producción sobre la rama `feat/fase2-b-runtime` (ver v-00.38.01).
+
+### Corregido
+- **B1 + B1b — el ID de AX se valida antes de usarlo.** `leer_id_diario` devolvía texto arbitrario
+  del OCR y el motor procesaba el diario con ese identificador: **un dígito mal leído hacía
+  registrar y listar como error un diario distinto del real**. Ahora exige UN único número de 8
+  dígitos (con límites para no cortar una lectura corrida de 9) y devuelve `ERROR_LECTURA` en
+  cualquier otro caso; el motor entonces **salta la casilla** (no la clickea), guarda captura y
+  registra `id_ilegible` en la telemetría.
+- **B5 — las trazas del motor ya llegan a `logs/bot_ax.log`.** Causa raíz: el motor entrega sus
+  mensajes por `log_callback` y la GUI clásica los encolaba **directamente** para su consola, sin
+  pasar por `logging`; al archivo solo llegaban las líneas que `vision.py` escribe con
+  `logger.info/warning`. Resultado: un fallo temprano de la sesión no dejaba rastro en texto.
+  Arreglado en las DOS GUI (la alternativa además ni importaba el logger).
+
+### Añadido
+- **B2 — latido (`bot_heartbeat`) cada 60 s** en la telemetría: permite distinguir «el bot está
+  esperando el resultado de AX» de «el bot se colgó» sin mirar la pantalla. Hilo daemon cortado en
+  un `finally`, así que ninguna salida deja hilos huérfanos. Una línea por minuto como máximo.
+- **B3 — retención de capturas (máx 50, FIFO).** `logs/capturas/` tenía 363 archivos (~0,5 MB cada
+  uno) dentro de Google Drive; ahora se conservan las 50 más recientes.
+
+### Verificación
+- Suite **71/71** (18 pruebas nuevas: 8 de B1/B1b, 5 de B3, 2 de B2, 3 de B5) · `ruff: All checks
+  passed!` · los dobles inertes de `tests/conftest.py` garantizan que ninguna prueba mueva el
+  mouse ni capture la pantalla.
+---
+
 ## [v-00.34.00] — 2026-11-16 (C-5: `test_ocr.py` resuelve Tesseract igual que el bot)
 
 ### Corregido

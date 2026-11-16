@@ -55,6 +55,42 @@ def registrar_log(id_diario: str, resultado: str) -> None:
         print(f"Error escribiendo registro: {e}")
 
 
+INTERVALO_HEARTBEAT_S: float = 60.0
+
+
+def iniciar_heartbeat(
+    stop_event: Optional[threading.Event],
+    intervalo: float = INTERVALO_HEARTBEAT_S,
+) -> threading.Thread:
+    """Lanza un hilo daemon que emite un latido en la telemetría cada ``intervalo`` segundos.
+
+    POR QUÉ (tarea B2 del plan): sin latido no hay forma de distinguir «el bot está
+    esperando el resultado de AX» de «el bot se colgó» sin mirar la pantalla. El chequeo de
+    salud (A3) puede apoyarse en estos eventos con un umbral corto y confiable. El latido
+    cuesta una línea por minuto como máximo, así que no engorda ``logs/events.jsonl``.
+
+    Args:
+        stop_event (Optional[threading.Event]): Se activa al terminar la sesión (``bot_stop``).
+        intervalo (float): Segundos entre latidos (60 por defecto).
+
+    Returns:
+        threading.Thread: Hilo daemon ya iniciado. El llamador debe activar ``stop_event``
+        al terminar la sesión para que el latido no quede huérfano.
+    """
+    def _latir() -> None:
+        while True:
+            if stop_event is not None:
+                if stop_event.wait(intervalo):
+                    return  # la sesión terminó: el latido se corta sin dejar rastro
+            else:
+                time.sleep(intervalo)
+            event_log("bot_heartbeat", intervalo_segundos=intervalo)
+
+    hilo: threading.Thread = threading.Thread(target=_latir, name="bot-heartbeat", daemon=True)
+    hilo.start()
+    return hilo
+
+
 def run_bot(
     log_callback: Callable[[str], None] = print,
     stop_event: Optional[threading.Event] = None,
@@ -142,6 +178,10 @@ def run_bot(
 
     ciclo: int = 1
     log("\n--- CONFIGURACIÓN OCR ACTIVA ---")
+
+    # B2: latido de la sesión en la telemetría estructurada (una línea por minuto).
+    _heartbeat_stop: threading.Event = threading.Event()
+    iniciar_heartbeat(_heartbeat_stop)
 
     try:
         posiciones_procesadas: Set[Tuple[int, int]] = set()  # Cache de coordenadas ya procesadas
@@ -235,6 +275,19 @@ def run_bot(
 
                     identificador = leer_id_diario(coord)
                     id_normalizado = normalizar_id_diario(identificador)
+
+                    # B1b: con una lectura dudosa NO se clickea la casilla. Procesar un
+                    # identificador ilegible registraría —y listaría como error— un diario
+                    # equivocado; se salta la casilla y queda constancia en la telemetría.
+                    if identificador == "ERROR_LECTURA":
+                        log(f"  -> ID ilegible en {coord}: se salta la casilla sin procesarla.")
+                        _captura_id = capturar_pantalla_error("id_ilegible")
+                        event_log(
+                            "id_ilegible",
+                            coords=[coord[0], coord[1]],
+                            captura_path=_captura_id,
+                        )
+                        continue
 
                     if id_normalizado in diarios_con_error:
                         if intentos_scroll == 0:
@@ -457,6 +510,9 @@ def run_bot(
     except Exception as e:
         log(f"\nError inesperado: {e}")
         event_log("bot_stop", reason="error")
+    finally:
+        # B2: el latido nunca debe sobrevivir a la sesión (nada de hilos huérfanos).
+        _heartbeat_stop.set()
 
     log("\nEjecución finalizada.")
     return True

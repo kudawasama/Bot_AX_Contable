@@ -1,7 +1,7 @@
 ---
 type: riesgo
 status: activo
-created: 2026-10-13T14:54:45
+created: 2026-10-14T16:41:33
 project: "Bot_AX_Contable"
 tags: ["riesgo", "anlisis", "class:fix", "revisarcommitsypendientess"]
 source: "chat"
@@ -9,7 +9,7 @@ source: "chat"
 
 # ⚠️ Encontré un problema real y lo voy a arreglar con su prueba de regresión. Primero el diagnóstico exacto:
 
-> #riesgo #activo #AUTOMATIZACION #grupo-gobierno
+> #riesgo #activo #TESTING #grupo-gobierno
 
 Riesgo: Encontré un problema real y lo voy a arreglar con su prueba de regresión. Primero el diagnóstico exacto:
 

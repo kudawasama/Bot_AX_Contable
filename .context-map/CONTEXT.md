@@ -59,19 +59,19 @@ ctxmap refresh .
 ## Resumen Ejecutivo
 
 **Proyecto**: Bot_AX_Contable
-**Nodos totales**: 88
-**Distribución**: BASE: 16, FUTURO: 3, CORRECCION: 25, CAMBIO: 7, IDEA: 31, RIESGO: 6
+**Nodos totales**: 90
+**Distribución**: BASE: 17, FUTURO: 3, CORRECCION: 29, CAMBIO: 7, IDEA: 27, RIESGO: 6, PRUEBA: 1
 **Readiness**: 94/100
 
 
 ## Estado del Proyecto
 
-- **Ideas**: 31 (features, conceptos)
-- **Bases**: 16 (fundamentos)
+- **Ideas**: 27 (features, conceptos)
+- **Bases**: 17 (fundamentos)
 - **Riesgos**: 6 (problemas potenciales)
 - **Cambios**: 7 (modificaciones)
 - **Pendientes**: 3 (tareas por hacer)
-- **Correcciones**: 25 (bugs/fixes)
+- **Correcciones**: 29 (bugs/fixes)
 
 
 ## Estado del Contexto
@@ -114,7 +114,7 @@ _Sin páginas todavía. Captura con `ctxmap inbox add "<texto>"` o `ctxmap inges
 
 ## 🧮 Eficiencia de Contexto & Presupuesto de Tokens
 
-- **Brief Principal (`CONTEXT.md`)**: `1332` tokens
+- **Brief Principal (`CONTEXT.md`)**: `1336` tokens
 - **Prefijo Invariante (Prompt Cache)**: `707` tokens deterministas (alta tasa de Cache Hit en Claude 3.7 / Gemini 2.5).
 - **Optimización de Ventana**: **>99% de ahorro de tokens** (carga inmediata del mapa narrativo vs. inspección masiva de código).
 
@@ -122,5 +122,5 @@ _Sin páginas todavía. Captura con `ctxmap inbox add "<texto>"` o `ctxmap inges
 ---
 
 > Este brief fue generado automáticamente por ContextMap IA.
-> Última compilación: 2026-10-13 14:54
+> Última compilación: 2026-10-14 16:41
 > Optimizado para Prompt Caching (Claude 3.7 Sonnet, Gemini 2.5 Pro/Flash, GPT-4o).

@@ -11,7 +11,7 @@ manual de ``types.ModuleType`` (los dobles inertes viven en ``tests/conftest.py`
 Ejecutar con: ``python -m pytest tests/test_vision.py -v``
 """
 
-from src.services.vision import normalizar_id_diario
+from src.services.vision import leer_id_diario, normalizar_id_diario
 
 
 class TestNormalizarIdDiario:
@@ -48,3 +48,46 @@ class TestNormalizarIdDiario:
         ]
         for v in variantes:
             assert normalizar_id_diario(v) == "00326946", f"Fallo con: {v}"
+
+
+class TestLecturaIdDiarioValidada:
+    """B1: el ID de AX tiene exactamente 8 dígitos y se valida antes de usarlo.
+
+    Antes, ``leer_id_diario`` devolvía cualquier texto del OCR y el motor procesaba el
+    diario con ese identificador: un dígito mal leído hacía registrar —y listar como
+    error— un diario distinto del real.
+    """
+
+    def test_lee_el_id_valido_de_8_digitos(self, mock_tesseract):
+        mock_tesseract.image_to_string.return_value = "W00337505Diar"
+        assert leer_id_diario((100, 100)) == "00337505"
+
+    def test_basura_del_ocr_no_es_id(self, mock_tesseract):
+        mock_tesseract.image_to_string.return_value = "W00ab919Diat"
+        assert leer_id_diario((100, 100)) == "ERROR_LECTURA"
+
+    def test_lectura_de_7_digitos_no_es_valida(self, mock_tesseract):
+        mock_tesseract.image_to_string.return_value = "W0337501Diat"
+        assert leer_id_diario((100, 100)) == "ERROR_LECTURA"
+
+    def test_lectura_corrida_de_9_digitos_no_es_valida(self, mock_tesseract):
+        """9 dígitos seguidos: tomar los primeros 8 daría un ID inventado."""
+        mock_tesseract.image_to_string.return_value = "W003375050Diar"
+        assert leer_id_diario((100, 100)) == "ERROR_LECTURA"
+
+    def test_dos_ids_distintos_en_la_misma_lectura_es_dudoso(self, mock_tesseract):
+        mock_tesseract.image_to_string.return_value = "00337505 00337506"
+        assert leer_id_diario((100, 100)) == "ERROR_LECTURA"
+
+    def test_dos_ids_aunque_sean_iguales_son_dudosos(self, mock_tesseract):
+        """El filtro de OCR quita los separadores: dos IDs quedan como 16 dígitos corridos.
+
+        Es deliberado: ante cualquier lectura que no sea UN único número de 8 dígitos se
+        prefiere saltar el diario antes que arriesgar un identificador inventado.
+        """
+        mock_tesseract.image_to_string.return_value = "00337505 00337505"
+        assert leer_id_diario((100, 100)) == "ERROR_LECTURA"
+
+    def test_lectura_vacia_es_error(self, mock_tesseract):
+        mock_tesseract.image_to_string.return_value = ""
+        assert leer_id_diario((100, 100)) == "ERROR_LECTURA"
