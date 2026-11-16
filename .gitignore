@@ -25,4 +25,8 @@ __pycache__/
 *.pyc
 logs/
 
+# Cachés de herramientas de desarrollo (no son artefactos del bot)
+.pytest_cache/
+.ruff_cache/
+
 blacklist.json
