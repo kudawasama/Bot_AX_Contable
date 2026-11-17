@@ -15,3 +15,10 @@ keyboard==0.13.5
 PyScreeze==1.0.1
 MouseInfo==0.1.3
 PyGetWindow==0.0.9
+
+# OpenCV es OBLIGATORIO en la práctica: PyAutoGUI lo usa para el parámetro confidence=
+# (búsqueda por similitud), que el bot pasa en TODAS sus búsquedas de patrones. Sin
+# opencv-python instalado, la búsqueda falla en un PC nuevo. No viene como dependencia
+# declarada de PyAutoGUI, así que se fija aquí.
+opencv-python==4.13.0
+numpy==2.2.6

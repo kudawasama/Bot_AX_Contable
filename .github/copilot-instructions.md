@@ -1,6 +1,6 @@
 # GitHub Copilot — Instrucciones para Bot_AX_Contable
 
-> Generado automáticamente por **ContextMap** (2026-10-14).
+> Generado automáticamente por **ContextMap** (2026-11-17).
 
 ## Antes de sugerir código
 

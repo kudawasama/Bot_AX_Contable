@@ -63,6 +63,14 @@ BTN_ABAJO: str = os.path.join(PATRONES_DIR, "Avanzar_Abajo.png")
 IMG_FORMULARIOS: str = os.path.join(PATRONES_DIR, "Formularios_Abiertos.png")
 MSG_EXITO_ASIENTO: str = os.path.join(PATRONES_DIR, "msg_exito_asiento_1.png")
 
+# Avisos del Infolog de AX que marcan el FIN DE CICLO. Son recortes de texto fijo, no de
+# la ventana completa: los patrones anteriores (MSG_EXITO_ASIENTO / IMG_ERROR) incluían la
+# hora del mensaje y el número de asientos, que cambian en cada registro, y por eso la
+# similitud caía por debajo del umbral aunque el aviso estuviera en pantalla
+# (medido el 2026-11-17: 0.69 y 0.31 contra umbrales 0.8 y 0.9).
+INFOLOG_EXITO: str = os.path.join(PATRONES_DIR, "infolog_exito.png")
+INFOLOG_ERROR: str = os.path.join(PATRONES_DIR, "infolog_error.png")
+
 
 def cargar_configuracion() -> Optional[Dict[str, Any]]:
     """Carga y valida la configuración de sectores desde el archivo JSON de la raíz.

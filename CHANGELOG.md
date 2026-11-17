@@ -6,6 +6,48 @@ Todos los cambios relevantes de este proyecto. El formato sigue
 
 ---
 
+## [v-00.40.00] — 2026-11-17 (el fin de ciclo ya se detecta: avisos del Infolog)
+
+### Corregido
+- **El bot no detectaba que el ciclo había terminado.** Síntoma: con el aviso de AX ya en
+  pantalla, el motor seguía en `Esperando resultado (timeout: 60min)` y no arrancaba el
+  ciclo siguiente (sesión `000358`, 14:37:51, detenida a mano).
+  **Causa raíz:** el fin de ciclo se decidía comparando capturas del Infolog **completo**
+  (`msg_exito_asiento_1.png` 340x162 y `Error_Registro.png` 341x101). Esas capturas
+  incluyen texto que **cambia en cada registro**: la hora del mensaje
+  (`Mensaje (14:38:40)`) y el número de asientos (`... en el diario: 7`). Medido con el
+  aviso real en pantalla: **0.690** y **0.312** de similitud, contra umbrales de **0.8** y
+  **0.9**. El bot sólo veía el aviso cuando el número de asientos y la hora coincidían con
+  los de la captura de referencia.
+  **Solución:** dos recortes de **texto fijo**, sin hora ni conteos, y un clasificador
+  (`clasificar_aviso_resultado`) que los compara con la misma métrica que usa el resto del
+  módulo:
+  - `patrones/infolog_error.png` — «Uno o más errores de DETENCIÓN críticos…» → `error`
+  - `patrones/infolog_exito.png` — «Número de asientos registrados en el diario:» (sin los
+    dígitos) → `exito`
+  El error se evalúa **primero**: si el Infolog mezcla avisos, un error nunca pasa por éxito
+  (marcaría como registrado un diario que falló). Los patrones anteriores se conservan como
+  respaldo, así que la lógica previa sigue disponible si aparece un aviso distinto.
+- **`.gitignore`/telemetría: `sector_b_fallback` ya no miente.** Se registraba «Menu fuera de
+  sector B» aunque el punto encontrado estuviera **dentro** del sector (la búsqueda regional
+  no alcanzaba el umbral y la de pantalla completa sí). Ahora sólo cuenta como fallback si
+  el punto cae realmente fuera del sector.
+
+### Añadido
+- `requirements.txt`: **`opencv-python` y `numpy` fijados.** PyAutoGUI los necesita para el
+  parámetro `confidence=`, que el bot usa en **todas** sus búsquedas, pero no los declara
+  como dependencia: en un PC recién formateado el bot habría fallado en la primera búsqueda.
+- `tests/test_aviso_resultado.py` (6 pruebas): éxito, error, **prioridad del error**,
+  pantalla sin aviso, imagen sin varianza y límite de tamaño de los patrones (un patrón
+  grande reintroduce el fallo original).
+
+### Verificación
+- **77/77 pruebas** · `ruff: All checks passed!` · clasificación probada **en vivo** contra
+  el aviso real que estaba en pantalla (sólo lectura): devuelve `exito`, y el mismo aviso
+  hace que los patrones antiguos se queden en 0.690 / 0.312.
+
+---
+
 ## [v-00.39.00] — 2026-11-16 (C-6: lanzadores `.bat` portables + calibración versionada)
 
 ### Corregido

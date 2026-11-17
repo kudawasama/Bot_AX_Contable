@@ -27,7 +27,12 @@ NOMBRES_IMAGENES: Dict[str, str] = {
     "Formularios_Abiertos.png": "FormAbierto",
     "msg_exito_asiento_1.png": "Exito-Ventana",
     "btn_cerrar_info.png": "Cerrar",
+    "infolog_exito.png": "Aviso-Exito",
+    "infolog_error.png": "Aviso-Error",
 }
+
+# Umbral para los avisos del Infolog (texto fijo recortado, sin hora ni conteos).
+UMBRAL_AVISO_RESULTADO: float = 0.8
 
 # B1: el ID de diario de AX tiene EXACTAMENTE 8 dígitos. Los límites (?<!\d) / (?!\d)
 # evitan que una lectura corrida (9 dígitos) entregue por error los primeros 8.
@@ -133,8 +138,16 @@ def buscar_y_clickear(
                         grayscale=True
                     )
                     if ubicacion and sector_region:
-                        logger.warning(f"{nombre_corto(ruta_imagen)} fuera de sector B")
-                        event_log("sector_b_fallback", elemento=nombre_corto(ruta_imagen))
+                        # Solo es un fallback de verdad si el punto cae FUERA del sector.
+                        # Antes se avisaba siempre, aunque el punto estuviera dentro: el
+                        # sector acierta pero la búsqueda regional no alcanza el umbral.
+                        dentro = (
+                            sector_region[0] <= int(ubicacion[0]) <= sector_region[0] + sector_region[2]
+                            and sector_region[1] <= int(ubicacion[1]) <= sector_region[1] + sector_region[3]
+                        )
+                        if not dentro:
+                            logger.warning(f"{nombre_corto(ruta_imagen)} fuera de sector B")
+                            event_log("sector_b_fallback", elemento=nombre_corto(ruta_imagen))
                 except pyautogui.ImageNotFoundException:
                     pass
 
@@ -215,6 +228,103 @@ def buscar_estado_checkbox(
     return False
 
 
+def _mejor_coincidencia(pantalla_gris: Any, ruta_patron: str) -> float:
+    """Devuelve la mejor similitud (0.0-1.0) de un patrón sobre una pantalla en gris.
+
+    Usa la misma métrica que PyAutoGUI (``TM_CCOEFF_NORMED``) para que los umbrales
+    signifiquen lo mismo que en el resto del módulo. Nunca levanta excepción: un patrón
+    ilegible o más grande que la pantalla devuelve 0.0.
+
+    Args:
+        pantalla_gris (Any): Imagen de la pantalla en escala de grises (numpy array).
+        ruta_patron (str): Ruta del patrón a buscar.
+
+    Returns:
+        float: Mejor coincidencia encontrada, entre 0.0 y 1.0.
+    """
+    try:
+        import cv2
+
+        patron = cv2.imread(ruta_patron, cv2.IMREAD_GRAYSCALE)
+        if patron is None or pantalla_gris is None:
+            return 0.0
+        alto, ancho = patron.shape[:2]
+        if alto > pantalla_gris.shape[0] or ancho > pantalla_gris.shape[1]:
+            return 0.0
+        resultado = cv2.matchTemplate(pantalla_gris, patron, cv2.TM_CCOEFF_NORMED)
+        return float(resultado.max())
+    except Exception as error:  # pragma: no cover - salvaguarda
+        logger.warning(f"No se pudo comparar {nombre_corto(ruta_patron)}: {error}")
+        return 0.0
+
+
+def _captura_pantalla_gris() -> Any:
+    """Captura la pantalla actual en escala de grises (sólo lectura)."""
+    import cv2
+    import numpy as np
+
+    return cv2.cvtColor(np.array(pyautogui.screenshot()), cv2.COLOR_RGB2GRAY)
+
+
+def scores_aviso_resultado(pantalla_gris: Any = None) -> Dict[str, float]:
+    """Devuelve la similitud de cada aviso del Infolog sobre la pantalla actual.
+
+    Se usa para diagnóstico: si el bot vuelve a quedarse esperando, el log muestra los
+    números reales en vez de obligar a inferirlos.
+
+    Args:
+        pantalla_gris (Any): Imagen en grises; si es ``None`` se captura la pantalla.
+
+    Returns:
+        Dict[str, float]: ``{'error': score, 'exito': score}``.
+    """
+    from src.core.config import INFOLOG_ERROR, INFOLOG_EXITO
+
+    if pantalla_gris is None:
+        pantalla_gris = _captura_pantalla_gris()
+    return {
+        'error': _mejor_coincidencia(pantalla_gris, INFOLOG_ERROR),
+        'exito': _mejor_coincidencia(pantalla_gris, INFOLOG_EXITO),
+    }
+
+
+def clasificar_aviso_resultado(pantalla_gris: Any = None) -> Optional[str]:
+    """Dice si el Infolog de AX está mostrando un aviso de ÉXITO o de ERROR.
+
+    POR QUÉ EXISTE (incidente 2026-11-17): el fin de ciclo se detectaba comparando
+    capturas completas del Infolog (``msg_exito_asiento_1.png`` 340x162 y
+    ``Error_Registro.png`` 341x101). Esas capturas incluyen **texto que cambia en cada
+    registro**: la hora del mensaje (``Mensaje (14:01:02)``) y el número de asientos
+    (``... en el diario: 1``). Resultado medido: con el aviso real en pantalla la
+    similitud caía a 0.69 / 0.31, por debajo del umbral (0.8 / 0.9), y el bot se quedaba
+    esperando hasta el timeout de 60 minutos con el ciclo ya terminado.
+
+    La solución es comparar sólo fragmentos de texto **fijo**:
+      * error  -> "Uno o más errores de DETENCIÓN críticos. Utilice los siguientes..."
+      * éxito  -> "Número de asientos registrados en el diario:" (sin los dígitos)
+
+    El error se evalúa primero: si el Infolog mezcla avisos, un error NO debe pasar por
+    éxito (marcaría como registrado un diario que falló).
+
+    Args:
+        pantalla_gris (Any): Imagen en escala de grises. Si es ``None`` se captura la
+            pantalla actual (sólo lectura: no mueve mouse ni teclado).
+
+    Returns:
+        Optional[str]: ``'error'``, ``'exito'`` o ``None`` si no hay aviso reconocible.
+    """
+    try:
+        similitudes = scores_aviso_resultado(pantalla_gris)
+        if similitudes['error'] >= UMBRAL_AVISO_RESULTADO:
+            return 'error'
+        if similitudes['exito'] >= UMBRAL_AVISO_RESULTADO:
+            return 'exito'
+        return None
+    except Exception as error:
+        logger.warning(f"No se pudo clasificar el aviso de resultado: {error}")
+        return None
+
+
 def esperar_resultado_registro(
     ruta_obj_exito: str,
     ruta_obj_error: str,
@@ -253,10 +363,38 @@ def esperar_resultado_registro(
                 pass
             ultimo_jiggle = ahora
 
-        # Loguear progreso cada 30 segundos
+        # Captura única por iteración: se reutiliza para clasificar el aviso y para las
+        # trazas de diagnóstico (antes se capturaba la pantalla varias veces por vuelta).
+        try:
+            pantalla_gris = _captura_pantalla_gris()
+        except Exception:
+            pantalla_gris = None
+
+        # Loguear progreso cada 30 segundos, con las similitudes reales de los avisos
         if ahora - ultimo_mensaje > 30:
-            logger.info(f"...esperando ({int(ahora - inicio)}s)")
+            similitudes = scores_aviso_resultado(pantalla_gris)
+            logger.info(
+                f"...esperando ({int(ahora - inicio)}s) "
+                f"aviso: exito={similitudes['exito']:.2f} error={similitudes['error']:.2f}"
+            )
             ultimo_mensaje = ahora
+
+        # 0. Aviso del Infolog por texto FIJO (solución del incidente 2026-11-17).
+        #    Va antes que los patrones completos porque éstos incluyen la hora y el
+        #    número de asientos, que cambian en cada registro.
+        aviso = clasificar_aviso_resultado(pantalla_gris)
+        if aviso == 'error':
+            logger.warning("-> ERROR de Registro AX! (aviso del Infolog)")
+            event_log("result_error_ax", origen="infolog")
+            return 'error'
+        if aviso == 'exito':
+            logger.info("-> EXITO! (aviso del Infolog confirmado)")
+            event_log("result_exito_popup", origen="infolog")
+            pyautogui.press('esc')
+            time.sleep(0.3)
+            pyautogui.press('enter')
+            time.sleep(0.5)
+            return 'exito'
 
         # 1. Buscar ventana modal de éxito en toda la pantalla
         try:
