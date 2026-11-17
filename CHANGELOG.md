@@ -6,6 +6,19 @@ Todos los cambios relevantes de este proyecto. El formato sigue
 
 ---
 
+## [v-00.40.01] — 2026-11-17 (calibración real de sectores)
+
+### Corregido
+- **La calibración versionada no era la que el bot usa en producción.** El 2026-11-17 a las
+  14:37 se recalibró la pantalla (1366x768) y el cambio quedó sin commitear en la copia de
+  trabajo: un clon nuevo habría arrancado con la calibración anterior.
+  - `sector_a`: `[59, 232, 276, 454]` (antes `[61, 242, 255, 444]`)
+  - `sector_b`: `[1104, 87, 251, 36]` (antes `[1108, 99, 236, 36]`)
+  - `sector_scroll`: `[343, 650, 39, 41]` (antes `[335, 671, 35, 24]`)
+  - `ocr_region_offset`: sin cambios
+
+---
+
 ## [v-00.40.00] — 2026-11-17 (el fin de ciclo ya se detecta: avisos del Infolog)
 
 ### Corregido
