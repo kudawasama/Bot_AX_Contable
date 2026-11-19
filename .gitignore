@@ -19,6 +19,8 @@ diag_output*.txt
 
 # Cache local del escaneo de ContextMap (se regenera en cada refresh)
 .context-map/.scan_cache.json
+# Índice FTS del vault (binario, se regenera en cada build)
+.context-map/state/*.db
 
 # Python
 __pycache__/

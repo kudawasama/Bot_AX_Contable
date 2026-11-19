@@ -82,9 +82,9 @@
       "height": 50
     },
     {
-      "id": "8c6e6cfd-efb8-55ed-8bf2-839e70dada87",
+      "id": "3b541638-1577-5b3b-9de3-2d73309e8fa1",
       "type": "file",
-      "file": "4.0-RIESGOS/Archivos de alta complejidad scripts_observer_analyze.py, src_ui_gui_classic.py, scripts_chequeo_sal.md",
+      "file": "4.0-RIESGOS/Archivos de alta complejidad scripts_observer_analyze.py, src_ui_gui_classic.py, src_services_vision.md",
       "x": 1040,
       "y": 0,
       "width": 240,
@@ -150,14 +150,6 @@
       "fromNode": "507e3429-ff50-57b5-9688-23c04c38c683",
       "fromSide": "right",
       "toNode": "bceb5ea6-1ba1-5260-83d9-71ef8a42b778",
-      "toSide": "left",
-      "label": ""
-    },
-    {
-      "id": "7d1a612a-669b-53f4-8534-7aab33be4967",
-      "fromNode": "7f6cd1be-e1ff-5fd1-8caf-a26ed739b451",
-      "fromSide": "right",
-      "toNode": "fe1f0c36-2819-5b60-8dee-d620bf0c75e9",
       "toSide": "left",
       "label": ""
     },
@@ -274,26 +266,10 @@
       "label": ""
     },
     {
-      "id": "9521245b-135b-50f9-8a90-398150fd99e6",
+      "id": "68e5a3c0-3247-5af8-89df-a74bdcdfb8d8",
       "fromNode": "e1816036-41c7-5e0e-9431-47747735af62",
       "fromSide": "right",
-      "toNode": "8c6e6cfd-efb8-55ed-8bf2-839e70dada87",
-      "toSide": "left",
-      "label": ""
-    },
-    {
-      "id": "371f13ed-26aa-5aa0-b279-eff827cdff26",
-      "fromNode": "8c6e6cfd-efb8-55ed-8bf2-839e70dada87",
-      "fromSide": "right",
-      "toNode": "51ab7fbb-e480-561c-834c-777c47994dc4",
-      "toSide": "left",
-      "label": ""
-    },
-    {
-      "id": "98cd36b7-e1bf-56a6-bafc-1e9a2a3e0365",
-      "fromNode": "8c6e6cfd-efb8-55ed-8bf2-839e70dada87",
-      "fromSide": "right",
-      "toNode": "bceb5ea6-1ba1-5260-83d9-71ef8a42b778",
+      "toNode": "3b541638-1577-5b3b-9de3-2d73309e8fa1",
       "toSide": "left",
       "label": ""
     },
@@ -318,6 +294,22 @@
       "fromNode": "51ab7fbb-e480-561c-834c-777c47994dc4",
       "fromSide": "right",
       "toNode": "bceb5ea6-1ba1-5260-83d9-71ef8a42b778",
+      "toSide": "left",
+      "label": ""
+    },
+    {
+      "id": "6b7023d0-5031-50ce-866e-f424326600e8",
+      "fromNode": "51ab7fbb-e480-561c-834c-777c47994dc4",
+      "fromSide": "right",
+      "toNode": "d1baa5bd-39ea-5553-8d51-b55f3a7cd33e",
+      "toSide": "left",
+      "label": ""
+    },
+    {
+      "id": "f7c1f731-5b05-5334-bee1-45f22b22f402",
+      "fromNode": "bceb5ea6-1ba1-5260-83d9-71ef8a42b778",
+      "fromSide": "right",
+      "toNode": "d1baa5bd-39ea-5553-8d51-b55f3a7cd33e",
       "toSide": "left",
       "label": ""
     },

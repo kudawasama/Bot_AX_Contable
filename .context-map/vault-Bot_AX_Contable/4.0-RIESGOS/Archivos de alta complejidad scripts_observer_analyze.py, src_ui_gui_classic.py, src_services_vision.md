@@ -1,28 +1,28 @@
 ---
 type: riesgo
 status: activo
-created: 2026-10-14T16:41:33
+created: 2026-11-19T15:58:28
 project: "Bot_AX_Contable"
 tags: ["riesgo", "class:chore"]
 source: "scanner"
 ---
 
-# ⚠️ Archivos de alta complejidad: scripts/observer_analyze.py, src/ui/gui_classic.py, scripts/chequeo_salud.py
+# ⚠️ Archivos de alta complejidad: scripts/observer_analyze.py, src/ui/gui_classic.py, src/services/vision.py
 
 > #riesgo #activo #UI
 
-Zona de alta complejidad: Archivos de alta complejidad (6 total): scripts/observer_analyze.py; src/ui/gui_classic.py; scripts/chequeo_salud.py.
+Zona de alta complejidad: Archivos de alta complejidad (6 total): scripts/observer_analyze.py; src/ui/gui_classic.py; src/services/vision.py.
 
 ## 🧠 Contexto Narrativo con Alma
 
 ### ⚠️ 1. ¿Qué RIESGO técnico es?
-Riesgo técnico o zona de alta complejidad referente a 'Archivos de alta complejidad: scripts/observer_analyze.py, src/ui/gui_classic.py, scripts/chequeo_salud.py'.
+Riesgo técnico o zona de alta complejidad referente a 'Archivos de alta complejidad: scripts/observer_analyze.py, src/ui/gui_classic.py, src/services/vision.py'.
 
 ### 📍 2. ¿Dónde se ubica el problema?
 Detectado en el módulo/componente vía `scanner`.
 
 ### 💥 3. ¿Qué IMPACTO tiene si se ignora?
-Incrementa la probabilidad de desacoplamientos o fallos al refactorizar. Zona de alta complejidad: Archivos de alta complejidad (6 total): scripts/observer_analyze.py; src/ui/gui_classic.py; scripts/chequeo_salud.py.
+Incrementa la probabilidad de desacoplamientos o fallos al refactorizar. Zona de alta complejidad: Archivos de alta complejidad (6 total): scripts/observer_analyze.py; src/ui/gui_classic.py; src/services/vision.py.
 
 ### 🛡️ 4. ¿Cómo MITIGAR este riesgo?
 1. Modularizar el componente reduciendo el número de líneas/responsabilidades.
@@ -40,7 +40,7 @@ Incrementa la probabilidad de desacoplamientos o fallos al refactorizar. Zona de
 
 - Archivo: scripts/observer_analyze.py
 - Archivo: src/ui/gui_classic.py
-- Archivo: scripts/chequeo_salud.py
+- Archivo: src/services/vision.py
 
 ## 🔗 Conexiones
 

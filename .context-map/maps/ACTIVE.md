@@ -52,6 +52,10 @@ Bot_AX_Contable
       - Proyecto 'Bot_AX_Contable' — 502 archivos, 503124 líneas, sin entrypoints.
     - **BASE.019** Proyecto 'Bot_AX_Contable' — 508 archivos, 507522 líneas, sin entrypoints `[arquitectura, class:other, proyecto]` completado | v1 | src: scanner | ev: Cantidad: 508; Líneas de código: 507522
       - Proyecto 'Bot_AX_Contable' — 508 archivos, 507522 líneas, sin entrypoints.
+    - **BASE.021** Proyecto 'Bot_AX_Contable' — 182 archivos, 105037 líneas, sin entrypoints `[arquitectura, class:other, proyecto]` completado | v1 | src: scanner | ev: Cantidad: 182; Líneas de código: 105037
+      - Proyecto 'Bot_AX_Contable' — 182 archivos, 105037 líneas, sin entrypoints.
+    - **BASE.020** Documentación principal: AGENTS.md `[class:chore, documentacion, proyecto]` completado | v1 | src: scanner | ev: Archivo: AGENTS.md
+      - Documentación: Documentación principal: AGENTS.md.
 
 - **IDEA**
 
@@ -61,35 +65,31 @@ Bot_AX_Contable
       - Feature implementada: feat: observer watchdog — vigilancia en vivo del bot via cron
     - **IDEA.001** [64e2d1c] feat: observer analyzer + event logging estructurado (JSONL) `[class:feature, git, idea]` completado | v1 | src: git | ev: Cantidad: 64
       - Feature implementada: feat: observer analyzer + event logging estructurado (JSONL)
-    - **FUTURO.026** TODO (src/bot_ax/config/defaults.py:L4): Centraliza todos los defaults numéricos para facilitar ajustes. `[class:chore]` completado | v1 | src: scanner | ev: Archivo: src/bot_ax/config/defaults.py; Cantidad: 4
-      - Pendiente: Centraliza todos los defaults numéricos para facilitar ajustes..
-
-Ubicación: `src/bot_ax/config/defaults.py:L4`
-    - **FUTURO.027** TODO (src/core/engine.py:L258): event_log("scroll_performed", intento=intentos_scroll, metodo="boton") `[class:perf]` completado | v1 | src: scanner | ev: Archivo: src/core/engine.py; Cantidad: 258
+    - **FUTURO.026** TODO (src/core/engine.py:L258): event_log("scroll_performed", intento=intentos_scroll, metodo="boton") `[class:perf]` completado | v1 | src: scanner | ev: Archivo: src/core/engine.py; Cantidad: 258
       - Pendiente: event_log("scroll_performed", intento=intentos_scroll, metodo="boton").
 
 Ubicación: `src/core/engine.py:L258`
-    - **FUTURO.028** TODO (src/core/engine.py:L273): event_log("scroll_performed", intento=intentos_scroll, metodo="click") `[class:perf]` completado | v1 | src: scanner | ev: Archivo: src/core/engine.py; Cantidad: 273
+    - **FUTURO.027** TODO (src/core/engine.py:L273): event_log("scroll_performed", intento=intentos_scroll, metodo="click") `[class:perf]` completado | v1 | src: scanner | ev: Archivo: src/core/engine.py; Cantidad: 273
       - Pendiente: event_log("scroll_performed", intento=intentos_scroll, metodo="click").
 
 Ubicación: `src/core/engine.py:L273`
-    - **FUTURO.029** TODO (src/core/engine.py:L276): event_log("scroll_performed", intento=intentos_scroll, metodo="pgdn") `[class:perf]` completado | v1 | src: scanner | ev: Archivo: src/core/engine.py; Cantidad: 276
+    - **FUTURO.028** TODO (src/core/engine.py:L276): event_log("scroll_performed", intento=intentos_scroll, metodo="pgdn") `[class:perf]` completado | v1 | src: scanner | ev: Archivo: src/core/engine.py; Cantidad: 276
       - Pendiente: event_log("scroll_performed", intento=intentos_scroll, metodo="pgdn").
 
 Ubicación: `src/core/engine.py:L276`
-    - **FUTURO.032** TODO (src/ui/gui_classic.py:L271): self._log_btn("✕A", "Limpiar todo el log", self._clear_log, head_frame) `[class:update]` completado | v1 | src: scanner | ev: Archivo: src/ui/gui_classic.py; Archivo: self._log_btn; Archivo: self._clear_log; Cantidad: 271
+    - **FUTURO.031** TODO (src/ui/gui_classic.py:L271): self._log_btn("✕A", "Limpiar todo el log", self._clear_log, head_frame) `[class:update]` completado | v1 | src: scanner | ev: Archivo: src/ui/gui_classic.py; Archivo: self._log_btn; Archivo: self._clear_log; Cantidad: 271
       - Pendiente: self._log_btn("✕A", "Limpiar todo el log", self._clear_log, head_frame).
 
 Ubicación: `src/ui/gui_classic.py:L271`
-    - **FUTURO.033** TODO (src/ui/gui_classic.py:L609): """Borra todos los errores mostrados en pantalla.""" `[class:fix]` completado | v1 | src: scanner | ev: Archivo: src/ui/gui_classic.py; Cantidad: 609
+    - **FUTURO.032** TODO (src/ui/gui_classic.py:L609): """Borra todos los errores mostrados en pantalla.""" `[class:fix]` completado | v1 | src: scanner | ev: Archivo: src/ui/gui_classic.py; Cantidad: 609
       - Pendiente: """Borra todos los errores mostrados en pantalla.""".
 
 Ubicación: `src/ui/gui_classic.py:L609`
-    - **FUTURO.034** TODO (src/ui/gui_classic.py:L617): self.log("🗑 Todos los errores eliminados del log.") `[class:fix]` completado | v1 | src: scanner | ev: Archivo: src/ui/gui_classic.py; Archivo: self.log; Cantidad: 617
+    - **FUTURO.033** TODO (src/ui/gui_classic.py:L617): self.log("🗑 Todos los errores eliminados del log.") `[class:fix]` completado | v1 | src: scanner | ev: Archivo: src/ui/gui_classic.py; Archivo: self.log; Cantidad: 617
       - Pendiente: self.log("🗑 Todos los errores eliminados del log.").
 
 Ubicación: `src/ui/gui_classic.py:L617`
-    - **FUTURO.035** TODO (src/ui/gui_gemini.py:L70): """Construye todos los elementos gráficos y paneles de control en la ventana.""" `[class:chore]` completado | v1 | src: scanner | ev: Archivo: src/ui/gui_gemini.py; Cantidad: 70
+    - **FUTURO.034** TODO (src/ui/gui_gemini.py:L70): """Construye todos los elementos gráficos y paneles de control en la ventana.""" `[class:chore]` completado | v1 | src: scanner | ev: Archivo: src/ui/gui_gemini.py; Cantidad: 70
       - Pendiente: """Construye todos los elementos gráficos y paneles de control en la ventana.""".
 
 Ubicación: `src/ui/gui_gemini.py:L70`
@@ -214,11 +214,11 @@ Ubicación: `TODO`
       - Corrección: fix: desactivar auto-bump, version manual
     - **CORRECCION.002** [4e89205] fix: bajar confianza scroll sector de 0.7 a 0.6 `[class:fix, correccion, git]` completado | v1 | src: git | ev: Archivo: 0.7; Archivo: 0.6; Cantidad: 4
       - Corrección: fix: bajar confianza scroll sector de 0.7 a 0.6
-    - **FUTURO.030** TODO (src/core/logger.py:L47): _logger.setLevel(logging.DEBUG) `[class:fix]` completado | v1 | src: scanner | ev: Archivo: src/core/logger.py; Archivo: _logger.setLevel; Archivo: logging.DEBUG; Cantidad: 47
+    - **FUTURO.029** TODO (src/core/logger.py:L47): _logger.setLevel(logging.DEBUG) `[class:fix]` completado | v1 | src: scanner | ev: Archivo: src/core/logger.py; Archivo: _logger.setLevel; Archivo: logging.DEBUG; Cantidad: 47
       - Pendiente: _logger.setLevel(logging.DEBUG).
 
 Ubicación: `src/core/logger.py:L47`
-    - **FUTURO.031** TODO (src/core/logger.py:L59): file_handler.setLevel(logging.DEBUG) `[class:fix]` completado | v1 | src: scanner | ev: Archivo: src/core/logger.py; Archivo: file_handler.setLevel; Archivo: logging.DEBUG; Cantidad: 59
+    - **FUTURO.030** TODO (src/core/logger.py:L59): file_handler.setLevel(logging.DEBUG) `[class:fix]` completado | v1 | src: scanner | ev: Archivo: src/core/logger.py; Archivo: file_handler.setLevel; Archivo: logging.DEBUG; Cantidad: 59
       - Pendiente: file_handler.setLevel(logging.DEBUG).
 
 Ubicación: `src/core/logger.py:L59`
@@ -293,8 +293,8 @@ LO QUE QUEDÓ EN ESTE PASO
 
   - **ID**, título/tags, estado, source, versión
 
-    - **RIESGO.007** Archivos de alta complejidad: scripts/observer_analyze.py, src/ui/gui_classic.py, scripts/chequeo_salud.py `[class:chore, riesgo]` activo | v1 | src: scanner | ev: Archivo: scripts/observer_analyze.py; Archivo: src/ui/gui_classic.py; Archivo: scripts/chequeo_salud.py
-      - Zona de alta complejidad: Archivos de alta complejidad (6 total): scripts/observer_analyze.py; src/ui/gui_classic.py; scripts/chequeo_salud.py.
+    - **RIESGO.009** Archivos de alta complejidad: scripts/observer_analyze.py, src/ui/gui_classic.py, src/services/vision.py `[class:chore, riesgo]` activo | v1 | src: scanner | ev: Archivo: scripts/observer_analyze.py; Archivo: src/ui/gui_classic.py; Archivo: src/services/vision.py
+      - Zona de alta complejidad: Archivos de alta complejidad (6 total): scripts/observer_analyze.py; src/ui/gui_classic.py; src/services/vision.py.
     - **RIESGO.003** Encontré un problema real y lo voy a arreglar con su prueba de regresión. Primero el diagnóstico exacto: `[anlisis, class:fix, revisarcommitsypendientess]` activo | v1 | src: chat | ev: Líneas de código: 0
       - Riesgo: Encontré un problema real y lo voy a arreglar con su prueba de regresión. Primero el diagnóstico exacto:
 
@@ -329,7 +329,7 @@ _(sin conexiones)_
 
 ## Riesgos activos
 
-- RIESGO.007: Archivos de alta complejidad: scripts/observer_analyze.py, src/ui/gui_classic.py, scripts/chequeo_salud.py
+- RIESGO.009: Archivos de alta complejidad: scripts/observer_analyze.py, src/ui/gui_classic.py, src/services/vision.py
 - RIESGO.003: Encontré un problema real y lo voy a arreglar con su prueba de regresión. Primero el diagnóstico exacto:
 - RIESGO.004: Entendido y aplicado: solo Bot_AX_Contable. Y me quedo con el hallazgo más importante de la sesión, que resultó ser un problema real del bot.
 - RIESGO.006: Implemento T1 y T3. Leo el archivo actual para reescribirlo de una vez y sin riesgo de parches parciales:
