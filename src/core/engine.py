@@ -37,8 +37,10 @@ except ImportError:
 # Scrolls SEGUIDOS sin que la lista se mueva antes de dar por terminada la lista de diarios.
 MAX_INTENTOS_SIN_MOVIMIENTO: int = 3
 # Tope total de scrolls por ciclo: red de seguridad si el OCR del ancla falla una y otra vez
-# (sin este tope, un ancla mal leída podría hacer scroll indefinidamente).
-MAX_SCROLLS_POR_CICLO: int = 25
+# (sin este tope, un ancla mal leída podría hacer scroll indefinidamente). Cada pulsación del
+# botón de scroll mueve sólo unas filas, y entre diarios listados puede haber decenas, así que
+# el tope debe ser holgado: la condición real de fin es que la lista deje de moverse.
+MAX_SCROLLS_POR_CICLO: int = 60
 # Tiempo máximo de espera del resultado de un registro. Medido sobre 2.051 registros reales:
 # mediana 32 s, p90 202 s, p99 451 s y máximo 824 s; 20 minutos dejan margen amplio sin
 # condenar al bot a esperar una hora cuando el registro no se llegó a disparar.
