@@ -6,6 +6,30 @@ Todos los cambios relevantes de este proyecto. El formato sigue
 
 ---
 
+## [v-00.42.00] — 2026-11-19 (el bot ya lee los IDs que antes daba por ilegibles)
+
+### Corregido
+- **Diarios saltados como «ID ilegible» aunque el ID era perfectamente legible.**
+  `leer_id_diario` recortaba la región del ID (110x28 px según `ocr_region_offset`) y la
+  pasaba a Tesseract **sin escalar**. En filas cuyo texto queda pegado a los iconos de estado
+  el OCR devolvía cadena vacía y el motor (B1b) saltaba la casilla sin procesarla.
+  Medido sobre 4 capturas reales (`logs/capturas/error_id_ilegible_2026-11-19_*.png`, 80
+  casillas con fila de diario): sin escalar **5/80 (6 %)** legibles; ampliando x2 **76/80
+  (95 %)**, con **0 discrepancias** frente a los IDs que ya se leían (ampliar no inventa
+  dígitos). Las 4 lecturas que siguen fallando tampoco se leen a x6: son filas sin diario.
+  Impacto comprobado: la sesión de las 15:22 se saltó `00342437`, `00342438` y `00342439`
+  (consecutivos) y siguió con `00342440`; los tres primeros no llegaron a
+  `registro_2026-11-19.txt`.
+
+### Añadido
+- `ESCALA_OCR = 2` y `_escalar_para_ocr()`: ampliación LANCZOS del recorte antes del OCR.
+  Coste despreciable (110x28 → 220x56).
+- `tests/test_ocr_escala.py` (9 pruebas): fija la ampliación y verifica que el candado de
+  validación **no** se relaja (7 dígitos, dos IDs distintos y texto vacío siguen devolviendo
+  `ERROR_LECTURA`).
+
+---
+
 ## [v-00.41.00] — 2026-11-18 (el bot ya no cierra la lista antes de tiempo)
 
 ### Corregido

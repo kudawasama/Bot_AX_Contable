@@ -484,6 +484,32 @@ def esperar_resultado_registro(
     return None
 
 
+ESCALA_OCR: int = 2
+
+
+def _escalar_para_ocr(imagen: Image.Image, factor: int = ESCALA_OCR) -> Image.Image:
+    """Amplía el recorte del ID antes de pasarlo a Tesseract.
+
+    POR QUÉ (v-00.42.00): con la región de 110x28 px tal cual, Tesseract devolvía
+    cadena vacía en filas cuyo ID es perfectamente legible, y el motor saltaba la
+    casilla como "ID ilegible". Medido sobre 4 capturas reales del 2026-11-19
+    (80 casillas con fila de diario): sin escalar 5/80 (6 %), con ampliación x2
+    76/80 (95 %), y los 76 IDs leídos coinciden con los del recorte original
+    (0 discrepancias, así que ampliar no inventa dígitos). Las 4 lecturas que
+    siguen fallando tampoco se leen a x6: son filas sin diario.
+
+    Args:
+        imagen (Image.Image): Recorte en escala de grises de la región del ID.
+        factor (int): Multiplicador del tamaño (2 por defecto).
+
+    Returns:
+        Image.Image: La imagen ampliada, o la original si ``factor <= 1``.
+    """
+    if factor <= 1:
+        return imagen
+    return imagen.resize((imagen.width * factor, imagen.height * factor), Image.LANCZOS)
+
+
 def leer_id_diario(coord_checkbox: Tuple[int, int]) -> str:
     """Extrae mediante Tesseract OCR el identificador de diario a la derecha del checkbox.
 
@@ -504,6 +530,9 @@ def leer_id_diario(coord_checkbox: Tuple[int, int]) -> str:
         # Captura de pantalla en la sección derecha del checkbox
         screenshot = pyautogui.screenshot(region=region_texto)
         screenshot = screenshot.convert('L')  # Convertir a escala de grises
+        # v-00.42.00: ampliar antes del OCR. Sin esto Tesseract devolvía '' en filas
+        # cuyo ID sí es legible y la casilla se saltaba como "ID ilegible".
+        screenshot = _escalar_para_ocr(screenshot)
 
         # Modo 7 de Tesseract: tratar la imagen como una línea de texto
         texto: str = pytesseract.image_to_string(screenshot, config='--psm 7').strip()
