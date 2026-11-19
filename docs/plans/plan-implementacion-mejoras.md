@@ -209,6 +209,39 @@ desarrollo diario.
 - **Mitigación:** decidir el modelo (configuración versionada vs local) y limpiar
   `.gitignore` acorde. Verificar con `git ls-files | grep -E "config_sectores|blacklist"`.
 
+### R-7. El PC del trabajo bloquea las llamadas directas a la API de Windows
+
+- **Hallazgo (2026-11-18):** la única defensa contra el apagado de pantalla / protector
+  durante las esperas largas es el **temblor del cursor** (`pyautogui.moveRel(3, 0)` +
+  `moveRel(-3, 0)` cada 12 s en `src/services/vision.py`). Funciona porque Windows no mide
+  *cuánto* se movió el mouse, sino si hubo un evento de entrada: cualquier desplazamiento
+  real reinicia el temporizador de inactividad que alimenta tanto el protector de pantalla
+  como el apagado del monitor (`[[GetLastInputInfo]]`).
+- **Lo que NO se puede hacer:** la alternativa "limpia" es
+  `kernel32.SetThreadExecutionState(ES_CONTINUOUS | ES_DISPLAY_REQUIRED | ES_SYSTEM_REQUIRED)`
+  vía `ctypes`, que mantiene pantalla y sistema despiertos sin mover nada. **Está descartado:
+  el equipo corporativo bloquea las llamadas directas a la API de Windows.** No proponerlo de
+  nuevo ni "optimizar" el temblor reemplazándolo por una llamada a `ctypes`/`win32api`:
+  en producción fallaría o quedaría bloqueada.
+- **Estado de la máquina donde se midió:** `ScreenSaveActive = 1`, `ScreenSaveTimeOut` no
+  definido (valor por defecto del sistema), `InactivityTimeoutSecs` (bloqueo de sesión por
+  directiva) **no definido** → no hay cierre de sesión forzado; `powercfg` no expone los GUID
+  `VIDEOIDLE`/`STANDBYIDLE` en esta imagen.
+- **Evidencia de que el temblor alcanza:** esperas de 300 s (2026-11-18 22:14) y de hasta
+  824 s (máximo medido sobre 2.051 registros) con contenido real en las capturas de pantalla,
+  es decir, sin pantalla apagada ni bloqueada.
+- **Precauciones al tocar ese bloque:**
+  1. El temblor debe ser un desplazamiento **real** de al menos 1 px: `moveRel(0, 0)` no
+     genera evento y no reinicia el temporizador.
+  2. Ida y vuelta al mismo píxel (±3 px) para no alterar el *hover* del clic siguiente.
+  3. Nunca mover el cursor fuera de la zona del último clic: un salto a otra zona puede caer
+     sobre un control distinto del formulario de AX.
+  4. Intervalo ≤ 60 s: los tiempos por defecto de protector/apagado se cuentan en minutos.
+- **Riesgo residual aceptado:** si alguna vez una directiva corporativa bloqueara la sesión
+  por inactividad *basándose en otra señal* (no en entrada de mouse/teclado), no habría
+  mitigación posible desde el bot; se detectaría por los timeouts de 20 min y las capturas
+  de `logs/capturas/`.
+
 ---
 
 ## 4. Mejoras por Fases (roadmap de implementación)

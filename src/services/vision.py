@@ -385,7 +385,15 @@ def esperar_resultado_registro(
             return 'cancelado'
 
         ahora = time.time()
-        # Desplazar mouse sutilmente cada 12s para prevenir bloqueo o suspensión
+        # Temblor del cursor cada 12 s: mantiene despierta la pantalla durante las esperas
+        # largas (registros de hasta 824 s medidos). Cualquier desplazamiento REAL del cursor
+        # reinicia el temporizador de inactividad de Windows, el mismo que alimenta el
+        # protector de pantalla y el apagado del monitor; no importa que sea de 3 px.
+        #
+        # NO sustituir esto por SetThreadExecutionState/ctypes: el equipo corporativo bloquea
+        # las llamadas directas a la API de Windows (riesgo R-7 de
+        # docs/plans/plan-implementacion-mejoras.md). Tampoco usar moveRel(0, 0), que no
+        # genera evento de entrada y por tanto no reinicia el temporizador.
         if ahora - ultimo_jiggle > 12:
             try:
                 pyautogui.moveRel(3, 0)
