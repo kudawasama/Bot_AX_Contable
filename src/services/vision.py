@@ -102,21 +102,25 @@ def buscar_y_clickear(
                 try:
                     img = Image.open(ruta_imagen)
                     iw, ih = img.size
+                    region_efectiva = sector_region
                     if iw > sector_region[2] or ih > sector_region[3]:
+                        # Ensanchar la región alrededor de su centro en vez de saltar a pantalla
+                        # completa: con sector_b a 1 px de menos, el bot buscaba el botón en toda
+                        # la pantalla (814 eventos sector_b_fallback y clics fuera de sitio).
+                        region_efectiva = _expandir_region(sector_region, iw, ih)
                         logger.warning(
-                            f"Region {sector_region} muy pequeña para {nombre_corto(ruta_imagen)} ({iw}x{ih}). "
-                            f"Buscando en pantalla completa."
+                            f"Region {sector_region} pequeña para {nombre_corto(ruta_imagen)} ({iw}x{ih}). "
+                            f"Ampliando a {region_efectiva}."
                         )
-                    else:
-                        try:
-                            ubicacion = pyautogui.locateCenterOnScreen(
-                                ruta_imagen,
-                                region=sector_region,
-                                confidence=confidencialidad,
-                                grayscale=True
-                            )
-                        except pyautogui.ImageNotFoundException:
-                            pass
+                    try:
+                        ubicacion = pyautogui.locateCenterOnScreen(
+                            ruta_imagen,
+                            region=region_efectiva,
+                            confidence=confidencialidad,
+                            grayscale=True
+                        )
+                    except pyautogui.ImageNotFoundException:
+                        pass
                 except Exception:
                     # Fallback robusto ante error de lectura
                     try:
@@ -258,6 +262,32 @@ def _mejor_coincidencia(pantalla_gris: Any, ruta_patron: str) -> float:
         return 0.0
 
 
+def _expandir_region(region: Tuple[int, int, int, int], ancho: int, alto: int) -> Tuple[int, int, int, int]:
+    """Amplía una región de búsqueda para que quepa un patrón, sin salirse de la pantalla.
+
+    Conserva el centro de la región y crece lo justo (más un margen de 6 px), de modo que
+    una calibración corta por 1-3 px sigue funcionando en su zona y no degrada a una
+    búsqueda en pantalla completa.
+
+    Args:
+        region (Tuple[int, int, int, int]): Región original (x, y, ancho, alto).
+        ancho (int): Ancho del patrón a contener.
+        alto (int): Alto del patrón a contener.
+
+    Returns:
+        Tuple[int, int, int, int]: Región ampliada que contiene el patrón.
+    """
+    margen = 6
+    x, y, w, h = region
+    nuevo_w = max(w, ancho + margen * 2)
+    nuevo_h = max(h, alto + margen * 2)
+    nuevo_x = int(x - (nuevo_w - w) / 2)
+    nuevo_y = int(y - (nuevo_h - h) / 2)
+    nuevo_x = max(0, nuevo_x)
+    nuevo_y = max(0, nuevo_y)
+    return (nuevo_x, nuevo_y, nuevo_w, nuevo_h)
+
+
 def _captura_pantalla_gris() -> Any:
     """Captura la pantalla actual en escala de grises (sólo lectura)."""
     import cv2
@@ -349,6 +379,7 @@ def esperar_resultado_registro(
 
     ultimo_mensaje: float = inicio
     ultimo_jiggle: float = inicio
+    captura_aviso: bool = False
     while time.time() - inicio < timeout:
         if stop_event and stop_event.is_set():
             return 'cancelado'
@@ -378,6 +409,17 @@ def esperar_resultado_registro(
                 f"aviso: exito={similitudes['exito']:.2f} error={similitudes['error']:.2f}"
             )
             ultimo_mensaje = ahora
+
+        # Diagnóstico: a los 90 s sin ningún aviso reconocible se guarda una captura.
+        # Sin ella no se puede saber qué quedó en pantalla cuando el registro no arrancó
+        # (el 2026-11-18 la sesión esperó 60 min y no había ni un aviso visible).
+        if not captura_aviso and ahora - inicio > 90:
+            captura_aviso = True
+            _ruta_diag = capturar_pantalla_error("resultado_sin_aviso")
+            event_log("resultado_sin_aviso", segundos=int(ahora - inicio), captura_path=_ruta_diag)
+            logger.warning(
+                f"Sin aviso reconocible tras {int(ahora - inicio)}s: captura guardada en {_ruta_diag}"
+            )
 
         # 0. Aviso del Infolog por texto FIJO (solución del incidente 2026-11-17).
         #    Va antes que los patrones completos porque éstos incluyen la hora y el

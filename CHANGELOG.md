@@ -6,6 +6,45 @@ Todos los cambios relevantes de este proyecto. El formato sigue
 
 ---
 
+## [v-00.41.00] — 2026-11-18 (el bot ya no cierra la lista antes de tiempo)
+
+### Corregido
+- **El bot terminaba la ejecución con diarios pendientes más abajo** («No se encontraron más
+  diarios. Fin.»). `intentos_scroll` contaba **cualquier** vuelta sin candidato, y como la
+  lista negra tiene decenas de diarios, **3 pantallas seguidas de diarios ya listados**
+  bastaban para cerrar la sesión.
+  Evidencia: la sesión de las 21:35 cerró por esa vía y a las 22:10, con unos scrolls más,
+  apareció `00342122`, que seguía pendiente.
+  **Ahora** el contador mide *scrolls seguidos sin que la lista se mueva*, usando como ancla
+  el ID del diario visible más arriba (`_actualizar_intentos_scroll`). Si el ancla cambia,
+  hay filas nuevas y el contador vuelve a cero. Se añade un tope de 25 scrolls por ciclo como
+  red de seguridad ante un OCR de ancla inestable.
+- **Espera del resultado: de 60 a 20 minutos** (`TIMEOUT_RESULTADO_SEGUNDOS`). Medido sobre
+  2.051 registros reales: mediana 32 s, p90 202 s, p99 451 s, máximo 824 s. Una hora de espera
+  sólo servía para dejar el bot colgado cuando el registro no llegaba a dispararse.
+- **Región de búsqueda más pequeña que el patrón:** ya no salta a pantalla completa, se
+  **amplía alrededor de su centro** (`_expandir_region`). Con `sector_b` a 1 px de menos
+  (31 px de alto frente a 32 del patrón) el bot buscaba el botón «Registrar» en toda la
+  pantalla, con 814 eventos `sector_b_fallback` y riesgo de clic en un control equivocado.
+
+### Añadido
+- **Captura de diagnóstico a los 90 s** sin aviso reconocible + evento `resultado_sin_aviso`.
+  El 2026-11-18 una sesión esperó 60 minutos sin ningún aviso en pantalla y no quedó registro
+  de qué había mostrado AX: sin esa captura no se puede corregir la secuencia de clics.
+- `tests/test_engine_scroll.py` (8 pruebas): la lista que se mueve no cuenta como intento
+  fallido, la lectura dudosa no cierra la sesión, topes coherentes y expansión de región.
+
+### Nota operativa
+- Los 26 diarios de `blacklist.json` **fallan por datos, no por el bot**. Las capturas lo
+  muestran: «El número de cuenta para el tipo de transacción Diario…», «Las transacciones
+  sobre el asiento IC_02478155 no existen», «Se ha cancelado el registro». Son correcciones
+  en AX, no reintentos.
+
+### Verificación
+- **85/85 pruebas** · `ruff: All checks passed!`
+
+---
+
 ## [v-00.40.01] — 2026-11-17 (calibración real de sectores)
 
 ### Corregido

@@ -33,6 +33,67 @@ try:
 except ImportError:
     HAS_KEYBOARD = False
 
+# --- Parámetros de control del ciclo (ajustados con datos de producción) ---
+# Scrolls SEGUIDOS sin que la lista se mueva antes de dar por terminada la lista de diarios.
+MAX_INTENTOS_SIN_MOVIMIENTO: int = 3
+# Tope total de scrolls por ciclo: red de seguridad si el OCR del ancla falla una y otra vez
+# (sin este tope, un ancla mal leída podría hacer scroll indefinidamente).
+MAX_SCROLLS_POR_CICLO: int = 25
+# Tiempo máximo de espera del resultado de un registro. Medido sobre 2.051 registros reales:
+# mediana 32 s, p90 202 s, p99 451 s y máximo 824 s; 20 minutos dejan margen amplio sin
+# condenar al bot a esperar una hora cuando el registro no se llegó a disparar.
+TIMEOUT_RESULTADO_SEGUNDOS: int = 1200
+
+
+def _actualizar_intentos_scroll(
+    ancla: Optional[str],
+    ancla_anterior: Optional[str],
+    intentos_actuales: int,
+) -> int:
+    """Cuenta scrolls seguidos SIN movimiento de la lista de diarios.
+
+    Un scroll sólo debe contar como fallido si la pantalla no cambió. Si el ancla (ID del
+    diario visible más arriba) es distinta, la lista se movió y hay más filas: se vuelve a
+    cero. Una lectura dudosa (``None``) tampoco cuenta, para no terminar la ejecución por un
+    OCR malo.
+
+    Args:
+        ancla (Optional[str]): Ancla de la pantalla actual; ``None`` si no es legible.
+        ancla_anterior (Optional[str]): Ancla de la vuelta anterior de este ciclo.
+        intentos_actuales (int): Contador acumulado antes de este scroll.
+
+    Returns:
+        int: Contador actualizado (0 si la lista se movió o no hay ancla fiable).
+    """
+    if ancla is None or ancla != ancla_anterior:
+        return 0
+    return intentos_actuales + 1
+
+
+def _id_primera_casilla(casillas: List[object]) -> Optional[str]:
+    """Devuelve el ID del diario visible más arriba (ancla de la pantalla).
+
+    Se usa para saber si la lista se movió tras un scroll: si el ancla cambia, hay más
+    filas abajo y el intento no debe contar como fallido. Devuelve ``None`` cuando no se
+    puede leer con seguridad (lista vacía o lectura dudosa).
+
+    Args:
+        casillas (List[object]): Resultado de ``locateAllOnScreen`` ordenado por ``top``.
+
+    Returns:
+        Optional[str]: ID normalizado del primer diario, o ``None`` si no es legible.
+    """
+    if not casillas:
+        return None
+    try:
+        centro = gui.center(casillas[0])
+        identificador = leer_id_diario((int(centro.x), int(centro.y)))
+    except Exception:
+        return None
+    if identificador == "ERROR_LECTURA":
+        return None
+    return normalizar_id_diario(identificador)
+
 
 def registrar_log(id_diario: str, resultado: str) -> None:
     """Guarda el resultado del procesamiento diario en un archivo de texto en la raíz.
@@ -220,11 +281,18 @@ def run_bot(
             event_log("ciclo_start", ciclo_num=ciclo)
 
             # Paso A: Buscar casillas vacías y elegir la mejor
+            # `intentos_scroll` cuenta sólo las vueltas en las que la lista NO se movió.
+            # Antes contaba cualquier vuelta sin candidato, así que 3 pantallas seguidas de
+            # diarios ya listados (lista negra) terminaban la ejecución aunque quedaran
+            # diarios pendientes más abajo (incidente 2026-11-18 21:35: se cerró con
+            # "No se encontraron más diarios" y a las 22:10 apareció 00342122).
             intentos_scroll: int = 0
+            scrolls_ciclo: int = 0
+            ancla_anterior: Optional[str] = None
             casilla_objetivo: Optional[Tuple[int, int]] = None
             id_actual: str = "DESCONOCIDO"
 
-            while intentos_scroll < 3:
+            while intentos_scroll < MAX_INTENTOS_SIN_MOVIMIENTO and scrolls_ciclo < MAX_SCROLLS_POR_CICLO:
                 # Verificar parada intermedia
                 if (stop_event and stop_event.is_set()) or (not stop_event and HAS_KEYBOARD and keyboard.is_pressed('esc')):
                     break
@@ -309,8 +377,17 @@ def run_bot(
                     break
 
                 # Realizar scroll si no se encontraron casillas
-                intentos_scroll += 1
-                log(f"No hay casillas nuevas. Buscando botón de scroll ({intentos_scroll}/3)...")
+                # El ancla es el ID del diario visible más arriba. Si cambia tras el scroll,
+                # la lista se movió y hay más filas: el intento no cuenta como fallido.
+                ancla = _id_primera_casilla(todas_vacias)
+                intentos_scroll = _actualizar_intentos_scroll(ancla, ancla_anterior, intentos_scroll)
+                ancla_anterior = ancla
+                scrolls_ciclo += 1
+                log(
+                    f"No hay diarios nuevos en esta pantalla ({len(todas_vacias)} casillas, "
+                    f"ancla={ancla or '?'}, sin movimiento {intentos_scroll}/{MAX_INTENTOS_SIN_MOVIMIENTO}, "
+                    f"scrolls {scrolls_ciclo}/{MAX_SCROLLS_POR_CICLO}). Buscando botón de scroll..."
+                )
                 try:
                     pos_flecha = gui.locateCenterOnScreen(BTN_ABAJO, region=sector_scroll, confidence=0.7, grayscale=True)
                 except Exception:
@@ -345,8 +422,11 @@ def run_bot(
                 log("Caché de posiciones del Sector A restablecida tras scroll.")
 
             if not casilla_objetivo:
-                log("No se encontraron más diarios tras 3 intentos de scroll. Fin.")
-                event_log("bot_stop", reason="no_more_diarios")
+                log(
+                    f"No se encontraron más diarios: {MAX_INTENTOS_SIN_MOVIMIENTO} scrolls seguidos "
+                    f"sin que la lista se moviese (scrolls totales: {scrolls_ciclo}). Fin."
+                )
+                event_log("bot_stop", reason="no_more_diarios", scrolls=scrolls_ciclo)
                 break
 
             log(f"==> PROCESANDO DIARIO: {normalizar_id_diario(id_actual)}")
@@ -434,7 +514,7 @@ def run_bot(
                 ruta_obj_exito=CHK_MARCADO,
                 ruta_obj_error=IMG_ERROR,
                 sector_region=sector_a,
-                timeout=3600,
+                timeout=TIMEOUT_RESULTADO_SEGUNDOS,
                 stop_event=stop_event
             )
             _tiempo_total = round(time.time() - _ts_inicio_resultado, 2)
